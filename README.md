@@ -314,9 +314,15 @@ This software is for educational and research purposes only. Trading options inv
 
 ## Documentation
 
-- **Main README**: This file
-- **Deployment Architecture**: See [docs/DEPLOYMENT_ARCHITECTURE.md](docs/DEPLOYMENT_ARCHITECTURE.md) for multi-machine deployment setup
-- **API Documentation**: Available at `/docs` endpoint when FastAPI is running
+All documentation is organized in the `docs/` directory:
+
+- **[docs/PROJECT_PLAN.md](docs/PROJECT_PLAN.md)** - Comprehensive project plan and architecture
+- **[docs/README.md](docs/README.md)** - Documentation index and quick links
+- **[docs/setup/NEXT_STEPS.md](docs/setup/NEXT_STEPS.md)** - Step-by-step setup guide
+- **[docs/status/PHASE1_STATUS.md](docs/status/PHASE1_STATUS.md)** - Current project status
+- **[docs/api/API_DEVELOPMENT_GUIDE.md](docs/api/API_DEVELOPMENT_GUIDE.md)** - API development best practices
+
+**API Documentation**: Available at `/docs` endpoint when FastAPI is running (Swagger UI)
 
 ## Support
 

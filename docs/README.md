@@ -1,35 +1,54 @@
-# Documentation
+# Bifrost Documentation
 
-This directory contains documentation for the Bifrost Options Trading Strategy Analyzer project.
+This directory contains all project documentation organized by category.
 
-## Documentation Files
+## Documentation Structure
 
-- **[DEPLOYMENT_ARCHITECTURE.md](./DEPLOYMENT_ARCHITECTURE.md)**: Complete multi-machine deployment architecture plan
-  - Machine roles and responsibilities
-  - Network architecture and port assignments
-  - Data flow diagrams
-  - Configuration examples
-  - SSH management setup
-  - Implementation phases
+### Main Documentation
+- **[PROJECT_PLAN.md](PROJECT_PLAN.md)** - Comprehensive project plan and architecture
+- **[README.md](README.md)** - This file
 
-## Quick Reference
+### API Documentation
+- **[api/API_DEVELOPMENT_GUIDE.md](api/API_DEVELOPMENT_GUIDE.md)** - API development best practices
+- **[api/API_CHANGELOG.md](api/API_CHANGELOG.md)** - API version tracking
 
-### Machine Overview
+### Status & Progress
+- **[status/IMPLEMENTATION_COMPLETE.md](status/IMPLEMENTATION_COMPLETE.md)** - Implementation completion summary
+- **[status/PHASE1_STATUS.md](status/PHASE1_STATUS.md)** - Phase 1 completion status
 
-- **Dev PC (10.0.0.90)**: Development and SSH management hub
-- **APP-SERVER (10.0.0.80)**: FastAPI, PostgreSQL, IB Gateway (all services)
-- **Web-Server (10.0.0.75)**: Nginx reverse proxy and frontend
-- **RTX4090-Server (10.0.0.60)**: ML/AI services with GPU
+### Setup & Installation
+- **[setup/NEXT_STEPS.md](setup/NEXT_STEPS.md)** - Step-by-step implementation guide
+- **[setup/SETUP_COMPLETE.md](setup/SETUP_COMPLETE.md)** - Setup scripts documentation
 
-### Key Services
+### Development Guides
+- **[development/PHASE1_RESTRUCTURE.md](development/PHASE1_RESTRUCTURE.md)** - Phase 1 restructuring summary
+- **[development/STRUCTURE_VERIFICATION.md](development/STRUCTURE_VERIFICATION.md)** - Project structure verification
 
-- **IB Gateway**: Runs on APP-SERVER (10.0.0.80) in headless mode
-- **FastAPI**: Main API server on APP-SERVER (10.0.0.80:8000)
-- **PostgreSQL**: Database on APP-SERVER (10.0.0.80:5432)
-- **ML API**: ML services on RTX4090-Server (10.0.0.60:8001)
+## Quick Links
 
-## Related Documentation
+### Getting Started
+1. Read [PROJECT_PLAN.md](PROJECT_PLAN.md) for architecture overview
+2. Follow [setup/NEXT_STEPS.md](setup/NEXT_STEPS.md) for implementation
+3. Check [status/PHASE1_STATUS.md](status/PHASE1_STATUS.md) for current status
 
-- Main project README: [../README.md](../README.md)
-- API documentation: Available at `/docs` endpoint when FastAPI is running
+### Development
+- See [api/API_DEVELOPMENT_GUIDE.md](api/API_DEVELOPMENT_GUIDE.md) for API development
+- Review [development/PHASE1_RESTRUCTURE.md](development/PHASE1_RESTRUCTURE.md) for project structure
 
+### Status
+- [status/IMPLEMENTATION_COMPLETE.md](status/IMPLEMENTATION_COMPLETE.md) - What's been completed
+- [status/PHASE1_STATUS.md](status/PHASE1_STATUS.md) - Phase 1 details
+
+## Documentation Categories
+
+### `/docs/status/`
+Status reports and completion summaries for each phase.
+
+### `/docs/setup/`
+Setup guides, installation instructions, and configuration documentation.
+
+### `/docs/development/`
+Development guides, restructuring notes, and technical documentation.
+
+### `/docs/api/`
+API-specific documentation including development guides and changelogs.

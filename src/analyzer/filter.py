@@ -2,7 +2,7 @@
 import logging
 from typing import List, Optional, Callable
 
-from .models import StrategyResult, FilterCriteria, StrategyRanking, StrategyType
+from ..database.schemas import StrategyResult, FilterCriteria, StrategyRanking, StrategyType
 
 logger = logging.getLogger(__name__)
 

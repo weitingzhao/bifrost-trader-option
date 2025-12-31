@@ -1,0 +1,135 @@
+# Future Requirements - Open Source Tools for Options Trading
+# Add these incrementally based on implementation plan
+
+# ============================================================================
+# CHARTING & VISUALIZATION
+# ============================================================================
+
+# Plotly - Interactive charts (Priority: High)
+plotly>=5.0.0
+kaleido>=0.2.1  # For static image export
+
+# TradingView Lightweight Charts (for frontend - npm package)
+# npm install lightweight-charts
+
+# Alternative charting libraries
+# bokeh>=3.0.0              # Real-time streaming charts
+# matplotlib>=3.7.0        # Static charts
+# mplfinance>=0.12.0      # Financial charts (candlesticks)
+
+# ============================================================================
+# BACKTESTING FRAMEWORKS
+# ============================================================================
+
+# VectorBT - Fast vectorized backtesting (Priority: High)
+vectorbt>=0.25.0
+
+# Backtrader - Comprehensive backtesting (Priority: Medium)
+backtrader>=1.9.0
+
+# Alternative backtesting
+# zipline-reloaded>=3.0.0  # Algorithmic trading (community fork)
+# backtesting>=0.3.3      # Simple backtesting
+
+# ============================================================================
+# OPTIONS PRICING & GREEKS
+# ============================================================================
+
+# py_vollib - Options pricing and Greeks (Priority: High)
+py_vollib>=1.0.1
+
+# QuantLib - Advanced quantitative finance (Priority: High)
+QuantLib-Python>=1.31
+
+# Vectorized options calculations
+# py_vollib_vectorized>=0.1.0
+
+# Alternative pricing
+# mibian>=0.1.2           # Simple options pricing
+
+# ============================================================================
+# BACKEND JOBS & TASK SCHEDULING
+# ============================================================================
+
+# Celery - Distributed task queue (Priority: High)
+celery>=5.3.0
+redis>=5.0.0              # Celery broker
+flower>=2.0.0             # Celery monitoring
+
+# APScheduler - Simple scheduling (Priority: High)
+apscheduler>=3.10.0
+
+# Alternative job queues
+# rq>=1.15.0              # Simple Redis queue
+# dramatiq>=1.15.0        # Fast task processing
+# prefect>=2.10.0         # Workflow orchestration
+
+# ============================================================================
+# MARKET DATA PROVIDERS
+# ============================================================================
+
+# yfinance - Yahoo Finance data (free)
+yfinance>=0.2.0
+
+# Alternative data sources
+# pandas-datareader>=0.10.0  # Multiple data sources
+# alpha-vantage>=2.3.0       # Alpha Vantage API
+# polygon-api-client>=1.13.0 # Polygon.io (paid, good free tier)
+
+# ============================================================================
+# TECHNICAL ANALYSIS
+# ============================================================================
+
+# TA-Lib - Technical analysis library (Priority: Medium)
+# Note: Requires C library installation first
+# On macOS: brew install ta-lib
+# On Ubuntu: sudo apt-get install ta-lib
+TA-Lib>=0.4.28
+
+# Alternative technical analysis
+# pandas-ta>=0.3.14b0     # Pandas technical analysis
+
+# ============================================================================
+# DATA MANIPULATION & ANALYSIS
+# ============================================================================
+
+# Already in requirements.txt, but listed for completeness
+# pandas>=2.0.0
+# numpy>=1.24.0
+# scipy>=1.10.0           # Scientific computing
+
+# ============================================================================
+# UTILITIES
+# ============================================================================
+
+# Date/time handling
+python-dateutil>=2.8.2
+
+# Progress bars
+tqdm>=4.65.0
+
+# Configuration
+pyyaml>=6.0
+
+# ============================================================================
+# INSTALLATION NOTES
+# ============================================================================
+
+# 1. Install TA-Lib C library first (if using TA-Lib):
+#    macOS: brew install ta-lib
+#    Ubuntu: sudo apt-get install ta-lib
+#    Then: pip install TA-Lib
+
+# 2. QuantLib may require additional dependencies:
+#    macOS: brew install quantlib
+#    Ubuntu: sudo apt-get install libquantlib0v5
+
+# 3. For TradingView charts (frontend):
+#    npm install lightweight-charts
+
+# 4. Install incrementally based on needs:
+#    - Start with Plotly, Celery, py_vollib
+#    - Add VectorBT for backtesting
+#    - Add QuantLib for advanced pricing
+#    - Add others as needed
+

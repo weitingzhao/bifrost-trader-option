@@ -1,0 +1,16 @@
+[Unit]
+Description=Bifrost Celery Worker
+After=network.target redis.service postgresql.service
+
+[Service]
+Type=simple
+User=bifrost
+WorkingDirectory=/opt/bifrost-trader-option
+Environment="PATH=/opt/bifrost-trader-option/venv/bin"
+ExecStart=/opt/bifrost-trader-option/venv/bin/celery -A services.celery_app worker --loglevel=info
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+

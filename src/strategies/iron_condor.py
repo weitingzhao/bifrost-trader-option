@@ -2,7 +2,7 @@
 from typing import Optional, List
 
 from .base_strategy import BaseStrategy
-from ..models import (
+from ..database.schemas import (
     IronCondorParams, BreakevenPoint, StrategyGreeks,
     StrategyType, OptionContract, OptionType
 )

@@ -1,0 +1,290 @@
+# Bifrost Options Trading Strategy Analyzer - Cursor Rules
+
+## Project Overview
+
+Bifrost is a professional options trading strategy analyzer system that integrates with Interactive Brokers to provide:
+- Real-time option chain data from IB Gateway
+- Strategy analysis (Covered Call, Iron Condor, etc.)
+- Historical option tracking with PostgreSQL + TimescaleDB
+- ML-based strategy optimization
+- Multi-machine distributed deployment
+
+## Architecture Principles
+
+### Technology Stack
+- **Backend API**: FastAPI (Port 8000) - High-performance trading API, real-time data, async operations
+- **Admin/Management**: Django (Port 8001) - Admin interface, data management, migrations
+- **Shared Database**: PostgreSQL + TimescaleDB (both frameworks access same database)
+- **Frontend**: React/Vue (Web-Server) - Production trading interface
+- **Monitoring**: Streamlit (Dev PC) - System monitoring and analytics dashboards
+- **Data Management**: Django Admin (APP-SERVER) - CRUD operations
+
+### Multi-Machine Deployment
+- **Dev PC (10.0.0.90)**: Development, SSH management, Streamlit monitoring
+- **APP-SERVER (10.0.0.80)**: FastAPI, Django, PostgreSQL, IB Gateway
+- **Web-Server (10.0.0.75)**: Nginx, React/Vue frontend
+- **RTX4090-Server (10.0.0.60)**: ML/AI services with GPU
+
+## Project Structure Rules
+
+### FastAPI Code Organization (src/)
+- **src/api/**: FastAPI application, routes, middleware
+  - Use `src/api/routes/` for route handlers (one file per domain)
+  - Use `src/api/middleware/` for custom middleware
+  - Main app in `src/api/main.py`
+- **src/core/**: Core business logic (config, IB connector, options chain, cache)
+- **src/analyzer/**: Analysis engines (analyzer, filter, risk calculator)
+- **src/database/**: Database layer
+  - `schemas.py`: Pydantic models (API request/response)
+  - `models.py`: SQLAlchemy ORM models (mirror Django models)
+  - `connection.py`: Database connection configuration
+  - `repositories/`: Data access layer
+- **src/strategies/**: Strategy implementations (base_strategy, covered_call, iron_condor)
+- **src/utils/**: Utility functions (logger, validators)
+
+### Django Code Organization (django_app/)
+- **django_app/django_config/**: Django project settings
+- **django_app/apps/**: Django apps
+  - `options/`: Options data models & admin
+  - `strategies/`: Strategy history models & admin
+  - `data_collection/`: Data collection management commands
+- Django manages database migrations (source of truth)
+- SQLAlchemy models must mirror Django models
+
+### Shared Code (shared/)
+- **shared/database/**: Shared database utilities and constants
+- **shared/schemas/**: Shared data structures between FastAPI and Django
+
+### Background Services (services/)
+- **services/data_collector.py**: Periodic option chain collection (Celery)
+- **services/history_service.py**: Historical data management
+
+## Import Conventions
+
+### FastAPI Code (src/)
+- Use **relative imports** within the package:
+  - Same level: `from .module import something`
+  - Parent level: `from ..module import something`
+  - Two levels up: `from ...module import something`
+- Example: `from ..core.config import config`
+- Example: `from ...database.schemas import OptionsChain`
+
+### Django Code (django_app/)
+- Use Django's standard import patterns
+- Import Django models: `from apps.options.models import OptionSnapshot`
+
+### Cross-Framework Imports
+- FastAPI and Django should NOT import from each other
+- Use `shared/` directory for common code
+- Both access same database via their respective ORMs
+
+## Code Style & Standards
+
+### Python
+- Follow PEP 8 style guide
+- Use type hints for all function parameters and return types
+- Use async/await for FastAPI endpoints and IB operations
+- Use Pydantic models for API request/response validation
+- Use docstrings for all classes and functions
+
+### FastAPI Best Practices
+- Split routes into separate files by domain (health, options, strategies, history)
+- Use dependency injection for shared resources (database sessions, connectors)
+- Use Pydantic models for request/response validation
+- Return proper HTTP status codes
+- Include error handling with meaningful error messages
+
+### Django Best Practices
+- Use Django ORM for all database operations
+- Create migrations for all model changes
+- Use Django admin for data management interfaces
+- Use management commands for background tasks
+
+## Database Rules
+
+### Schema Management
+- **Django is the source of truth** for database schema
+- All migrations are created in Django: `python manage.py makemigrations`
+- SQLAlchemy models must mirror Django models exactly
+- Use TimescaleDB hypertables for time-series data (option_snapshots)
+
+### Database Access
+- FastAPI: Use SQLAlchemy with async engine for database access
+- Django: Use Django ORM (sync) for database access
+- Both frameworks access the same PostgreSQL database
+- Use connection pooling appropriately for each framework
+
+## IB Gateway Integration
+
+### Connection Management
+- Single IB Gateway instance on APP-SERVER (port 7497/7496)
+- Use connection pooling with multiple client IDs:
+  - Client ID 1: FastAPI real-time requests
+  - Client ID 2: Data collector service
+  - Client ID 3: Background analysis jobs
+- Implement auto-reconnect logic
+- Use async/await for all IB operations
+
+### Code Location
+- IB connector: `src/core/ib_connector.py`
+- Options chain fetcher: `src/core/options_chain.py`
+- Use caching to reduce IB API calls
+
+## File Naming Conventions
+
+- Python files: `snake_case.py`
+- Route files: `snake_case.py` (e.g., `options.py`, `strategies.py`)
+- Model files: `models.py` (Django), `schemas.py` (Pydantic), `models.py` (SQLAlchemy)
+- Test files: `test_*.py`
+- Script files: `snake_case.sh` or `snake_case.py`
+
+## Testing
+
+- Unit tests: `tests/unit/`
+- Integration tests: `tests/integration/`
+- E2E tests: `tests/e2e/`
+- Test FastAPI endpoints
+- Test strategy calculations
+- Test database operations
+
+## Documentation
+
+- API documentation: Auto-generated by FastAPI at `/docs`
+- Project plan: `docs/PROJECT_PLAN.md`
+- API development guide: `docs/api/API_DEVELOPMENT_GUIDE.md`
+- Code comments: Explain complex logic, not obvious code
+- Docstrings: Required for all public functions and classes
+
+## Deployment
+
+### Service Configuration
+- FastAPI: Systemd service on APP-SERVER (port 8000)
+- Django: Systemd service on APP-SERVER (port 8001)
+- Use Gunicorn + Uvicorn workers for FastAPI
+- Use Gunicorn for Django
+- Nginx reverse proxy on Web-Server
+
+### Environment Variables
+- Use `.env` files for configuration
+- Never commit secrets to git
+- Use environment-specific configurations
+
+## Open Source Libraries
+
+### Phase 1 (Essential)
+- Plotly: Interactive charts
+- Celery + Redis: Background jobs
+- py_vollib: Options pricing
+- APScheduler: Simple scheduling
+
+### Phase 2 (Short-term)
+- VectorBT: Fast backtesting
+- QuantLib: Advanced pricing models
+- TA-Lib: Technical indicators
+
+## Error Handling
+
+- Use proper exception handling
+- Log errors with context
+- Return meaningful error messages to API clients
+- Use HTTP status codes appropriately (400, 404, 500, etc.)
+- Never expose internal errors to clients in production
+
+## Performance Considerations
+
+- Use async/await for I/O operations
+- Implement caching for frequently accessed data
+- Use connection pooling for database and IB connections
+- Optimize database queries
+- Consider caching option chains
+
+## Security
+
+- Never hardcode credentials
+- Use environment variables for secrets
+- Implement API authentication (JWT tokens - future)
+- Validate all user inputs
+- Use parameterized queries for database operations
+
+## When Making Changes
+
+1. **Follow the project structure** - Don't create files in wrong locations
+2. **Update imports** - Use relative imports within packages
+3. **Maintain separation** - FastAPI and Django should not import from each other
+4. **Update tests** - Add tests for new functionality
+5. **Update documentation** - Update relevant docs when adding features
+6. **Check linter** - Ensure no linter errors before committing
+7. **Test imports** - Verify all imports work correctly
+
+## Common Patterns
+
+### FastAPI Route Pattern
+```python
+from fastapi import APIRouter
+from ...database.schemas import ResponseModel
+from ...core.something import get_something
+
+router = APIRouter()
+
+@router.get("/api/endpoint", response_model=ResponseModel)
+async def endpoint():
+    # Implementation
+    pass
+```
+
+### Database Access Pattern
+```python
+# FastAPI (SQLAlchemy)
+from ...database.connection import AsyncSessionLocal
+async with AsyncSessionLocal() as session:
+    # Query database
+    pass
+
+# Django (Django ORM)
+from apps.options.models import OptionSnapshot
+OptionSnapshot.objects.filter(...)
+```
+
+### IB Connection Pattern
+```python
+from ...core.ib_connector import get_connector
+connector = await get_connector()
+# Use connector
+```
+
+## Prohibited Practices
+
+- ❌ Don't mix FastAPI and Django imports
+- ❌ Don't create circular dependencies
+- ❌ Don't use absolute imports starting with `src.` (use relative)
+- ❌ Don't modify database schema without Django migrations
+- ❌ Don't commit secrets or credentials
+- ❌ Don't create files outside the defined structure
+- ❌ Don't bypass the ORM for database access (use repositories)
+
+## Project Goals
+
+1. **Real-time Trading**: Provide fast, reliable real-time option chain data
+2. **Strategy Analysis**: Analyze multiple option strategies with accurate calculations
+3. **Historical Tracking**: Track option history for pattern analysis
+4. **ML Optimization**: Use ML for strategy recommendations
+5. **Scalability**: Design for horizontal scaling when needed
+6. **Maintainability**: Clean, organized code structure
+7. **Performance**: Optimize for low latency trading operations
+
+## Key Design Decisions
+
+1. **Hybrid FastAPI + Django**: Use each framework for its strengths
+2. **Shared Database**: Both frameworks access same PostgreSQL database
+3. **Co-located Services**: API, DB, and IB Gateway on APP-SERVER for low latency
+4. **Separation of Concerns**: Clear boundaries between components
+5. **Async-First**: Use async/await for all I/O operations in FastAPI
+
+## When in Doubt
+
+- Refer to `docs/PROJECT_PLAN.md` for architecture decisions
+- Follow existing code patterns in the codebase
+- Use relative imports within packages
+- Keep FastAPI and Django code separate
+- Test imports and functionality after changes
+

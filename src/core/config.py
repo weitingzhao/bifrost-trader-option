@@ -29,6 +29,23 @@ class Config:
     
     # Strategy Parameters
     DEFAULT_STOCK_QUANTITY: int = 100  # Standard lot size
+    
+    # Database Settings (shared with Django)
+    DB_NAME: str = os.getenv("DB_NAME", "options_db")
+    DB_USER: str = os.getenv("DB_USER", "bifrost")
+    DB_PASSWORD: str = os.getenv("DB_PASSWORD", "")
+    DB_HOST: str = os.getenv("DB_HOST", "localhost")
+    DB_PORT: str = os.getenv("DB_PORT", "5432")
+    
+    @property
+    def DATABASE_URL(self) -> str:
+        """Get the database URL for SQLAlchemy."""
+        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+    
+    @property
+    def DATABASE_URL_SYNC(self) -> str:
+        """Get the synchronous database URL for Django."""
+        return f"postgresql://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
 
 config = Config()

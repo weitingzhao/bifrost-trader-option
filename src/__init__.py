@@ -1,5 +1,1 @@
-"""Bifrost Options Trading Strategy Analyzer"""
-
-__version__ = "0.1.0"
-
-
+"""Bifrost Options Trading Strategy Analyzer - FastAPI Application."""

@@ -11,6 +11,6 @@ if [ ! -f .env ]; then
 fi
 
 # Run the application
-python3 -m src.main
+python3 -m src.api.main
 
 

@@ -8,7 +8,7 @@ from collections import defaultdict
 from ib_insync import Option as IBOption, Ticker
 
 from .ib_connector import get_connector
-from .models import OptionContract, OptionType, OptionsChain
+from ..database.schemas import OptionContract, OptionType, OptionsChain
 from .config import config
 
 logger = logging.getLogger(__name__)

@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from typing import List, Optional
 import math
 
-from ..models import (
+from ..database.schemas import (
     StrategyResult, ProfitPoint, BreakevenPoint, StrategyGreeks,
     StrategyType
 )

@@ -1,0 +1,16 @@
+[Unit]
+Description=Bifrost FastAPI Trading API
+After=network.target postgresql.service redis.service
+
+[Service]
+Type=simple
+User=bifrost
+WorkingDirectory=/opt/bifrost-trader-option
+Environment="PATH=/opt/bifrost-trader-option/venv/bin"
+ExecStart=/opt/bifrost-trader-option/venv/bin/uvicorn src.api.main:app --host 0.0.0.0 --port 8000
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+

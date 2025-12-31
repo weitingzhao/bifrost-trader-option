@@ -1,0 +1,18 @@
+# Optional dependencies that may require special installation
+# These are not included in requirements.txt due to installation complexity
+
+# QuantLib-Python
+# Available via pip: 1.17, 1.18 (older versions)
+# For latest version (1.31+), use one of these methods:
+#
+# Option 1: Conda (recommended)
+#   conda install -c conda-forge quantlib-python
+#
+# Option 2: Build from source
+#   See: https://github.com/lballabio/QuantLib-SWIG
+#
+# Option 3: Use older version via pip
+#   pip install QuantLib-Python==1.18
+#
+# Note: The pricing utilities will work with py_vollib alone if QuantLib is not available
+
