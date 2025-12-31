@@ -1,14 +1,17 @@
 """Streamlit Status Monitor for APP-SERVER (10.0.0.80)."""
 
 import streamlit as st
-import subprocess
-import json
 from datetime import datetime
 import time
-
-# Configuration
-APP_SERVER = "app-server"  # SSH hostname from config
-APP_SERVER_PATH = "~/bifrost-trader"
+from utils import (
+    get_status,
+    get_system_info,
+    get_fastapi_logs_streaming,
+    get_status_icon,
+    get_logs,
+    run_ssh_command,
+    APP_SERVER,
+)
 
 # Page config with dark theme
 st.set_page_config(
@@ -94,219 +97,108 @@ st.markdown(
     .stCaption {
         color: #b0b0b0 !important;
     }
+    
+    /* Links */
+    a {
+        color: #60a5fa !important;
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: underline;
+        color: #93c5fd !important;
+    }
+    
+    /* Status items with links */
+    .status-item a {
+        font-size: 12px;
+        margin-right: 8px;
+    }
+    
+    /* Smooth transitions */
+    .status-item, .metric-card {
+        transition: background-color 0.3s ease;
+    }
+    
+    /* Loading indicator */
+    .refresh-indicator {
+        color: #60a5fa;
+        font-size: 12px;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
     </style>
 """,
     unsafe_allow_html=True,
 )
 
 
-def run_ssh_command(command):
-    """Execute SSH command on APP-SERVER."""
-    try:
-        result = subprocess.run(
-            ["ssh", "-o", "ConnectTimeout=5", APP_SERVER, command],
-            capture_output=True,
-            text=True,
-            timeout=10,
-        )
-        return {
-            "success": result.returncode == 0,
-            "stdout": result.stdout,
-            "stderr": result.stderr,
-            "returncode": result.returncode,
-        }
-    except subprocess.TimeoutExpired:
-        return {"success": False, "error": "Command timeout"}
-    except Exception as e:
-        return {"success": False, "error": str(e)}
-
-
-def get_status():
-    """Get overall status of APP-SERVER."""
-    status = {
-        "timestamp": datetime.now().isoformat(),
-        "server": "10.0.0.80 (APP-SERVER)",
-        "checks": {},
-    }
-
-    # Check SSH connection
-    ssh_check = run_ssh_command("echo 'connected'")
-    status["checks"]["ssh"] = {
-        "status": "online" if ssh_check["success"] else "offline",
-        "message": "Connected" if ssh_check["success"] else "Cannot connect",
-    }
-
-    # Check Python
-    python_check = run_ssh_command("python3 --version")
-    status["checks"]["python"] = {
-        "status": "installed" if python_check["success"] else "not_installed",
-        "version": python_check["stdout"].strip() if python_check["success"] else "N/A",
-    }
-
-    # Check venv
-    venv_check = run_ssh_command(
-        f"cd {APP_SERVER_PATH} && test -d venv && echo 'exists' || echo 'not_found'"
-    )
-    status["checks"]["venv"] = {
-        "status": "created" if "exists" in venv_check["stdout"] else "not_created",
-        "message": (
-            "Virtual environment exists"
-            if "exists" in venv_check["stdout"]
-            else "Virtual environment not created"
-        ),
-    }
-
-    # Check PostgreSQL
-    pg_check = run_ssh_command(
-        "systemctl is-active postgresql 2>/dev/null || service postgresql status 2>/dev/null | grep -q running && echo 'running' || echo 'not_running'"
-    )
-    status["checks"]["postgresql"] = {
-        "status": "running" if "running" in pg_check["stdout"] else "not_running",
-        "message": (
-            "PostgreSQL is running"
-            if "running" in pg_check["stdout"]
-            else "PostgreSQL not running or not installed"
-        ),
-    }
-
-    # Check FastAPI service (systemd or process)
-    fastapi_systemd = run_ssh_command(
-        "systemctl is-active bifrost-api 2>/dev/null || echo 'not_active'"
-    )
-    fastapi_process = run_ssh_command("ps aux | grep 'src.main' | grep -v grep | wc -l")
-    fastapi_port = run_ssh_command(
-        "curl -s http://localhost:8000/api/health >/dev/null 2>&1 && echo 'responding' || echo 'not_responding'"
-    )
-
-    # Determine status
-    is_running = (
-        fastapi_systemd["stdout"].strip() == "active"
-        or (fastapi_process["success"] and int(fastapi_process["stdout"].strip()) > 0)
-        or fastapi_port["stdout"].strip() == "responding"
-    )
-
-    if is_running:
-        status["checks"]["fastapi"] = {
-            "status": "running",
-            "message": "FastAPI is running (systemd service or manual process)",
-        }
-    else:
-        status["checks"]["fastapi"] = {
-            "status": "not_running",
-            "message": "FastAPI service not running",
-        }
-
-    # Check if code is deployed
-    code_check = run_ssh_command(
-        f"cd {APP_SERVER_PATH} && test -f src/main.py && echo 'deployed' || echo 'not_deployed'"
-    )
-    status["checks"]["code"] = {
-        "status": "deployed" if "deployed" in code_check["stdout"] else "not_deployed",
-        "message": (
-            "Code is deployed"
-            if "deployed" in code_check["stdout"]
-            else "Code not found"
-        ),
-    }
-
-    # Overall status
-    all_checks = [v["status"] for v in status["checks"].values()]
-    if all(
-        c in ["online", "installed", "created", "running", "deployed"]
-        for c in all_checks
-    ):
-        status["overall"] = "healthy"
-    elif any(
-        c in ["offline", "not_installed", "not_created", "not_running", "not_deployed"]
-        for c in all_checks
-    ):
-        status["overall"] = "degraded"
-    else:
-        status["overall"] = "unknown"
-
-    return status
-
-
-def get_system_info():
-    """Get system information from APP-SERVER."""
-    info = {}
-
-    # Uptime
-    uptime = run_ssh_command("uptime")
-    info["uptime"] = uptime["stdout"].strip() if uptime["success"] else "N/A"
-
-    # Disk usage
-    disk = run_ssh_command("df -h / | tail -1")
-    info["disk"] = disk["stdout"].strip() if disk["success"] else "N/A"
-
-    # Memory
-    memory = run_ssh_command("free -h | grep Mem")
-    info["memory"] = memory["stdout"].strip() if memory["success"] else "N/A"
-
-    # CPU load
-    load = run_ssh_command("cat /proc/loadavg")
-    info["load"] = load["stdout"].strip() if load["success"] else "N/A"
-
-    return info
-
-
-def get_logs():
-    """Get recent logs from APP-SERVER."""
-    # Try to get systemd logs
-    log_check = run_ssh_command(
-        "journalctl -u bifrost-api -n 50 --no-pager 2>/dev/null || echo 'no_logs'"
-    )
-
-    if "no_logs" in log_check["stdout"]:
-        # Try to get logs from file
-        log_check = run_ssh_command(
-            f"cd {APP_SERVER_PATH} && tail -50 app.log 2>/dev/null || echo 'no_log_file'"
-        )
-
-    if "no_log_file" in log_check["stdout"]:
-        # Get general system info
-        log_check = run_ssh_command("uptime && echo '---' && df -h | head -5")
-
-    return log_check["stdout"] if log_check["success"] else "No logs available"
-
-
-def get_status_icon(status):
-    """Get emoji icon for status."""
-    icons = {
-        "online": "🟢",
-        "offline": "🔴",
-        "installed": "✅",
-        "not_installed": "❌",
-        "created": "✅",
-        "not_created": "❌",
-        "running": "🟢",
-        "not_running": "🟡",
-        "deployed": "✅",
-        "not_deployed": "❌",
-        "healthy": "🟢",
-        "degraded": "🟡",
-        "unknown": "⚪",
-    }
-    return icons.get(status, "❓")
-
-
 # Main App
 def main():
-    st.title("📊 Bifrost APP-SERVER Status Monitor")
-    st.caption(
-        f"Monitoring 10.0.0.80 (APP-SERVER) • Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-    )
+    # Initialize session state
+    if "last_refresh" not in st.session_state:
+        st.session_state.last_refresh = datetime.now()
+    if "refresh_count" not in st.session_state:
+        st.session_state.refresh_count = 0
 
-    # Sidebar
+    st.title("📊 Bifrost APP-SERVER Status Monitor")
+
+    # Sidebar - Static, doesn't refresh
     with st.sidebar:
         st.header("⚙️ Controls")
-        auto_refresh = st.checkbox("Auto-refresh", value=True)
-        refresh_interval = st.slider("Refresh interval (seconds)", 5, 60, 10)
+        auto_refresh = st.checkbox("Auto-refresh", value=True, key="auto_refresh")
+        refresh_interval = st.slider(
+            "Refresh interval (seconds)", 5, 60, 10, key="refresh_interval"
+        )
 
-        if st.button("🔄 Refresh Now"):
+        if st.button("🔄 Refresh Now", key="manual_refresh"):
+            st.session_state.last_refresh = datetime.now()
+            st.session_state.refresh_count += 1
             st.rerun()
 
         st.divider()
+
+        # Quick Navigation
+        st.header("🚀 Quick Access")
+        # APP-Server Status button (parent)
+        try:
+            st.page_link(
+                "pages/1_APP_Server_status.py",
+                label="📊 APP-Server Status",
+                icon="📊",
+                use_container_width=True,
+            )
+        except:
+            st.markdown(
+                '[<button style="background-color: #1f77b4; color: white; border: none; '
+                "padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; "
+                'font-size: 16px; font-weight: bold;">📊 APP-Server Status</button>](/APP_Server_status)',
+                unsafe_allow_html=True,
+            )
+
+        # API Logs button (child of APP-Server Status, indented)
+        st.markdown('<div style="margin-left: 20px;">', unsafe_allow_html=True)
+        try:
+            st.page_link(
+                "pages/1_API_live_logs.py",
+                label="📝 API Logs",
+                icon="📝",
+                use_container_width=True,
+            )
+        except:
+            st.markdown(
+                '[<button style="background-color: #1f77b4; color: white; border: none; '
+                "padding: 8px 16px; border-radius: 5px; cursor: pointer; width: calc(100% - 20px); "
+                'font-size: 14px; font-weight: bold; margin-left: 20px;">📝 API Logs</button>](/API_live_logs)',
+                unsafe_allow_html=True,
+            )
+        st.markdown("</div>", unsafe_allow_html=True)
+
+        st.divider()
+
         st.header("📋 Quick Info")
         st.info(
             """
@@ -315,12 +207,23 @@ def main():
         """
         )
 
-    # Get status data
-    with st.spinner("Fetching status..."):
-        status = get_status()
-        system_info = get_system_info()
+        # Status indicator
+        st.divider()
+        st.markdown(
+            f"**Last Update:** {st.session_state.last_refresh.strftime('%H:%M:%S')}"
+        )
+        st.markdown(f"**Updates:** {st.session_state.refresh_count}")
 
-    # Overall Status Banner
+    # Create containers for dynamic content (these will update without full page refresh)
+    status_container = st.container()
+
+    # Get status data (with caching to reduce unnecessary calls)
+    with status_container:
+        with st.spinner("Fetching status..."):
+            status = get_status()
+            system_info = get_system_info()
+
+    # Overall Status Banner - Update timestamp
     overall_status = status["overall"]
     status_color = {
         "healthy": "🟢",
@@ -334,6 +237,10 @@ def main():
         "unknown": "#374151",
     }
 
+    # Update caption with timestamp
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    st.caption(f"Monitoring 10.0.0.80 (APP-SERVER) • Last updated: {timestamp}")
+
     st.markdown(
         f"""
     <div class="metric-card" style="background: {status_bg_color.get(overall_status, '#374151')}; border-left: 4px solid {'#10b981' if overall_status == 'healthy' else '#f59e0b' if overall_status == 'degraded' else '#6b7280'};">
@@ -345,7 +252,7 @@ def main():
 
     st.divider()
 
-    # Service Status Columns
+    # Service Status Columns - Use empty containers for updates
     col1, col2 = st.columns(2)
 
     with col1:
@@ -361,12 +268,20 @@ def main():
                 else "status-degraded"
             )
 
+            # Add clickable links for PostgreSQL and FastAPI
+            service_link = ""
+            if check_name == "postgresql" and check_status == "running":
+                service_link = '<br><a href="http://10.0.0.80:5432" target="_blank" style="color: #60a5fa; text-decoration: none;">🔗 Connect to PostgreSQL</a> | <a href="http://10.0.0.80" target="_blank" style="color: #60a5fa; text-decoration: none;">📊 pgAdmin</a>'
+            elif check_name == "fastapi" and check_status == "running":
+                service_link = '<br><a href="http://10.0.0.80:8000" target="_blank" style="color: #60a5fa; text-decoration: none;">🔗 API: http://10.0.0.80:8000</a> | <a href="http://10.0.0.80:8000/docs" target="_blank" style="color: #60a5fa; text-decoration: none;">📚 API Docs</a> | <a href="http://10.0.0.80:8000/api/health" target="_blank" style="color: #60a5fa; text-decoration: none;">❤️ Health Check</a>'
+
             st.markdown(
                 f"""
             <div class="status-item">
                 <strong style="color: #ffffff; font-size: 16px;">{icon} {check_name.replace('_', ' ').title()}</strong><br>
                 <span class="{status_class}" style="font-size: 14px;">{check_status.replace('_', ' ').upper()}</span><br>
                 <small style="color: #b0b0b0;">{check_data.get('message', check_data.get('version', ''))}</small>
+                {service_link}
             </div>
             """,
                 unsafe_allow_html=True,
@@ -418,26 +333,291 @@ def main():
     # Logs Section
     st.subheader("📝 Server Logs")
 
-    log_tab1, log_tab2 = st.tabs(["Live Logs", "System Info"])
+    # Link to dedicated FastAPI logs page
+    st.info(
+        "💡 **Tip:** For dedicated FastAPI live logs with independent refresh, use the [📝 FastAPI Live Logs](/FastAPI_Live_Logs) page in the sidebar menu."
+    )
+
+    log_tab1, log_tab2, log_tab3 = st.tabs(
+        ["FastAPI Live Logs", "All Logs", "System Info"]
+    )
 
     with log_tab1:
+        st.markdown("**Real-time FastAPI Console Output**")
+
+        # Get log lines setting (persistent in session state)
+        if "log_lines" not in st.session_state:
+            st.session_state.log_lines = 100
+        log_lines = st.slider(
+            "Number of log lines",
+            20,
+            200,
+            st.session_state.log_lines,
+            key="log_lines_slider",
+        )
+        st.session_state.log_lines = log_lines
+
+        # Auto-refresh toggle for logs (persistent)
+        if "auto_refresh_logs" not in st.session_state:
+            st.session_state.auto_refresh_logs = True
+        auto_refresh_logs = st.checkbox(
+            "Auto-refresh logs",
+            value=st.session_state.auto_refresh_logs,
+            key="auto_logs_checkbox",
+        )
+        st.session_state.auto_refresh_logs = auto_refresh_logs
+
+        # Use empty container for log updates
+        log_display = st.empty()
+
+        with log_display.container():
+            # Get FastAPI logs
+            fastapi_logs = get_fastapi_logs_streaming(lines=log_lines)
+
+            # Format logs with better styling
+            st.markdown(
+                """
+                <style>
+                .stCodeBlock {
+                    background-color: #1a1a1a !important;
+                    border: 1px solid #404040;
+                    border-radius: 4px;
+                }
+                .stCodeBlock code {
+                    color: #d4d4d4 !important;
+                    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+                    font-size: 12px;
+                    line-height: 1.5;
+                }
+                .log-timestamp {
+                    color: #60a5fa;
+                }
+                .log-error {
+                    color: #ef4444;
+                }
+                .log-warning {
+                    color: #f59e0b;
+                }
+                .log-info {
+                    color: #10b981;
+                }
+                </style>
+                """,
+                unsafe_allow_html=True,
+            )
+
+            # Display logs with syntax highlighting
+            # Check if we have actual log content (not error messages)
+            has_logs = (
+                fastapi_logs
+                and fastapi_logs.strip()
+                and "No logs available" not in fastapi_logs
+                and "Log file exists but is empty" not in fastapi_logs
+                and len(fastapi_logs.strip()) > 20
+            )  # Ensure we have substantial content
+
+            if has_logs:
+                # Split logs into lines for better display
+                log_lines_list = [
+                    line for line in fastapi_logs.split("\n") if line.strip()
+                ]
+
+                # Show log source info
+                st.caption(
+                    f"📄 Source: /tmp/fastapi.log on {APP_SERVER} | Lines: {len(log_lines_list)}"
+                )
+
+                # Create a scrollable code block
+                st.code(fastapi_logs, language="text")
+
+                # Show log stats
+                error_count = sum(
+                    1
+                    for line in log_lines_list
+                    if "ERROR" in line.upper() or "error" in line.lower()
+                )
+                warning_count = sum(
+                    1
+                    for line in log_lines_list
+                    if "WARNING" in line.upper() or "warning" in line.lower()
+                )
+                info_count = sum(
+                    1
+                    for line in log_lines_list
+                    if "INFO" in line.upper()
+                    and "ERROR" not in line.upper()
+                    and "WARNING" not in line.upper()
+                )
+
+                # Display stats
+                if error_count > 0 or warning_count > 0 or info_count > 0:
+                    col_err, col_warn, col_info = st.columns(3)
+                    with col_err:
+                        if error_count > 0:
+                            st.error(f"❌ Errors: {error_count}")
+                        else:
+                            st.success("✅ No errors")
+                    with col_warn:
+                        if warning_count > 0:
+                            st.warning(f"⚠️ Warnings: {warning_count}")
+                        else:
+                            st.success("✅ No warnings")
+                    with col_info:
+                        st.info(f"ℹ️ Info: {info_count}")
+            else:
+                # Show diagnostic information
+                st.warning("⚠️ No FastAPI logs found in /tmp/fastapi.log on APP-SERVER")
+
+                # Show what we tried
+                st.info(
+                    f"Attempted to retrieve logs from: `ssh {APP_SERVER} 'tail -n {log_lines} /tmp/fastapi.log'`"
+                )
+
+                # Diagnostic section
+                with st.expander("🔍 Diagnostic Information"):
+                    st.markdown("**Test SSH connection:**")
+                    st.code(f"ssh {APP_SERVER} 'echo connected'", language="bash")
+
+                    st.markdown("**Check FastAPI status:**")
+                    st.code(
+                        f"ssh {APP_SERVER} 'ps aux | grep src.main | grep -v grep'",
+                        language="bash",
+                    )
+
+                    st.markdown("**Check log file:**")
+                    st.code(
+                        f"ssh {APP_SERVER} 'ls -la /tmp/fastapi.log'", language="bash"
+                    )
+
+                    st.markdown("**View logs directly (this should work):**")
+                    st.code(
+                        f"ssh {APP_SERVER} 'tail -50 /tmp/fastapi.log'", language="bash"
+                    )
+
+                    st.markdown("**Restart FastAPI with logging:**")
+                    st.code(
+                        f"ssh {APP_SERVER} 'pkill -f src.main && cd ~/bifrost-trader && source venv/bin/activate && nohup python -m src.main > /tmp/fastapi.log 2>&1 &'",
+                        language="bash",
+                    )
+
+                    # Test the actual command - use the exact command that works manually
+                    st.markdown("---")
+                    st.markdown("**🔬 Live Test - Execute command now:**")
+                    if st.button("Test Log Retrieval", key="test_logs"):
+                        with st.spinner("Testing SSH command..."):
+                            # Import run_ssh_command for testing
+                            from utils import run_ssh_command
+
+                            # Test with the exact command that works manually
+                            test_result = run_ssh_command(
+                                f"tail -n 100 /tmp/fastapi.log 2>&1"
+                            )
+
+                            if test_result["success"]:
+                                st.success("✅ SSH command executed successfully")
+                                output = test_result["stdout"].strip()
+                                if output:
+                                    # Show first 1000 chars
+                                    preview = output[:1000] + (
+                                        "..." if len(output) > 1000 else ""
+                                    )
+                                    st.code(preview, language="text")
+                                    line_count = len(output.split("\n"))
+                                    st.info(
+                                        f"✅ Retrieved {line_count} lines. If you see logs above, the Streamlit app should work too."
+                                    )
+                                else:
+                                    st.warning(
+                                        "Command succeeded but returned no output. Log file might be empty."
+                                    )
+                                    # Show stderr if available
+                                    if test_result.get("stderr"):
+                                        st.code(
+                                            f"Stderr: {test_result['stderr']}",
+                                            language="text",
+                                        )
+                            else:
+                                st.error(
+                                    f"❌ SSH command failed (returncode: {test_result.get('returncode', 'N/A')})"
+                                )
+                                if test_result.get("stderr"):
+                                    st.code(
+                                        f"Stderr: {test_result['stderr']}",
+                                        language="text",
+                                    )
+                                if test_result.get("error"):
+                                    st.code(
+                                        f"Error: {test_result['error']}",
+                                        language="text",
+                                    )
+                                if test_result.get("stdout"):
+                                    st.code(
+                                        f"Stdout: {test_result['stdout']}",
+                                        language="text",
+                                    )
+
+                                # Additional debug info
+                                st.markdown("**Debug Information:**")
+                                st.json(
+                                    {
+                                        "command": f"tail -n 100 /tmp/fastapi.log",
+                                        "success": test_result.get("success", False),
+                                        "returncode": test_result.get(
+                                            "returncode", "N/A"
+                                        ),
+                                        "stdout_length": len(
+                                            test_result.get("stdout", "")
+                                        ),
+                                        "stderr_length": len(
+                                            test_result.get("stderr", "")
+                                        ),
+                                    }
+                                )
+
+        # Auto-refresh logs if enabled (separate from main refresh)
+        if auto_refresh_logs and auto_refresh:
+            # Only refresh logs tab, not entire page
+            time.sleep(1)  # Shorter interval for logs
+            # Update just the log display
+            if (
+                datetime.now()
+                - st.session_state.get("last_log_refresh", datetime.now())
+            ).total_seconds() >= 2:
+                st.session_state.last_log_refresh = datetime.now()
+                st.rerun()
+
+    with log_tab2:
+        st.markdown("**All Server Logs**")
         logs = get_logs()
         st.markdown(
             """
-        <style>
-        .stCodeBlock {
-            background-color: #1a1a1a !important;
-        }
-        .stCodeBlock code {
-            color: #d4d4d4 !important;
-        }
-        </style>
-        """,
+            <style>
+            .stCodeBlock {
+                background-color: #1a1a1a !important;
+                border: 1px solid #404040;
+            }
+            .stCodeBlock code {
+                color: #d4d4d4 !important;
+            }
+            </style>
+            """,
             unsafe_allow_html=True,
         )
         st.code(logs, language="bash")
 
-    with log_tab2:
+        # Quick actions
+        st.markdown("**Quick Actions:**")
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            if st.button("📋 Copy Logs"):
+                st.code(logs, language="bash")
+        with col2:
+            if st.button("🔄 Refresh Logs"):
+                st.rerun()
+        with col3:
+            st.markdown(f"[🔗 SSH to Server](ssh://app-server)")
+
+    with log_tab3:
         st.json(
             {
                 "server": status["server"],
@@ -447,10 +627,20 @@ def main():
             }
         )
 
-    # Auto-refresh
+    # Smart auto-refresh - only refresh data, not entire page
     if auto_refresh:
-        time.sleep(refresh_interval)
-        st.rerun()
+        # Use time-based refresh instead of immediate rerun
+        elapsed = (datetime.now() - st.session_state.last_refresh).total_seconds()
+        if elapsed >= refresh_interval:
+            st.session_state.last_refresh = datetime.now()
+            st.session_state.refresh_count += 1
+            # Use st.rerun() but with minimal disruption
+            time.sleep(0.1)  # Small delay to allow UI to update
+            st.rerun()
+        else:
+            # Show countdown
+            remaining = refresh_interval - elapsed
+            st.sidebar.caption(f"⏱️ Next refresh in {int(remaining)}s")
 
 
 if __name__ == "__main__":

@@ -1,93 +1,48 @@
-# APP-SERVER Status Monitor (Streamlit)
+# Streamlit Monitoring Dashboard
 
-Real-time status monitoring dashboard for APP-SERVER (10.0.0.80) built with Streamlit.
+Real-time status monitoring dashboard for APP-SERVER (10.0.0.80).
 
-## Features
+## Pages
 
-- 📊 Real-time status monitoring
-- 🔌 Service health checks
-- 💻 System information (CPU, memory, disk)
-- 📝 Live server logs
-- 🔄 Auto-refresh capability
-- 🎨 Modern, interactive UI
+### 📊 Main Dashboard (`app.py`)
+- Overall server status
+- Service health checks
+- System information
+- Quick log view
+
+### 📝 FastAPI Live Logs (`pages/1_📝_FastAPI_Live_Logs.py`)
+- Dedicated page for FastAPI console output
+- Independent auto-refresh (1-10 seconds)
+- Real-time log streaming
+- Error/warning/info statistics
+- Quick links to API docs
 
 ## Quick Start
 
-### Install Dependencies
-
 ```bash
-pip install streamlit
-```
-
-Or:
-
-```bash
-pip install -r requirements.txt
-```
-
-### Run the App
-
-```bash
+cd streamlit_apps/monitoring
 streamlit run app.py
 ```
 
-The app will open automatically in your browser at `http://localhost:8501`
+Access at: **http://localhost:8501**
 
-## What It Monitors
+## Features
 
-1. **SSH Connection** - Connectivity to APP-SERVER
-2. **Python** - Python installation and version
-3. **Virtual Environment** - venv status and packages
-4. **PostgreSQL** - Database service status
-5. **FastAPI Service** - Application service status
-6. **Code Deployment** - Project files verification
-7. **System Resources** - CPU, memory, disk usage
+- **Multi-page Navigation**: Use sidebar to switch between dashboard and logs
+- **Real-time Monitoring**: Auto-refresh with configurable intervals
+- **Dark Theme**: Optimized for readability
+- **Service Links**: Clickable links to PostgreSQL and FastAPI services
+- **Log Statistics**: Error/warning counts and analysis
+- **Smart Refresh**: Only updates when needed, minimal page disruption
+
+## Navigation
+
+- **Main Dashboard**: Overview of all services and system status
+- **FastAPI Live Logs**: Dedicated page for continuous log monitoring
 
 ## Configuration
 
-Edit the configuration at the top of `app.py`:
-
-```python
-APP_SERVER = "app-server"  # SSH hostname
-APP_SERVER_PATH = "~/bifrost-trader"  # Path on remote server
-```
-
-## Usage
-
-1. **Auto-refresh**: Enable in sidebar to automatically update status
-2. **Refresh Interval**: Adjust how often the dashboard updates (5-60 seconds)
-3. **Manual Refresh**: Click "Refresh Now" button in sidebar
-4. **Logs**: View live logs in the "Live Logs" tab
-5. **System Info**: View detailed JSON in "System Info" tab
-
-## Status Indicators
-
-- 🟢 **Green** - Healthy/Online/Running
-- 🟡 **Yellow** - Degraded/Warning
-- 🔴 **Red** - Offline/Not Running/Error
-- ⚪ **White** - Unknown status
-
-## Troubleshooting
-
-### Cannot Connect to APP-SERVER
-
-1. Verify SSH connection:
-   ```bash
-   ssh app-server
-   ```
-
-2. Check SSH config:
-   ```bash
-   cat ~/.ssh/config | grep app-server
-   ```
-
-### Streamlit Not Found
-
-```bash
-pip install streamlit
-```
-
-### Port Already in Use
-
-Streamlit uses port 8501 by default. If it's in use, Streamlit will automatically use the next available port.
+Edit `app.py` to change:
+- `APP_SERVER`: SSH hostname (default: "app-server")
+- `APP_SERVER_PATH`: Remote project path (default: "~/bifrost-trader")
 
