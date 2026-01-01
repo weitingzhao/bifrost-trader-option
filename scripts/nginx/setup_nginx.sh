@@ -129,6 +129,10 @@ server {
     listen 80;
     server_name 10.0.0.75;
     
+    location = /docs {
+        return 301 /docs/;
+    }
+    
     location /docs/ {
         alias /var/www/docs/;
         index index.html index.htm;
