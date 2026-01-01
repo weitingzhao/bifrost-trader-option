@@ -52,23 +52,36 @@ if ! python3 -m pytest --version > /dev/null 2>&1; then
     }
 fi
 
+# Run Database tests
+echo "=========================================="
+echo "DATABASE: Database Tests"
+echo "=========================================="
+run_test_suite "Database Operations" "tests/database/test_database_operations.py"
+run_test_suite "Database Integration" "tests/database/test_database_integration.py"
+
+# Run Strategy tests
+echo "=========================================="
+echo "STRATEGIES: Strategy Tests"
+echo "=========================================="
+run_test_suite "Strategy Calculations" "tests/strategies/test_strategies.py"
+
 # Run Phase 1 tests
 echo "=========================================="
 echo "PHASE 1: Foundation Tests"
 echo "=========================================="
-run_test_suite "Phase 1: Foundation" "tests/test_phase1_foundation.py"
+run_test_suite "Phase 1: Foundation" "tests/phases/test_phase1_foundation.py"
 
 # Run Phase 2 tests
 echo "=========================================="
 echo "PHASE 2: Data Infrastructure Tests"
 echo "=========================================="
-run_test_suite "Phase 2: Data Infrastructure" "tests/test_phase2_data_infrastructure.py"
+run_test_suite "Phase 2: Data Infrastructure" "tests/phases/test_phase2_data_infrastructure.py"
 
 # Run Phase 3 tests
 echo "=========================================="
 echo "PHASE 3: Enhanced Features Tests"
 echo "=========================================="
-run_test_suite "Phase 3: Enhanced Features" "tests/test_phase3_enhanced_features.py"
+run_test_suite "Phase 3: Enhanced Features" "tests/phases/test_phase3_enhanced_features.py"
 
 # Summary
 echo "=========================================="
