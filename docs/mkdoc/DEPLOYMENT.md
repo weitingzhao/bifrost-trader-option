@@ -57,7 +57,7 @@ The setup script will automatically:
 
 ```bash
 ssh vision@10.0.0.75
-sudo ~/bifrost-scripts/nginx/setup_web_server.sh
+sudo ~/bifrost-scripts/nginx/setup_nginx.sh
 ```
 
 **Note**: The script will prompt for confirmation before removing existing nginx.
@@ -243,7 +243,7 @@ scripts/docs/
 scripts/nginx/
 ├── nginx_docs.conf        # Nginx config for documentation
 ├── bifrost.conf           # Nginx config for main application
-├── setup_web_server.sh    # Initial nginx setup (run on server)
+├── setup_nginx.sh    # Initial nginx setup (run on server)
 ├── check_nginx.sh         # Check nginx status
 └── copy_setup_to_server.sh # Copy setup scripts to server
 
@@ -274,7 +274,7 @@ The deployment script automatically backs up previous versions:
 
 ## Summary
 
-1. **Initial Setup** (one-time): Run `setup_web_server.sh` on web server
+1. **Initial Setup** (one-time): Run `setup_nginx.sh` on web server
 2. **Deploy**: Run `deploy_docs.sh` from dev PC
 3. **Access**: Open `http://10.0.0.75/docs/` from any PC
 4. **Update**: Run `deploy_docs.sh` after documentation changes

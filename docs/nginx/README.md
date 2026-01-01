@@ -37,7 +37,7 @@ Nginx is used on the Web-Server (10.0.0.75) to serve:
 
 3. **Run setup:**
    ```bash
-   sudo ~/bifrost-scripts/nginx/setup_web_server.sh
+   sudo ~/bifrost-scripts/nginx/setup_nginx.sh
    ```
 
 ### Configuration Locations

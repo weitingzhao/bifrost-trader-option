@@ -10,7 +10,7 @@ PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 # Configuration
 WEB_SERVER="10.0.0.75"
 WEB_SERVER_USER="vision"
-SETUP_SCRIPT="$SCRIPT_DIR/setup_web_server.sh"
+SETUP_SCRIPT="$SCRIPT_DIR/setup_nginx.sh"
 NGINX_CHECK_SCRIPT="$SCRIPT_DIR/check_nginx.sh"
 
 cd "$PROJECT_ROOT"
@@ -43,10 +43,10 @@ ssh "$WEB_SERVER_USER@$WEB_SERVER" "mkdir -p ~/bifrost-scripts/nginx"
 
 # Copy setup script
 if [ -f "$SETUP_SCRIPT" ]; then
-    echo "📋 Copying setup_web_server.sh..."
+    echo "📋 Copying setup_nginx.sh..."
     scp "$SETUP_SCRIPT" "$WEB_SERVER_USER@$WEB_SERVER:~/bifrost-scripts/nginx/"
 else
-    echo "⚠️  Warning: setup_web_server.sh not found at $SETUP_SCRIPT"
+    echo "⚠️  Warning: setup_nginx.sh not found at $SETUP_SCRIPT"
 fi
 
 # Copy nginx check script
@@ -84,7 +84,7 @@ echo "   2. Check if nginx exists:"
 echo "      ~/bifrost-scripts/nginx/check_nginx.sh"
 echo ""
 echo "   3. Run setup (will handle nginx removal/reinstall if needed):"
-echo "      sudo ~/bifrost-scripts/nginx/setup_web_server.sh"
+echo "      sudo ~/bifrost-scripts/nginx/setup_nginx.sh"
 echo ""
 echo "=========================================="
 

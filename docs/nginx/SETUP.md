@@ -25,7 +25,7 @@ ssh vision@10.0.0.75
 ~/bifrost-scripts/nginx/check_nginx.sh
 
 # Run setup (will handle existing nginx)
-sudo ~/bifrost-scripts/nginx/setup_web_server.sh
+sudo ~/bifrost-scripts/nginx/setup_nginx.sh
 ```
 
 ### Manual Installation

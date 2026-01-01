@@ -144,7 +144,7 @@ else
     echo ""
     echo "   2. SSH into server and run setup:"
     echo "      ssh $WEB_SERVER_USER@$WEB_SERVER"
-    echo "      sudo ~/bifrost-scripts/nginx/setup_web_server.sh"
+    echo "      sudo ~/bifrost-scripts/nginx/setup_nginx.sh"
     echo ""
 fi
 
