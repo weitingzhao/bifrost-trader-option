@@ -13,7 +13,7 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 
 1. **Read the [Project Plan](PROJECT_PLAN.md)** for architecture overview
 2. **Follow [Setup Guide](setup/NEXT_STEPS.md)** for installation
-3. **Check [Database Schema Management](database/SCHEMA_MANAGEMENT.md)** for database setup
+3. **Check [Database Documentation](database/README.md)** for database setup
 4. **Review [API Development Guide](api/API_DEVELOPMENT_GUIDE.md)** for API development
 
 ## Documentation Structure
