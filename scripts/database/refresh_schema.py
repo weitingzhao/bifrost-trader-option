@@ -417,32 +417,6 @@ def generate_markdown(tables: dict, output_dir: Path):
                 f.write("---\n\n")
                 f.write("**Last Updated**: Auto-generated from schema files\n")
 
-        # Footer
-        f.write("## Related Files\n\n")
-        f.write(
-            "- **Django Models**: `app_django/apps/*/models.py` (Single Source of Truth)\n"
-        )
-        f.write("- **SQLAlchemy Models**: `src/database/models.py`\n")
-        f.write("- **App-Specific SQL Schema Files** (in `scripts/database/`):\n")
-        f.write("  - `schema_options.sql` - Options app tables\n")
-        f.write("  - `schema_strategies.sql` - Strategies app tables\n")
-        f.write("  - `schema_data_collection.sql` - Data collection app tables\n\n")
-        f.write("## Regenerating This Documentation\n\n")
-        f.write(
-            "This documentation is auto-generated from `schema_*.sql` files. To regenerate:\n\n"
-        )
-        f.write("```bash\n")
-        f.write("./scripts/database/refresh_schema.sh\n")
-        f.write("```\n\n")
-        f.write("This command will:\n")
-        f.write("1. Read all `schema_*.sql` files directly\n")
-        f.write("2. Generate this markdown documentation\n")
-        f.write(
-            "3. Verify schema synchronization (Django → SQLAlchemy → schema files)\n\n"
-        )
-        f.write("---\n\n")
-        f.write("**Last Updated**: Auto-generated from schema files\n")
-
 
 # ============================================================================
 # SCHEMA VERIFICATION FUNCTIONS
