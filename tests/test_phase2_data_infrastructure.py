@@ -67,6 +67,12 @@ class TestSQLAlchemyModels:
         
         for field in required_fields:
             assert field in columns, f"Required field {field} not found in SQLAlchemy model"
+    
+    def test_repository_module_exists(self):
+        """Verify repository module exists."""
+        from src.database.repositories.history_repo import HistoryRepository, get_history_repository
+        assert HistoryRepository is not None
+        assert callable(get_history_repository)
 
 
 class TestDataCollector:

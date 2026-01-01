@@ -102,17 +102,69 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 
 ## Database Rules
 
-### Schema Management
-- **Django is the source of truth** for database schema
-- All migrations are created in Django: `python manage.py makemigrations`
-- SQLAlchemy models must mirror Django models exactly
-- Use TimescaleDB hypertables for time-series data (option_snapshots)
+### Schema Management - CRITICAL WORKFLOW
+
+**⭐ SINGLE SOURCE OF TRUTH: `scripts/database/schema_canonical.sql`**
+
+**ALL database schema changes MUST follow this exact workflow:**
+
+```
+1. Update schema_canonical.sql (SINGLE SOURCE OF TRUTH) ⭐
+   ↓
+2. Update Django models (django_app/apps/*/models.py)
+   ↓
+3. Generate Django migrations (python manage.py makemigrations)
+   ↓
+4. Update SQLAlchemy models (src/database/models.py) to match
+   ↓
+5. Verify all three are in sync
+```
+
+**When making ANY database schema change:**
+
+1. **ALWAYS start with `scripts/database/schema_canonical.sql`**
+   - This is the authoritative schema definition
+   - Document changes in the version tracking section at the bottom
+   - Use `IF NOT EXISTS` / `IF EXISTS` for idempotent operations
+   - Include comments for new tables/columns
+
+2. **Then update Django models** in appropriate files:
+   - `django_app/apps/options/models.py` - For stocks, option_snapshots, option_contracts
+   - `django_app/apps/strategies/models.py` - For strategy_history, market_conditions
+   - `django_app/apps/data_collection/models.py` - For collection_jobs
+
+3. **Generate Django migrations:**
+   ```bash
+   cd django_app
+   python manage.py makemigrations
+   python manage.py migrate
+   ```
+
+4. **Update SQLAlchemy models** in `src/database/models.py` to match Django models exactly
+
+5. **Verify synchronization:**
+   - Canonical schema updated ✅
+   - Django models updated ✅
+   - SQLAlchemy models updated ✅
+   - Migrations generated ✅
+
+**Important Rules:**
+- ❌ **NEVER** modify Django models first - always start with canonical schema
+- ❌ **NEVER** modify SQLAlchemy models without updating canonical schema first
+- ✅ **ALWAYS** document changes in schema_canonical.sql version tracking section
+- ✅ **ALWAYS** use idempotent SQL (`IF NOT EXISTS`, `IF EXISTS`)
+- ✅ **ALWAYS** keep all three representations in sync (canonical, Django, SQLAlchemy)
+
+**Reference Documentation:**
+- Complete guide: `docs/database/SCHEMA_MANAGEMENT.md`
+- Canonical schema: `scripts/database/schema_canonical.sql`
 
 ### Database Access
 - FastAPI: Use SQLAlchemy with async engine for database access
 - Django: Use Django ORM (sync) for database access
 - Both frameworks access the same PostgreSQL database
 - Use connection pooling appropriately for each framework
+- Use TimescaleDB hypertables for time-series data (option_snapshots)
 
 ## IB Gateway Integration
 
@@ -208,6 +260,7 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 
 ## When Making Changes
 
+### General Changes
 1. **Follow the project structure** - Don't create files in wrong locations
 2. **Update imports** - Use relative imports within packages
 3. **Maintain separation** - FastAPI and Django should not import from each other
@@ -215,6 +268,36 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 5. **Update documentation** - Update relevant docs when adding features
 6. **Check linter** - Ensure no linter errors before committing
 7. **Test imports** - Verify all imports work correctly
+
+### Database Schema Changes (CRITICAL)
+**MUST follow this workflow in order:**
+
+1. **Update `scripts/database/schema_canonical.sql`** ⭐ (SINGLE SOURCE OF TRUTH)
+   - Add/modify table definitions
+   - Add indexes, constraints, comments
+   - Document changes in version tracking section
+   - Use idempotent SQL (`IF NOT EXISTS`, `IF EXISTS`)
+
+2. **Update Django models** (`django_app/apps/*/models.py`)
+   - Match canonical schema exactly
+   - Add appropriate field types and constraints
+
+3. **Generate Django migrations**
+   ```bash
+   cd django_app
+   python manage.py makemigrations
+   ```
+
+4. **Update SQLAlchemy models** (`src/database/models.py`)
+   - Mirror Django models exactly
+   - Match field types, constraints, indexes
+
+5. **Verify synchronization**
+   - All three representations match
+   - Run migrations successfully
+   - Test database operations
+
+**See `docs/database/SCHEMA_MANAGEMENT.md` for detailed examples and best practices.**
 
 ## Common Patterns
 
@@ -257,7 +340,8 @@ connector = await get_connector()
 - ❌ Don't mix FastAPI and Django imports
 - ❌ Don't create circular dependencies
 - ❌ Don't use absolute imports starting with `src.` (use relative)
-- ❌ Don't modify database schema without Django migrations
+- ❌ Don't modify database schema without following the canonical schema workflow
+- ❌ Don't modify Django or SQLAlchemy models without updating schema_canonical.sql first
 - ❌ Don't commit secrets or credentials
 - ❌ Don't create files outside the defined structure
 - ❌ Don't bypass the ORM for database access (use repositories)
