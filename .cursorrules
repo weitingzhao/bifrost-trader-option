@@ -69,7 +69,7 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 - Example: `from ..core.config import config`
 - Example: `from ...database.schemas import OptionsChain`
 
-### Django Code (django_app/)
+### Django Code (app_django/)
 - Use Django's standard import patterns
 - Import Django models: `from apps.options.models import OptionSnapshot`
 
@@ -111,7 +111,7 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 ```
 1. Update scripts/database/schema.sql (SINGLE SOURCE OF TRUTH) ⭐
    ↓
-2. Update Django models (django_app/apps/*/models.py)
+2. Update Django models (app_django/apps/*/models.py)
    ↓
 3. Generate Django migrations (python manage.py makemigrations)
    ↓
@@ -129,13 +129,13 @@ Bifrost is a professional options trading strategy analyzer system that integrat
    - Include comments for new tables/columns
 
 2. **Then update Django models** in appropriate files:
-   - `django_app/apps/options/models.py` - For stocks, option_snapshots, option_contracts
-   - `django_app/apps/strategies/models.py` - For strategy_history, market_conditions
-   - `django_app/apps/data_collection/models.py` - For collection_jobs
+   - `app_django/apps/options/models.py` - For stocks, option_snapshots, option_contracts
+   - `app_django/apps/strategies/models.py` - For strategy_history, market_conditions
+   - `app_django/apps/data_collection/models.py` - For collection_jobs
 
 3. **Generate Django migrations:**
    ```bash
-   cd django_app
+   cd app_django
    python manage.py makemigrations
    python manage.py migrate
    ```
@@ -278,13 +278,13 @@ Bifrost is a professional options trading strategy analyzer system that integrat
    - Document changes in version tracking section
    - Use idempotent SQL (`IF NOT EXISTS`, `IF EXISTS`)
 
-2. **Update Django models** (`django_app/apps/*/models.py`)
+2. **Update Django models** (`app_django/apps/*/models.py`)
    - Match canonical schema exactly
    - Add appropriate field types and constraints
 
 3. **Generate Django migrations**
    ```bash
-   cd django_app
+   cd app_django
    python manage.py makemigrations
    ```
 
