@@ -217,9 +217,12 @@ The database schema is organized into three Django apps:
 This documentation is auto-generated from `schema_all.sql`. To regenerate:
 
 ```bash
-./scripts/database/combine_schemas.sh
-./scripts/database/generate_schema_docs.sh
+./scripts/database/refresh_schema.sh
 ```
+
+This single command will:
+1. Combine all app-specific schema files into `schema_all.sql`
+2. Generate this markdown documentation
 
 ---
 

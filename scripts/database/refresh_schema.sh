@@ -113,7 +113,7 @@ echo "📝 Step 2: Generating markdown documentation..."
 echo ""
 
 # Run Python script to generate markdown
-python3 "$SCRIPT_DIR/generate_schema_docs.py"
+python3 "$SCRIPT_DIR/refresh_schema.py"
 
 echo ""
 echo "=========================================="
@@ -131,4 +131,5 @@ echo "📚 View in MkDocs:"
 echo "   mkdocs serve"
 echo "   Then navigate to: Database > SCHEMA"
 echo ""
+
 
