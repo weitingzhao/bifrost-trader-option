@@ -153,17 +153,18 @@ if [ "$IS_LOCAL" = false ]; then
         if [ "$NGINX_RUNNING" = "running" ] || [ "$NGINX_RUNNING" = "active" ]; then
             echo "✅ Nginx is installed and running"
             echo ""
-            echo "📝 Note: Configuration test requires sudo password"
+            echo "📝 Note: Some checks (like configuration test) require sudo"
             echo "   To test config, run on server: sudo nginx -t"
+            echo "   Or run script locally: sudo $REMOTE_SCRIPT_PATH"
         else
-        echo "⚠️  Nginx is installed but NOT running"
-        echo ""
-        echo "📝 To start nginx:"
-        echo "   ssh $WEB_SERVER_USER@$WEB_SERVER"
-        echo "   sudo systemctl start nginx"
-        echo ""
-        echo "💡 For full checks with sudo, run on server:"
-        echo "   $REMOTE_SCRIPT_PATH"
+            echo "⚠️  Nginx is installed but NOT running"
+            echo ""
+            echo "📝 To start nginx:"
+            echo "   ssh $WEB_SERVER_USER@$WEB_SERVER"
+            echo "   sudo systemctl start nginx"
+            echo ""
+            echo "💡 For full checks with sudo, run on server:"
+            echo "   sudo $REMOTE_SCRIPT_PATH"
         fi
         echo ""
     else
