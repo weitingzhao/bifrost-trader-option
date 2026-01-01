@@ -16,7 +16,7 @@
 --   2. Generate Django migrations (python manage.py makemigrations)
 --   3. Update SQLAlchemy models (src/database/models.py) to match Django models
 --   4. Update app-specific schema files (schema_*.sql) to match Django models
---   5. Run verify_schema.py to verify all three are in sync
+--   5. Run refresh_schema.py --verify-only to verify all three are in sync
 -- 
 -- Last Updated: 2026-01-01
 -- PostgreSQL Version: 17

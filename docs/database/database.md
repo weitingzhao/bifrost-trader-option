@@ -23,7 +23,7 @@ When making any database schema changes, follow this process:
    ↓
 4. Update scripts/database/schema.sql to match Django models
    ↓
-5. Run verify_schema.py to verify all three are in sync
+5. Run refresh_schema.py --verify-only to verify all three are in sync
 ```
 
 ### Step-by-Step Process
@@ -234,7 +234,7 @@ class Stock(models.Model):
 1. Generate Django migrations
 2. Update SQLAlchemy models to match
 3. Update schema.sql to match
-4. Run verify_schema.py to verify sync
+4. Run refresh_schema.py --verify-only to verify sync
 
 ### 2. Review Generated Migrations
 
@@ -253,7 +253,7 @@ After updating Django models:
 1. ✅ Generate and review Django migrations
 2. ✅ Update SQLAlchemy models to match
 3. ✅ Update schema.sql to match
-4. ✅ Run verify_schema.py to verify sync
+4. ✅ Run refresh_schema.py --verify-only to verify sync
 
 ### 4. Test Migrations
 
@@ -481,6 +481,6 @@ If Django migrations conflict:
 - Generate Django migrations
 - Then update SQLAlchemy models to match Django models
 - Then update schema.sql to match Django models
-- Run `verify_schema.py` to verify all three are in sync
+- Run `refresh_schema.py --verify-only` to verify all three are in sync
 - Django migrations track all schema changes
 

@@ -55,7 +55,7 @@ All database changes must follow this workflow:
 2. Generate Django migrations
 3. Update SQLAlchemy models to match Django models
 4. Update schema.sql to match Django models
-5. Run verify_schema.py to verify all three are in sync
+5. Run refresh_schema.py --verify-only to verify all three are in sync
 
 See [Database Documentation](database/database.md) for details.
 
