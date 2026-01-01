@@ -122,6 +122,7 @@ server {
     }
 }
 EOF
+fi
 
 # Enable site
 echo "🔗 Enabling nginx site..."
