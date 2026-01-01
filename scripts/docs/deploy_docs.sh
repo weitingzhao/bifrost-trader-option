@@ -11,7 +11,17 @@ PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 WEB_SERVER="10.0.0.75"
 WEB_SERVER_USER="vision"
 DOCS_DEPLOY_PATH="/var/www/docs"
-LOCAL_SITE_DIR="$PROJECT_ROOT/site"
+
+# Get site directory from mkdocs.yml or use default
+SITE_DIR="mkdocs_site"
+if [ -f "$PROJECT_ROOT/mkdocs.yml" ]; then
+    # Try to extract site_dir from mkdocs.yml
+    EXTRACTED_DIR=$(grep -E "^site_dir:" "$PROJECT_ROOT/mkdocs.yml" | sed 's/site_dir:[[:space:]]*//' | tr -d '"' | tr -d "'" || echo "")
+    if [ -n "$EXTRACTED_DIR" ]; then
+        SITE_DIR="$EXTRACTED_DIR"
+    fi
+fi
+LOCAL_SITE_DIR="$PROJECT_ROOT/$SITE_DIR"
 
 cd "$PROJECT_ROOT"
 

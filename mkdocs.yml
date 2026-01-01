@@ -3,6 +3,9 @@ site_description: Professional options trading strategy analyzer system with Int
 site_author: Bifrost Team
 site_url: http://10.0.0.75/docs
 
+# Custom output directory for built documentation
+site_dir: mkdocs_site
+
 # Repository
 repo_name: bifrost-trader-option
 repo_url: https://github.com/your-username/bifrost-trader-option
