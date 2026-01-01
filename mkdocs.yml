@@ -60,7 +60,7 @@ nav:
     - api/API_CHANGELOG.md
   
   - Database:
-    - database/HOME.md
+    - database/index.md
   
   - Nginx & Web Server:
     - nginx/README.md
