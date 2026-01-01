@@ -1,4 +1,4 @@
-# Complete Database Schema
+# Database Schema
 
 This document provides a human-readable view of the complete database schema.
 

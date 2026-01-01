@@ -1,4 +1,4 @@
-# Strategies App - Database Schema
+# Strategies Schema
 
 Strategy history and market conditions
 

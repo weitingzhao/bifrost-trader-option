@@ -194,14 +194,14 @@ def generate_markdown(tables: dict, output_dir: Path):
     """Generate markdown documentation from parsed tables, organized by app."""
     # Create output directory if it doesn't exist
     output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     # Organize tables by app
     app_tables = {
         "options": [],
         "strategies": [],
         "data_collection": [],
     }
-    
+
     for table_name, table_info in tables.items():
         app = table_info.get("app", "unknown")
         if app in app_tables:
@@ -209,7 +209,7 @@ def generate_markdown(tables: dict, output_dir: Path):
         else:
             # Fallback for tables without app info
             app_tables["options"].append((table_name, table_info))
-    
+
     # Define app order and descriptions
     app_order = [
         (
@@ -220,12 +220,12 @@ def generate_markdown(tables: dict, output_dir: Path):
         ("strategies", "Strategies App", "Strategy history and market conditions"),
         ("data_collection", "Data Collection App", "Collection job tracking"),
     ]
-    
+
     # Generate main index file
     index_file = output_dir / "SCHEMA.md"
     with open(index_file, "w") as f:
         # Header
-        f.write("# Complete Database Schema\n\n")
+        f.write("# Database Schema\n\n")
         f.write(
             "This document provides a human-readable view of the complete database schema.\n\n"
         )
@@ -241,11 +241,17 @@ def generate_markdown(tables: dict, output_dir: Path):
         f.write(
             "- **[Options App](SCHEMA_OPTIONS.md)**: Stock symbols, option snapshots, and option contracts\n"
         )
-        f.write("- **[Strategies App](SCHEMA_STRATEGIES.md)**: Strategy history and market conditions\n")
-        f.write("- **[Data Collection App](SCHEMA_DATA_COLLECTION.md)**: Collection job tracking\n\n")
+        f.write(
+            "- **[Strategies App](SCHEMA_STRATEGIES.md)**: Strategy history and market conditions\n"
+        )
+        f.write(
+            "- **[Data Collection App](SCHEMA_DATA_COLLECTION.md)**: Collection job tracking\n\n"
+        )
         f.write("---\n\n")
         f.write("## App-Specific Schema Documentation\n\n")
-        f.write("Click on the links above to view detailed schema documentation for each Django app.\n\n")
+        f.write(
+            "Click on the links above to view detailed schema documentation for each Django app.\n\n"
+        )
         f.write("---\n\n")
         f.write("## Related Files\n\n")
         f.write(
@@ -266,10 +272,12 @@ def generate_markdown(tables: dict, output_dir: Path):
         f.write("This command will:\n")
         f.write("1. Read all `schema_*.sql` files directly\n")
         f.write("2. Generate markdown documentation for each app\n")
-        f.write("3. Verify schema synchronization (Django → SQLAlchemy → schema files)\n\n")
+        f.write(
+            "3. Verify schema synchronization (Django → SQLAlchemy → schema files)\n\n"
+        )
         f.write("---\n\n")
         f.write("**Last Updated**: Auto-generated from schema files\n")
-    
+
     # Generate separate file for each app
     for app_key, app_title, app_description in app_order:
         if app_tables[app_key]:
@@ -281,7 +289,14 @@ def generate_markdown(tables: dict, output_dir: Path):
             app_file = output_dir / app_file_map[app_key]
             
             with open(app_file, "w") as f:
-                f.write(f"# {app_title} - Database Schema\n\n")
+                # Map app titles to shorter schema titles
+                schema_title_map = {
+                    "Options App": "Options Schema",
+                    "Strategies App": "Strategies Schema",
+                    "Data Collection App": "Data Collection Schema",
+                }
+                schema_title = schema_title_map.get(app_title, f"{app_title} - Database Schema")
+                f.write(f"# {schema_title}\n\n")
                 f.write(f"{app_description}\n\n")
                 f.write(
                     "> **Note:** This is an auto-generated file. The source of truth is Django models (`app_django/apps/*/models.py`).\n"
@@ -292,7 +307,7 @@ def generate_markdown(tables: dict, output_dir: Path):
                 )
                 f.write("---\n\n")
                 f.write("## Tables\n\n")
-                
+
                 # Sort tables within each app
                 for table_name, table_info in sorted(app_tables[app_key]):
                     f.write(f"### {table_name}\n\n")
@@ -399,7 +414,7 @@ def generate_markdown(tables: dict, output_dir: Path):
                         f.write("\n")
 
                     f.write("---\n\n")
-                
+
                 # Footer for app-specific file
                 f.write("## Related Files\n\n")
                 f.write(
@@ -411,7 +426,9 @@ def generate_markdown(tables: dict, output_dir: Path):
                     "strategies": "schema_strategies.sql",
                     "data_collection": "schema_data_collection.sql",
                 }
-                f.write(f"- **SQL Schema File**: `scripts/database/{schema_file_map[app_key]}`\n\n")
+                f.write(
+                    f"- **SQL Schema File**: `scripts/database/{schema_file_map[app_key]}`\n\n"
+                )
                 f.write("## Navigation\n\n")
                 f.write("- [← Back to Schema Overview](SCHEMA.md)\n\n")
                 f.write("---\n\n")

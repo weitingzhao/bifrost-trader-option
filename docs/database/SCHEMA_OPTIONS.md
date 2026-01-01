@@ -1,4 +1,4 @@
-# Options App - Database Schema
+# Options Schema
 
 Stock symbols, option snapshots, and option contracts
 

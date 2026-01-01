@@ -1,4 +1,4 @@
-# Data Collection App - Database Schema
+# Data Collection Schema
 
 Collection job tracking
 
