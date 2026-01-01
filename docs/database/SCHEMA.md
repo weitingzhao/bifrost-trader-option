@@ -4,7 +4,7 @@ This document provides a human-readable view of the complete database schema.
 
 > **Note:** This is an auto-generated file. The source of truth is Django models (`app_django/apps/*/models.py`).
 > 
-> For the raw SQL schema, see: [schema_all.sql](schema_all.sql)
+> For the raw SQL schema files, see the app-specific schema files in `scripts/database/`.
 
 ## Schema Overview
 
@@ -206,11 +206,10 @@ The database schema is organized into three Django apps:
 
 - **Django Models**: `app_django/apps/*/models.py` (Single Source of Truth)
 - **SQLAlchemy Models**: `src/database/models.py`
-- **Raw SQL Schema**: [schema_all.sql](schema_all.sql)
-- **App-Specific Schemas**:
-  - [schema_options.sql](../../scripts/database/schema_options.sql)
-  - [schema_strategies.sql](../../scripts/database/schema_strategies.sql)
-  - [schema_data_collection.sql](../../scripts/database/schema_data_collection.sql)
+- **App-Specific SQL Schema Files** (in `scripts/database/`):
+  - `schema_options.sql` - Options app tables
+  - `schema_strategies.sql` - Strategies app tables
+  - `schema_data_collection.sql` - Data collection app tables
 
 ## Regenerating This Documentation
 

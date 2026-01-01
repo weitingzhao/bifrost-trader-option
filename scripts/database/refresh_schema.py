@@ -197,7 +197,7 @@ def generate_markdown(tables: dict, output_file: Path):
             "> **Note:** This is an auto-generated file. The source of truth is Django models (`app_django/apps/*/models.py`).\n"
         )
         f.write("> \n")
-        f.write("> For the raw SQL schema, see: [schema_all.sql](schema_all.sql)\n\n")
+        f.write("> For the raw SQL schema files, see the app-specific schema files in `scripts/database/`.\n\n")
         f.write("## Schema Overview\n\n")
         f.write("The database schema is organized into three Django apps:\n\n")
         f.write(
@@ -316,15 +316,10 @@ def generate_markdown(tables: dict, output_file: Path):
             "- **Django Models**: `app_django/apps/*/models.py` (Single Source of Truth)\n"
         )
         f.write("- **SQLAlchemy Models**: `src/database/models.py`\n")
-        f.write("- **Raw SQL Schema**: [schema_all.sql](schema_all.sql)\n")
-        f.write("- **App-Specific Schemas**:\n")
-        f.write("  - [schema_options.sql](../../scripts/database/schema_options.sql)\n")
-        f.write(
-            "  - [schema_strategies.sql](../../scripts/database/schema_strategies.sql)\n"
-        )
-        f.write(
-            "  - [schema_data_collection.sql](../../scripts/database/schema_data_collection.sql)\n\n"
-        )
+        f.write("- **App-Specific SQL Schema Files** (in `scripts/database/`):\n")
+        f.write("  - `schema_options.sql` - Options app tables\n")
+        f.write("  - `schema_strategies.sql` - Strategies app tables\n")
+        f.write("  - `schema_data_collection.sql` - Data collection app tables\n\n")
         f.write("## Regenerating This Documentation\n\n")
         f.write(
             "This documentation is auto-generated from `schema_all.sql`. To regenerate:\n\n"
