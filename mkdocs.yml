@@ -1,7 +1,7 @@
 site_name: Bifrost Options Trading Strategy Analyzer
 site_description: Professional options trading strategy analyzer system with Interactive Brokers integration
 site_author: Bifrost Team
-site_url: https://your-domain.com/docs
+site_url: http://10.0.0.75/docs
 
 # Repository
 repo_name: bifrost-trader-option
@@ -42,9 +42,10 @@ plugins:
   - git-revision-date-localized:
       enable_creation_date: true
 
-# Exclude README.md from docs root (conflicts with index.md)
-exclude_docs: |
-  README.md
+# Explicitly include README.md files in subdirectories
+# (MkDocs excludes them by default when index.md exists in root)
+watch:
+  - docs
 
 # Navigation
 nav:
