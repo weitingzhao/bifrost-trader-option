@@ -63,6 +63,32 @@ if [ "$IS_LOCAL" = false ]; then
     echo "✅ Script copied to: $REMOTE_SCRIPT_PATH"
     echo ""
     
+    # Optionally try to run remotely with password prompt
+    echo "💡 You can:"
+    echo "   1. Run checks remotely (will prompt for sudo password if needed)"
+    echo "   2. SSH into server and run locally: sudo $REMOTE_SCRIPT_PATH"
+    echo ""
+    read -p "Attempt to run checks remotely now? (y/N): " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo ""
+        echo "🚀 Running checks remotely..."
+        echo ""
+        # Use ssh -t to allocate pseudo-terminal for password prompts
+        ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "$REMOTE_SCRIPT_PATH" || {
+            echo ""
+            echo "⚠️  Remote execution completed (some checks may require sudo)"
+            echo "   For full checks with sudo, run on server: sudo $REMOTE_SCRIPT_PATH"
+            echo ""
+            echo "Continuing with basic checks via SSH..."
+            echo ""
+        }
+    else
+        echo ""
+        echo "Running basic checks via SSH (no sudo)..."
+        echo ""
+    fi
+    
     # Check if nginx is installed
     echo "🔍 Checking nginx installation..."
     NGINX_INSTALLED=$(ssh "$WEB_SERVER_USER@$WEB_SERVER" "command -v nginx 2>/dev/null" || echo "")
