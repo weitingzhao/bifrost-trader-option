@@ -98,7 +98,26 @@ echo "✅ Schema files combined successfully!"
 echo "   Output: $OUTPUT_FILE"
 echo "   Size: $FILE_SIZE"
 echo ""
+
+# Copy to docs/database/ for documentation
+DOCS_DIR="$SCRIPT_DIR/../../docs/database"
+DOCS_FILE="$DOCS_DIR/schema_all.sql"
+
+if [ -d "$DOCS_DIR" ]; then
+    echo "📄 Copying to docs/database/ for documentation..."
+    cp "$OUTPUT_FILE" "$DOCS_FILE"
+    echo "   ✅ Copied to: $DOCS_FILE"
+    echo ""
+else
+    echo "⚠️  Warning: docs/database/ directory not found, skipping documentation copy"
+    echo "   Expected: $DOCS_DIR"
+    echo ""
+fi
+
 echo "📝 Usage:"
 echo "   psql -U bifrost -d options_db -f $OUTPUT_FILE"
+echo ""
+echo "📚 Documentation:"
+echo "   Schema also available at: docs/database/schema_all.sql"
 echo ""
 
