@@ -118,8 +118,8 @@ server {
     
     location /docs/ {
         alias /var/www/docs/;
-        index index.html;
-        try_files $uri $uri/ =404;
+        index index.html index.htm;
+        try_files $uri $uri/ /docs/index.html;
         
         gzip on;
         gzip_vary on;
