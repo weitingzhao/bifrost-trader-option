@@ -104,12 +104,12 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 
 ### Schema Management - CRITICAL WORKFLOW
 
-**⭐ SINGLE SOURCE OF TRUTH: `scripts/database/schema_canonical.sql`**
+**⭐ SINGLE SOURCE OF TRUTH: `scripts/database/schema.sql`**
 
 **ALL database schema changes MUST follow this exact workflow:**
 
 ```
-1. Update schema_canonical.sql (SINGLE SOURCE OF TRUTH) ⭐
+1. Update scripts/database/schema.sql (SINGLE SOURCE OF TRUTH) ⭐
    ↓
 2. Update Django models (django_app/apps/*/models.py)
    ↓
@@ -122,7 +122,7 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 
 **When making ANY database schema change:**
 
-1. **ALWAYS start with `scripts/database/schema_canonical.sql`**
+1. **ALWAYS start with `scripts/database/schema.sql`**
    - This is the authoritative schema definition
    - Document changes in the version tracking section at the bottom
    - Use `IF NOT EXISTS` / `IF EXISTS` for idempotent operations
@@ -156,8 +156,8 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 - ✅ **ALWAYS** keep all three representations in sync (canonical, Django, SQLAlchemy)
 
 **Reference Documentation:**
-- Complete guide: `docs/database/SCHEMA_MANAGEMENT.md`
-- Canonical schema: `scripts/database/schema_canonical.sql`
+- Complete guide: `docs/database/README.md` (Schema Management)
+- Canonical schema: `scripts/database/schema.sql` (Single Source of Truth)
 
 ### Database Access
 - FastAPI: Use SQLAlchemy with async engine for database access
@@ -272,7 +272,7 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 ### Database Schema Changes (CRITICAL)
 **MUST follow this workflow in order:**
 
-1. **Update `scripts/database/schema_canonical.sql`** ⭐ (SINGLE SOURCE OF TRUTH)
+1. **Update `scripts/database/schema.sql`** ⭐ (SINGLE SOURCE OF TRUTH)
    - Add/modify table definitions
    - Add indexes, constraints, comments
    - Document changes in version tracking section
@@ -297,7 +297,7 @@ Bifrost is a professional options trading strategy analyzer system that integrat
    - Run migrations successfully
    - Test database operations
 
-**See `docs/database/SCHEMA_MANAGEMENT.md` for detailed examples and best practices.**
+**See `docs/database/README.md` for detailed examples and best practices.**
 
 ## Common Patterns
 

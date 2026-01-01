@@ -1,8 +1,10 @@
-# Database Schema Management Guide
+# Database Documentation
+
+This directory contains all database-related documentation for the Bifrost project.
 
 ## Single Source of Truth
 
-**`scripts/database/schema_canonical.sql`** is the **single source of truth** for the database schema.
+**`scripts/database/schema.sql`** is the **single source of truth** for the database schema.
 
 This file contains the complete, authoritative database schema definition that all other schema representations must match.
 
@@ -13,7 +15,7 @@ This file contains the complete, authoritative database schema definition that a
 When making any database schema changes, follow this process:
 
 ```
-1. Update schema_canonical.sql (SINGLE SOURCE OF TRUTH)
+1. Update scripts/database/schema.sql (SINGLE SOURCE OF TRUTH)
    ↓
 2. Update Django models (django_app/apps/*/models.py)
    ↓
@@ -28,7 +30,7 @@ When making any database schema changes, follow this process:
 
 #### 1. Update Canonical Schema
 
-Edit `scripts/database/schema_canonical.sql`:
+Edit `scripts/database/schema.sql`:
 
 ```sql
 -- Add your changes here
@@ -92,7 +94,7 @@ Run the verification script:
 ```
 
 Or manually compare:
-- `scripts/database/schema_canonical.sql` (source of truth)
+- `scripts/database/schema.sql` (source of truth)
 - Django models in `django_app/apps/*/models.py`
 - SQLAlchemy models in `src/database/models.py`
 
@@ -100,7 +102,7 @@ Or manually compare:
 
 ### Primary Files
 
-1. **`scripts/database/schema_canonical.sql`** ⭐ **SINGLE SOURCE OF TRUTH**
+1. **`scripts/database/schema.sql`** ⭐ **SINGLE SOURCE OF TRUTH**
    - Complete, authoritative schema definition
    - All changes start here
    - Includes indexes, constraints, comments
@@ -129,7 +131,7 @@ Or manually compare:
 
 ## Version Tracking
 
-All schema changes must be documented in `schema_canonical.sql`:
+All schema changes must be documented in `scripts/database/schema.sql`:
 
 ```sql
 -- Version 1.1.0 (2026-01-15)
@@ -205,7 +207,7 @@ After any change, verify:
 
 ### Adding a New Table
 
-1. Add to `schema_canonical.sql`:
+1. Add to `scripts/database/schema.sql`:
 ```sql
 CREATE TABLE IF NOT EXISTS new_table (
     id SERIAL PRIMARY KEY,
@@ -232,7 +234,7 @@ class NewTable(Base):
 
 ### Adding a Column
 
-1. Update `schema_canonical.sql`:
+1. Update `scripts/database/schema.sql`:
 ```sql
 ALTER TABLE stocks ADD COLUMN IF NOT EXISTS new_column VARCHAR(50);
 ```
@@ -249,7 +251,7 @@ new_column = Column(String(50), nullable=True)
 
 ### Adding an Index
 
-1. Update `schema_canonical.sql`:
+1. Update `scripts/database/schema.sql`:
 ```sql
 CREATE INDEX IF NOT EXISTS idx_stocks_new_column ON stocks(new_column);
 ```
@@ -279,7 +281,7 @@ __table_args__ = (
 
 # Export and compare schemas
 ./scripts/database/export_schema.sh
-diff scripts/database/schema_canonical.sql scripts/database/schema_sqlalchemy.sql
+diff scripts/database/schema.sql scripts/database/schema_sqlalchemy.sql
 ```
 
 ### Manual Verification
@@ -299,7 +301,7 @@ If schemas get out of sync:
 1. **Identify the difference:**
    ```bash
    ./scripts/database/export_schema.sh
-   diff scripts/database/schema_canonical.sql scripts/database/schema_sqlalchemy.sql
+   diff scripts/database/schema.sql scripts/database/schema_sqlalchemy.sql
    ```
 
 2. **Fix canonical schema first** (source of truth)
@@ -322,7 +324,7 @@ If Django migrations conflict:
 ## Summary
 
 **Remember:**
-- ⭐ `schema_canonical.sql` is the **SINGLE SOURCE OF TRUTH**
+- ⭐ `scripts/database/schema.sql` is the **SINGLE SOURCE OF TRUTH**
 - Always update canonical schema first
 - Then update Django models
 - Then update SQLAlchemy models

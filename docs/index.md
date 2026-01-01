@@ -26,7 +26,7 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 - **[API Changelog](api/API_CHANGELOG.md)** - API version tracking
 
 ### 🗄️ Database
-- **[Schema Management](database/SCHEMA_MANAGEMENT.md)** ⭐ - Database schema change workflow (SINGLE SOURCE OF TRUTH)
+- **[Database Documentation](database/README.md)** ⭐ - Database schema management and guides (SINGLE SOURCE OF TRUTH)
 
 ### 🧪 Testing
 - **[Test Strategy](testing/TEST_STRATEGY.md)** - Comprehensive test strategies
@@ -51,13 +51,13 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 **⭐ Single Source of Truth:** `scripts/database/schema_canonical.sql`
 
 All database changes must follow this workflow:
-1. Update `schema_canonical.sql` (SINGLE SOURCE OF TRUTH)
+1. Update `scripts/database/schema.sql` (SINGLE SOURCE OF TRUTH)
 2. Update Django models
 3. Generate Django migrations
 4. Update SQLAlchemy models
 5. Verify all are in sync
 
-See [Schema Management Guide](database/SCHEMA_MANAGEMENT.md) for details.
+See [Database Documentation](database/README.md) for details.
 
 ### Architecture
 
@@ -70,7 +70,7 @@ See [Schema Management Guide](database/SCHEMA_MANAGEMENT.md) for details.
 
 - Check the [Project Plan](PROJECT_PLAN.md) for architecture decisions
 - Review [API Development Guide](api/API_DEVELOPMENT_GUIDE.md) for API questions
-- See [Database Schema Management](database/SCHEMA_MANAGEMENT.md) for database changes
+- See [Database Documentation](database/README.md) for database changes
 - Check [Test Strategy](testing/TEST_STRATEGY.md) for testing guidance
 
 ## Contributing

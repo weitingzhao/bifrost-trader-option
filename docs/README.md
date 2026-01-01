@@ -13,7 +13,7 @@ This directory contains all project documentation organized by category.
 - **[api/API_CHANGELOG.md](api/API_CHANGELOG.md)** - API version tracking
 
 ### Database Documentation
-- **[database/SCHEMA_MANAGEMENT.md](database/SCHEMA_MANAGEMENT.md)** ⭐ - Database schema change workflow (SINGLE SOURCE OF TRUTH)
+- **[database/README.md](database/README.md)** ⭐ - Database schema management and guides (SINGLE SOURCE OF TRUTH)
 - **[database/DATABASE_CONNECTION_DBEAVER.md](database/DATABASE_CONNECTION_DBEAVER.md)** - Complete guide for connecting to PostgreSQL using DBeaver
 - **[database/DATABASE_VERIFICATION.md](database/DATABASE_VERIFICATION.md)** - Guide for verifying database tables and schema
 - **[database/REINSTALL_POSTGRESQL.md](database/REINSTALL_POSTGRESQL.md)** - Guide for completely removing and reinstalling PostgreSQL
@@ -60,11 +60,11 @@ You can also read the markdown files directly in your editor or on GitHub.
 ### Getting Started
 1. Read [PROJECT_PLAN.md](PROJECT_PLAN.md) for architecture overview
 2. Follow [setup/NEXT_STEPS.md](setup/NEXT_STEPS.md) for implementation
-3. Check [database/SCHEMA_MANAGEMENT.md](database/SCHEMA_MANAGEMENT.md) for database setup
+3. Check [database/README.md](database/README.md) for database setup
 
 ### Database Schema Changes
-- ⭐ **Single Source of Truth:** `scripts/database/schema_canonical.sql`
-- See [database/SCHEMA_MANAGEMENT.md](database/SCHEMA_MANAGEMENT.md) for workflow
+- ⭐ **Single Source of Truth:** `scripts/database/schema.sql`
+- See [database/README.md](database/README.md) for workflow
 
 ### Development
 - See [api/API_DEVELOPMENT_GUIDE.md](api/API_DEVELOPMENT_GUIDE.md) for API development

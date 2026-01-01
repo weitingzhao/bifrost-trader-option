@@ -52,7 +52,7 @@ nav:
     - api/API_CHANGELOG.md
   
   - Database:
-    - database/SCHEMA_MANAGEMENT.md
+    - database/README.md
   
   - Testing:
     - testing/TEST_STRATEGY.md
