@@ -108,20 +108,22 @@ ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
     sudo chmod -R 755 $DOCS_DEPLOY_PATH
 "
 
-# Create nginx configuration
-echo "⚙️  Creating nginx configuration..."
-# Copy template if available, otherwise create inline
+# Deploy nginx configurations
+echo "⚙️  Deploying nginx configurations..."
+echo "💡 This requires sudo (will prompt for password)"
+
+# Deploy nginx_docs.conf
 if [ -f "$SCRIPT_DIR/nginx_docs.conf" ]; then
-    echo "   Using template: $SCRIPT_DIR/nginx_docs.conf"
+    echo "   📋 Deploying nginx_docs.conf..."
     scp "$SCRIPT_DIR/nginx_docs.conf" "$WEB_SERVER_USER@$WEB_SERVER:/tmp/nginx_docs.conf"
-    echo "💡 Copying config requires sudo (will prompt for password)"
     ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
         sudo cp /tmp/nginx_docs.conf $NGINX_CONFIG
+        sudo chmod 644 $NGINX_CONFIG
         rm /tmp/nginx_docs.conf
+        echo '✅ nginx_docs.conf deployed'
     "
 else
-    echo "   Creating configuration inline (template not found)"
-    echo "💡 Creating config requires sudo (will prompt for password)"
+    echo "   ⚠️  Warning: nginx_docs.conf not found, creating inline..."
     ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "sudo tee $NGINX_CONFIG > /dev/null" << 'EOF'
 server {
     listen 80;
@@ -154,17 +156,46 @@ server {
     }
 }
 EOF
+    ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "sudo chmod 644 $NGINX_CONFIG"
 fi
 
-# Enable site
+# Deploy bifrost.conf (optional, for future use)
+if [ -f "$SCRIPT_DIR/bifrost.conf" ]; then
+    echo "   📋 Deploying bifrost.conf..."
+    scp "$SCRIPT_DIR/bifrost.conf" "$WEB_SERVER_USER@$WEB_SERVER:/tmp/bifrost.conf"
+    ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
+        sudo cp /tmp/bifrost.conf /etc/nginx/sites-available/bifrost
+        sudo chmod 644 /etc/nginx/sites-available/bifrost
+        rm /tmp/bifrost.conf
+        echo '✅ bifrost.conf deployed (not enabled by default)'
+    "
+fi
+
+# Enable site and remove conflicting configs
 echo "🔗 Enabling nginx site..."
 echo "💡 This requires sudo (will prompt for password)"
 ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
+    # Remove default site if it exists
+    if [ -L /etc/nginx/sites-enabled/default ]; then
+        sudo rm /etc/nginx/sites-enabled/default
+        echo '✅ Removed default site'
+    fi
+    
+    # Enable docs site
     if [ ! -L /etc/nginx/sites-enabled/docs ]; then
         sudo ln -s $NGINX_CONFIG /etc/nginx/sites-enabled/
         echo '✅ Docs site enabled'
     else
-        echo '✅ Docs site already enabled'
+        # Remove old symlink and create new one to ensure it points to correct config
+        sudo rm /etc/nginx/sites-enabled/docs
+        sudo ln -s $NGINX_CONFIG /etc/nginx/sites-enabled/
+        echo '✅ Docs site re-enabled with latest config'
+    fi
+    
+    # Disable bifrost site if it exists (to avoid conflicts)
+    if [ -L /etc/nginx/sites-enabled/bifrost ]; then
+        sudo rm /etc/nginx/sites-enabled/bifrost
+        echo '⚠️  Bifrost site disabled (can be enabled later if needed)'
     fi
 "
 
