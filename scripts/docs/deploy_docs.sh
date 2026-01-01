@@ -89,7 +89,7 @@ echo "🌐 To access from other PCs:"
 echo "   http://10.0.0.75/docs/"
 echo ""
 echo "📝 Next steps:"
-echo "   1. Configure nginx on web server (see scripts/docs/nginx_docs.conf)"
+echo "   1. Configure nginx on web server (see scripts/nginx/nginx_docs.conf)"
 echo "   2. Test access from another PC"
 echo ""
 

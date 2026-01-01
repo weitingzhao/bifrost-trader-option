@@ -83,7 +83,12 @@ chmod -R 755 "$DOCS_DEPLOY_PATH"
 
 # Create nginx configuration
 echo "⚙️  Creating nginx configuration..."
-cat > "$NGINX_CONFIG" << 'EOF'
+# Use template from scripts/nginx/ if available, otherwise create inline
+if [ -f "$SCRIPT_DIR/../nginx/nginx_docs.conf" ]; then
+    cp "$SCRIPT_DIR/../nginx/nginx_docs.conf" "$NGINX_CONFIG"
+else
+    # Fallback: create configuration inline
+    cat > "$NGINX_CONFIG" << 'EOF'
 server {
     listen 80;
     server_name 10.0.0.75;

@@ -100,7 +100,7 @@ ssh vision@10.0.0.75 "sudo chown -R www-data:www-data /var/www/docs && sudo chmo
 ## Nginx Configuration
 
 The nginx configuration is located at:
-- Template: `scripts/docs/nginx_docs.conf`
+- Template: `scripts/nginx/nginx_docs.conf`
 - Server: `/etc/nginx/sites-available/docs`
 
 ### Configuration Details
@@ -208,7 +208,7 @@ For secure access, configure HTTPS:
 3. Configure firewall for port 443
 4. Access via `https://10.0.0.75/docs/`
 
-See `scripts/docs/nginx_docs.conf` for HTTPS example configuration.
+See `scripts/nginx/nginx_docs.conf` for HTTPS example configuration.
 
 ## Automated Deployment
 
@@ -240,7 +240,16 @@ scripts/docs/
 ├── build_docs.sh          # Build documentation locally
 ├── deploy_docs.sh          # Deploy to web server
 ├── setup_web_server.sh     # Initial nginx setup (run on server)
-└── nginx_docs.conf        # Nginx configuration template
+└── copy_setup_to_server.sh # Copy scripts to server
+
+scripts/nginx/
+├── nginx_docs.conf        # Nginx config for documentation
+└── bifrost.conf           # Nginx config for main application
+
+docs/nginx/
+├── README.md              # Nginx overview
+├── SETUP.md               # Setup guide
+└── CONFIGURATION.md       # Configuration reference
 
 site/                       # Built documentation (generated)
 └── index.html             # Documentation homepage
