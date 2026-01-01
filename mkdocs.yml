@@ -61,6 +61,7 @@ nav:
   
   - Database:
     - database/database.md
+    - database/DJANGO_VS_SQLALCHEMY.md
   
   - Nginx & Web Server:
     - nginx/README.md

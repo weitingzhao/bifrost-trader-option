@@ -321,6 +321,38 @@ If Django migrations conflict:
 3. Update SQLAlchemy models to match
 4. Test thoroughly before applying
 
+## Django ORM vs SQLAlchemy ORM
+
+This project uses **both Django ORM and SQLAlchemy ORM** to access the same database. Both are Object-Relational Mapping (ORM) frameworks, but they use different patterns and syntax.
+
+### Understanding ORM
+
+**Object-Relational Mapping (ORM)** is a technique that:
+- Maps database tables to Python classes
+- Maps table rows to class instances
+- Maps table columns to class attributes
+- Provides Python methods to query/manipulate data instead of raw SQL
+
+### Key Differences
+
+| Aspect | Django ORM | SQLAlchemy |
+|--------|------------|------------|
+| **Pattern** | Active Record | Data Mapper |
+| **Inheritance** | `models.Model` | `Base` |
+| **Query Syntax** | `Model.objects.filter()` | `session.query(Model).filter()` |
+| **Async Support** | Limited | Full async support |
+| **Migration System** | Built-in | Alembic (separate) |
+| **Use Case** | Admin interface, migrations | FastAPI async operations |
+
+### Why Both?
+
+- **Django ORM** (Port 8001): Admin interface, migrations, management commands
+- **SQLAlchemy** (Port 8000): FastAPI async support, high-performance queries
+
+### Side-by-Side Comparison
+
+See **[DJANGO_VS_SQLALCHEMY.md](DJANGO_VS_SQLALCHEMY.md)** for detailed side-by-side model comparisons, query syntax examples, and mapping reference.
+
 ## Summary
 
 **Remember:**
@@ -330,4 +362,5 @@ If Django migrations conflict:
 - Then update SQLAlchemy models
 - Verify all three are in sync
 - Document all changes in version tracking
+- Both Django ORM and SQLAlchemy are ORM frameworks but use different patterns
 
