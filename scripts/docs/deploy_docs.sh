@@ -79,33 +79,38 @@ fi
 echo "✅ SSH connection successful"
 echo ""
 
-# Ensure remote directory exists and has correct permissions (with password prompt)
-echo "📁 Ensuring remote directory exists..."
-echo "💡 This requires sudo privileges (will prompt for password)"
+# Ask for sudo password once
+echo "🔐 Sudo password required for deployment"
+read -s -p "Enter sudo password: " SUDO_PASSWORD
 echo ""
-ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
-    sudo mkdir -p $DOCS_DEPLOY_PATH
-    sudo chown $WEB_SERVER_USER:$WEB_SERVER_USER $DOCS_DEPLOY_PATH
-    sudo chmod 755 $DOCS_DEPLOY_PATH
-    echo '✅ Directory ready: $DOCS_DEPLOY_PATH'
-" || {
+echo "✅ Password captured (will be used for all sudo operations)"
+echo ""
+
+# Ensure remote directory exists and has correct permissions
+echo "📁 Ensuring remote directory exists..."
+ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "SUDO_PASS='$SUDO_PASSWORD' bash -c '
+    echo \"\$SUDO_PASS\" | sudo -S mkdir -p $DOCS_DEPLOY_PATH
+    echo \"\$SUDO_PASS\" | sudo -S chown $WEB_SERVER_USER:$WEB_SERVER_USER $DOCS_DEPLOY_PATH
+    echo \"\$SUDO_PASS\" | sudo -S chmod 755 $DOCS_DEPLOY_PATH
+    echo \"✅ Directory ready: $DOCS_DEPLOY_PATH\"
+'" || {
     echo "⚠️  Warning: Could not create directory"
     echo "   Run ./scripts/nginx/setup_app_mkdocs.sh first to setup directory"
     exit 1
 }
 
-# Backup existing docs if they exist (with password prompt)
+# Backup existing docs if they exist
 echo "💾 Backing up existing documentation..."
-ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
+ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "SUDO_PASS='$SUDO_PASSWORD' bash -c '
     if [ -d $DOCS_DEPLOY_PATH ] && [ \"\$(ls -A $DOCS_DEPLOY_PATH 2>/dev/null)\" ]; then
         BACKUP_DIR=${DOCS_DEPLOY_PATH}.backup.\$(date +%Y%m%d_%H%M%S)
-        sudo mv $DOCS_DEPLOY_PATH \$BACKUP_DIR 2>/dev/null || true
+        echo \"\$SUDO_PASS\" | sudo -S mv $DOCS_DEPLOY_PATH \$BACKUP_DIR 2>/dev/null || true
         echo \"✅ Backed up to: \$BACKUP_DIR\"
     fi
-    sudo mkdir -p $DOCS_DEPLOY_PATH
-    sudo chown $WEB_SERVER_USER:$WEB_SERVER_USER $DOCS_DEPLOY_PATH
-    sudo chmod 755 $DOCS_DEPLOY_PATH
-"
+    echo \"\$SUDO_PASS\" | sudo -S mkdir -p $DOCS_DEPLOY_PATH
+    echo \"\$SUDO_PASS\" | sudo -S chown $WEB_SERVER_USER:$WEB_SERVER_USER $DOCS_DEPLOY_PATH
+    echo \"\$SUDO_PASS\" | sudo -S chmod 755 $DOCS_DEPLOY_PATH
+'"
 
 # Deploy files
 echo "🚀 Deploying documentation..."
@@ -122,13 +127,13 @@ echo "🔍 Verifying deployment..."
 FILE_COUNT=$(ssh "$WEB_SERVER_USER@$WEB_SERVER" "find $DOCS_DEPLOY_PATH -type f | wc -l" || echo "0")
 echo "   Files deployed: $FILE_COUNT"
 
-# Set proper permissions (with password prompt)
+# Set proper permissions
 echo "🔐 Setting permissions for nginx..."
-ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
-    sudo chown -R www-data:www-data $DOCS_DEPLOY_PATH
-    sudo chmod -R 755 $DOCS_DEPLOY_PATH
-    echo '✅ Permissions set correctly'
-"
+ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "SUDO_PASS='$SUDO_PASSWORD' bash -c '
+    echo \"\$SUDO_PASS\" | sudo -S chown -R www-data:www-data $DOCS_DEPLOY_PATH
+    echo \"\$SUDO_PASS\" | sudo -S chmod -R 755 $DOCS_DEPLOY_PATH
+    echo \"✅ Permissions set correctly\"
+'"
 
 echo ""
 echo "✅ Deployment complete!"
