@@ -1,0 +1,116 @@
+site_name: Bifrost Options Trading Strategy Analyzer
+site_description: Professional options trading strategy analyzer system with Interactive Brokers integration
+site_author: Bifrost Team
+site_url: https://your-domain.com/docs
+
+# Repository
+repo_name: bifrost-trader-option
+repo_url: https://github.com/your-username/bifrost-trader-option
+edit_uri: edit/main/docs/
+
+# Theme
+theme:
+  name: material
+  palette:
+    # Light mode
+    - scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.annotate
+    - content.code.copy
+
+# Plugins
+plugins:
+  - search
+  - git-revision-date-localized:
+      enable_creation_date: true
+
+# Navigation
+nav:
+  - Home: index.md
+  - Project Plan: PROJECT_PLAN.md
+  
+  - API Documentation:
+    - api/API_DEVELOPMENT_GUIDE.md
+    - api/API_CHANGELOG.md
+  
+  - Database:
+    - database/SCHEMA_MANAGEMENT.md
+    - database/DATABASE_CONNECTION_DBEAVER.md
+    - database/DATABASE_VERIFICATION.md
+    - database/DATABASE_SERVER_INFO.md
+    - database/DBEAVER_CONNECTION_QUICK_REFERENCE.md
+    - database/EXPORT_SCHEMA_GUIDE.md
+    - database/DATABASE_SCHEMA_EXPORT.md
+    - database/REINSTALL_POSTGRESQL.md
+  
+  - Testing:
+    - testing/TEST_STRATEGY.md
+    - testing/TEST_DATABASE_COVERAGE.md
+    - testing/TEST_FIXES.md
+    - testing/TEST_WARNINGS_FIXED.md
+    - testing/TEST_AND_SCHEMA_SUMMARY.md
+  
+  - Setup & Installation:
+    - setup/NEXT_STEPS.md
+    - setup/SETUP_COMPLETE.md
+    - setup/README.md
+  
+  - Development:
+    - development/PHASE1_RESTRUCTURE.md
+    - development/STRUCTURE_VERIFICATION.md
+    - development/README.md
+  
+  - Status & Progress:
+    - status/IMPLEMENTATION_COMPLETE.md
+    - status/IMPLEMENTATION_STATUS.md
+    - status/PHASE1_COMPLETE.md
+    - status/PHASE1_STATUS.md
+    - status/PHASE3_VECTORBT_COMPLETE.md
+    - status/README.md
+
+# Markdown extensions
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+
+# Extra
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/your-username/bifrost-trader-option
+  version:
+    provider: mike
+
