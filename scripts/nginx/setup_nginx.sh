@@ -60,10 +60,14 @@ if [ -n "$NGINX_INSTALLED" ]; then
     
     echo ""
     echo "🛑 Stopping nginx service..."
-    ssh "$WEB_SERVER_USER@$WEB_SERVER" "sudo systemctl stop nginx 2>/dev/null || sudo service nginx stop 2>/dev/null || true"
+    echo "💡 This requires sudo privileges (will prompt for password)"
+    ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
+        sudo systemctl stop nginx 2>/dev/null || sudo service nginx stop 2>/dev/null || true
+    "
     
     echo "🗑️  Removing nginx..."
-    ssh "$WEB_SERVER_USER@$WEB_SERVER" "
+    echo "💡 This requires sudo privileges (will prompt for password)"
+    ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
         if command -v apt-get &> /dev/null; then
             sudo apt-get remove --purge -y nginx nginx-common nginx-core 2>/dev/null || true
             sudo apt-get autoremove -y 2>/dev/null || true
@@ -89,14 +93,16 @@ fi
 
 # Install nginx fresh
 echo "📦 Installing nginx..."
-ssh "$WEB_SERVER_USER@$WEB_SERVER" "
+echo "💡 This requires sudo privileges (will prompt for password)"
+ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
     sudo apt-get update
     sudo apt-get install -y nginx
 "
 
 # Create docs directory
 echo "📁 Creating documentation directory..."
-ssh "$WEB_SERVER_USER@$WEB_SERVER" "
+echo "💡 This requires sudo privileges (will prompt for password)"
+ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
     sudo mkdir -p $DOCS_DEPLOY_PATH
     sudo chown -R www-data:www-data $DOCS_DEPLOY_PATH
     sudo chmod -R 755 $DOCS_DEPLOY_PATH
@@ -108,10 +114,15 @@ echo "⚙️  Creating nginx configuration..."
 if [ -f "$SCRIPT_DIR/nginx_docs.conf" ]; then
     echo "   Using template: $SCRIPT_DIR/nginx_docs.conf"
     scp "$SCRIPT_DIR/nginx_docs.conf" "$WEB_SERVER_USER@$WEB_SERVER:/tmp/nginx_docs.conf"
-    ssh "$WEB_SERVER_USER@$WEB_SERVER" "sudo cp /tmp/nginx_docs.conf $NGINX_CONFIG && rm /tmp/nginx_docs.conf"
+    echo "💡 Copying config requires sudo (will prompt for password)"
+    ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
+        sudo cp /tmp/nginx_docs.conf $NGINX_CONFIG
+        rm /tmp/nginx_docs.conf
+    "
 else
     echo "   Creating configuration inline (template not found)"
-    ssh "$WEB_SERVER_USER@$WEB_SERVER" "sudo tee $NGINX_CONFIG > /dev/null" << 'EOF'
+    echo "💡 Creating config requires sudo (will prompt for password)"
+    ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "sudo tee $NGINX_CONFIG > /dev/null" << 'EOF'
 server {
     listen 80;
     server_name 10.0.0.75;
@@ -147,15 +158,20 @@ fi
 
 # Enable site
 echo "🔗 Enabling nginx site..."
-ssh "$WEB_SERVER_USER@$WEB_SERVER" "
+echo "💡 This requires sudo (will prompt for password)"
+ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
     if [ ! -L /etc/nginx/sites-enabled/docs ]; then
         sudo ln -s $NGINX_CONFIG /etc/nginx/sites-enabled/
+        echo '✅ Docs site enabled'
+    else
+        echo '✅ Docs site already enabled'
     fi
 "
 
 # Test nginx configuration
 echo "🧪 Testing nginx configuration..."
-if ssh "$WEB_SERVER_USER@$WEB_SERVER" "sudo nginx -t"; then
+echo "💡 This requires sudo (will prompt for password)"
+if ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "sudo nginx -t"; then
     echo "✅ Nginx configuration is valid"
 else
     echo "❌ Error: Nginx configuration test failed"
@@ -164,10 +180,12 @@ fi
 
 # Start/reload nginx
 echo "🔄 Starting nginx..."
-ssh "$WEB_SERVER_USER@$WEB_SERVER" "
+echo "💡 This requires sudo (will prompt for password)"
+ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
     sudo systemctl enable nginx
     sudo systemctl start nginx
     sudo systemctl reload nginx 2>/dev/null || true
+    echo '✅ Nginx started and enabled'
 "
 
 # Verify nginx is running
