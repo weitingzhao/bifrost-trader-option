@@ -256,71 +256,71 @@ def generate_markdown(tables: dict, output_file: Path):
                     f.write("|------------|------|-------------|-------------|\n")
 
                     for col in table_info["columns"]:
-                constraints_str = (
-                    ", ".join(col["constraints"]) if col["constraints"] else "-"
-                )
+                        constraints_str = (
+                            ", ".join(col["constraints"]) if col["constraints"] else "-"
+                        )
 
-                # Add description based on column name and type
-                desc = ""
-                if col["name"].endswith("_id") and col["name"] != "id":
-                    desc = "Foreign key reference"
-                elif col["name"] == "id":
-                    desc = "Primary key"
-                elif col["name"] in [
-                    "created_at",
-                    "updated_at",
-                    "timestamp",
-                    "started_at",
-                    "completed_at",
-                ]:
-                    desc = "Timestamp"
-                elif (
-                    "JSONB" in col["full_def"].upper()
-                    or "JSON" in col["full_def"].upper()
-                ):
-                    desc = "JSON data"
-                elif col["name"] in [
-                    "symbol",
-                    "name",
-                    "sector",
-                    "industry",
-                    "error_message",
-                ]:
-                    desc = "Text field"
-                elif col["name"] in [
-                    "price",
-                    "bid",
-                    "ask",
-                    "strike",
-                    "underlying_price",
-                    "sp500_price",
-                    "entry_cost",
-                    "max_profit",
-                    "max_loss",
-                ]:
-                    desc = "Price/numeric value"
-                elif col["name"] in [
-                    "delta",
-                    "gamma",
-                    "theta",
-                    "vega",
-                    "implied_volatility",
-                    "vix",
-                ]:
-                    desc = "Option Greek / Volatility"
-                elif col["name"] in ["volume", "open_interest", "records_collected"]:
-                    desc = "Integer count"
-                elif col["name"] in [
-                    "status",
-                    "job_type",
-                    "strategy_type",
-                    "option_type",
-                    "market_trend",
-                    "volatility_regime",
-                ]:
-                    desc = "Categorical value"
-                else:
-                    desc = "-"
+                        # Add description based on column name and type
+                        desc = ""
+                        if col["name"].endswith("_id") and col["name"] != "id":
+                            desc = "Foreign key reference"
+                        elif col["name"] == "id":
+                            desc = "Primary key"
+                        elif col["name"] in [
+                            "created_at",
+                            "updated_at",
+                            "timestamp",
+                            "started_at",
+                            "completed_at",
+                        ]:
+                            desc = "Timestamp"
+                        elif (
+                            "JSONB" in col["full_def"].upper()
+                            or "JSON" in col["full_def"].upper()
+                        ):
+                            desc = "JSON data"
+                        elif col["name"] in [
+                            "symbol",
+                            "name",
+                            "sector",
+                            "industry",
+                            "error_message",
+                        ]:
+                            desc = "Text field"
+                        elif col["name"] in [
+                            "price",
+                            "bid",
+                            "ask",
+                            "strike",
+                            "underlying_price",
+                            "sp500_price",
+                            "entry_cost",
+                            "max_profit",
+                            "max_loss",
+                        ]:
+                            desc = "Price/numeric value"
+                        elif col["name"] in [
+                            "delta",
+                            "gamma",
+                            "theta",
+                            "vega",
+                            "implied_volatility",
+                            "vix",
+                        ]:
+                            desc = "Option Greek / Volatility"
+                        elif col["name"] in ["volume", "open_interest", "records_collected"]:
+                            desc = "Integer count"
+                        elif col["name"] in [
+                            "status",
+                            "job_type",
+                            "strategy_type",
+                            "option_type",
+                            "market_trend",
+                            "volatility_regime",
+                        ]:
+                            desc = "Categorical value"
+                        else:
+                            desc = "-"
 
                         f.write(
                             f"| `{col['name']}` | `{col['type']}` | {constraints_str} | {desc} |\n"

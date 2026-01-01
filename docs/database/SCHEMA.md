@@ -16,60 +16,17 @@ The database schema is organized into three Django apps:
 
 ---
 
-## collection_jobs
+## Options App
 
-**Description:** collection_jobs table
+Stock symbols, option snapshots, and option contracts
 
-### Columns
+### Tables
 
-| Column Name | Type | Constraints | Description |
-|------------|------|-------------|-------------|
-| `id` | `SERIAL` | PRIMARY KEY | Primary key |
-| `job_type` | `VARCHAR(50)` | NOT NULL | Categorical value |
-| `symbol` | `VARCHAR(10)` | - | Text field |
-| `status` | `VARCHAR(20)` | NOT NULL | Categorical value |
-| `started_at` | `TIMESTAMP WITH` | - | Timestamp |
-| `completed_at` | `TIMESTAMP WITH` | - | Timestamp |
-| `created_at` | `TIMESTAMP WITH` | HAS DEFAULT | Timestamp |
-| `records_collected` | `INTEGER` | - | Integer count |
-| `error_message` | `TEXT` | - | Text field |
-
-### Indexes
-
-- `status`
-- `job_type`
-- `symbol`
-- `created_at`
-
----
-
-## market_conditions
-
-**Description:** market_conditions table
-
-### Columns
-
-| Column Name | Type | Constraints | Description |
-|------------|------|-------------|-------------|
-| `id` | `SERIAL` | PRIMARY KEY | Primary key |
-| `timestamp` | `TIMESTAMP WITH` | NOT NULL, HAS DEFAULT | Timestamp |
-| `sp500_price` | `DOUBLE PRECISION` | - | Price/numeric value |
-| `vix` | `DOUBLE PRECISION` | - | Option Greek / Volatility |
-| `market_trend` | `VARCHAR(20)` | - | Categorical value |
-| `volatility_regime` | `VARCHAR(20)` | - | Categorical value |
-| `meta_data` | `JSONB` | - | JSON data |
-
-### Indexes
-
-- `timestamp`
-
----
-
-## option_contracts
+#### option_contracts
 
 **Description:** option_contracts table
 
-### Columns
+**Columns:**
 
 | Column Name | Type | Constraints | Description |
 |------------|------|-------------|-------------|
@@ -94,11 +51,11 @@ The database schema is organized into three Django apps:
 | `timestamp` | `TIMESTAMP WITH` | NOT NULL | Timestamp |
 | `created_at` | `TIMESTAMP WITH` | HAS DEFAULT | Timestamp |
 
-### Foreign Keys
+**Foreign Keys:**
 
 - `snapshot_id` → `option_snapshots.id`
 
-### Indexes
+**Indexes:**
 
 - `snapshot_id`
 - `symbol`
@@ -108,11 +65,11 @@ The database schema is organized into three Django apps:
 
 ---
 
-## option_snapshots
+#### option_snapshots
 
 **Description:** option_snapshots table
 
-### Columns
+**Columns:**
 
 | Column Name | Type | Constraints | Description |
 |------------|------|-------------|-------------|
@@ -126,11 +83,11 @@ The database schema is organized into three Django apps:
 | `strike_range` | `JSONB` | - | JSON data |
 | `created_at` | `TIMESTAMP WITH` | HAS DEFAULT | Timestamp |
 
-### Foreign Keys
+**Foreign Keys:**
 
 - `stock_id` → `stocks.id`
 
-### Indexes
+**Indexes:**
 
 - `stock_id`
 - `symbol`
@@ -138,11 +95,11 @@ The database schema is organized into three Django apps:
 
 ---
 
-## stocks
+#### stocks
 
 **Description:** stocks table
 
-### Columns
+**Columns:**
 
 | Column Name | Type | Constraints | Description |
 |------------|------|-------------|-------------|
@@ -154,18 +111,47 @@ The database schema is organized into three Django apps:
 | `created_at` | `TIMESTAMP WITH` | HAS DEFAULT | Timestamp |
 | `updated_at` | `TIMESTAMP WITH` | HAS DEFAULT | Timestamp |
 
-### Indexes
+**Indexes:**
 
 - `symbol`
 - `created_at`
 
 ---
 
-## strategy_history
+
+## Strategies App
+
+Strategy history and market conditions
+
+### Tables
+
+#### market_conditions
+
+**Description:** market_conditions table
+
+**Columns:**
+
+| Column Name | Type | Constraints | Description |
+|------------|------|-------------|-------------|
+| `id` | `SERIAL` | PRIMARY KEY | Primary key |
+| `timestamp` | `TIMESTAMP WITH` | NOT NULL, HAS DEFAULT | Timestamp |
+| `sp500_price` | `DOUBLE PRECISION` | - | Price/numeric value |
+| `vix` | `DOUBLE PRECISION` | - | Option Greek / Volatility |
+| `market_trend` | `VARCHAR(20)` | - | Categorical value |
+| `volatility_regime` | `VARCHAR(20)` | - | Categorical value |
+| `meta_data` | `JSONB` | - | JSON data |
+
+**Indexes:**
+
+- `timestamp`
+
+---
+
+#### strategy_history
 
 **Description:** strategy_history table
 
-### Columns
+**Columns:**
 
 | Column Name | Type | Constraints | Description |
 |------------|------|-------------|-------------|
@@ -188,11 +174,11 @@ The database schema is organized into three Django apps:
 | `timestamp` | `TIMESTAMP WITH` | NOT NULL | Timestamp |
 | `created_at` | `TIMESTAMP WITH` | HAS DEFAULT | Timestamp |
 
-### Foreign Keys
+**Foreign Keys:**
 
 - `stock_id` → `stocks.id`
 
-### Indexes
+**Indexes:**
 
 - `stock_id`
 - `symbol`
@@ -201,6 +187,41 @@ The database schema is organized into three Django apps:
 - `created_at`
 
 ---
+
+
+## Data Collection App
+
+Collection job tracking
+
+### Tables
+
+#### collection_jobs
+
+**Description:** collection_jobs table
+
+**Columns:**
+
+| Column Name | Type | Constraints | Description |
+|------------|------|-------------|-------------|
+| `id` | `SERIAL` | PRIMARY KEY | Primary key |
+| `job_type` | `VARCHAR(50)` | NOT NULL | Categorical value |
+| `symbol` | `VARCHAR(10)` | - | Text field |
+| `status` | `VARCHAR(20)` | NOT NULL | Categorical value |
+| `started_at` | `TIMESTAMP WITH` | - | Timestamp |
+| `completed_at` | `TIMESTAMP WITH` | - | Timestamp |
+| `created_at` | `TIMESTAMP WITH` | HAS DEFAULT | Timestamp |
+| `records_collected` | `INTEGER` | - | Integer count |
+| `error_message` | `TEXT` | - | Text field |
+
+**Indexes:**
+
+- `status`
+- `job_type`
+- `symbol`
+- `created_at`
+
+---
+
 
 ## Related Files
 
