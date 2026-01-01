@@ -40,6 +40,7 @@ echo ""
 echo "🔐 Sudo password required for nginx setup"
 read -s -p "Enter sudo password: " SUDO_PASSWORD
 echo ""
+echo "✅ Password captured (will be used for all sudo operations)"
 echo ""
 
 # Function to execute sudo commands with password
