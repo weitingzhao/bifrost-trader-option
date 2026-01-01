@@ -8,14 +8,8 @@ set -e
 # Configuration
 WEB_SERVER="10.0.0.75"
 WEB_SERVER_USER="vision"
-REMOTE_SCRIPT_PATH="~/bifrost-scripts/nginx/check_nginx.sh"
-
-# Get script directory and path
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SCRIPT_FILE="$SCRIPT_DIR/check_nginx.sh"
 
 # Detect if running locally on server or remotely via SSH
-# If HOSTNAME contains the server name or we're on the server, run locally
 IS_LOCAL=false
 if [ -n "$SSH_CONNECTION" ]; then
     # Running via SSH - check if we're already on the target server
@@ -31,7 +25,7 @@ else
     fi
 fi
 
-# If not local, copy script to server first, then SSH
+# If not local, run checks via SSH
 if [ "$IS_LOCAL" = false ]; then
     echo "=========================================="
     echo "Checking Nginx Status on Web Server"
@@ -54,40 +48,6 @@ if [ "$IS_LOCAL" = false ]; then
     
     echo "✅ SSH connection successful"
     echo ""
-    
-    # Copy script to server
-    echo "📋 Copying check_nginx.sh to server..."
-    ssh "$WEB_SERVER_USER@$WEB_SERVER" "mkdir -p ~/bifrost-scripts/nginx"
-    scp "$SCRIPT_FILE" "$WEB_SERVER_USER@$WEB_SERVER:$REMOTE_SCRIPT_PATH"
-    ssh "$WEB_SERVER_USER@$WEB_SERVER" "chmod +x $REMOTE_SCRIPT_PATH"
-    echo "✅ Script copied to: $REMOTE_SCRIPT_PATH"
-    echo ""
-    
-    # Optionally try to run remotely with password prompt
-    echo "💡 You can:"
-    echo "   1. Run checks remotely (will prompt for sudo password if needed)"
-    echo "   2. SSH into server and run locally: sudo $REMOTE_SCRIPT_PATH"
-    echo ""
-    read -p "Attempt to run checks remotely now? (y/N): " -n 1 -r
-    echo ""
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        echo ""
-        echo "🚀 Running checks remotely..."
-        echo ""
-        # Use ssh -t to allocate pseudo-terminal for password prompts
-        ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "$REMOTE_SCRIPT_PATH" || {
-            echo ""
-            echo "⚠️  Remote execution completed (some checks may require sudo)"
-            echo "   For full checks with sudo, run on server: sudo $REMOTE_SCRIPT_PATH"
-            echo ""
-            echo "Continuing with basic checks via SSH..."
-            echo ""
-        }
-    else
-        echo ""
-        echo "Running basic checks via SSH (no sudo)..."
-        echo ""
-    fi
     
     # Check if nginx is installed
     echo "🔍 Checking nginx installation..."
@@ -117,7 +77,7 @@ if [ "$IS_LOCAL" = false ]; then
             echo ""
         fi
         
-        # Check nginx configuration
+        # Check nginx configuration directory
         echo "📁 Checking nginx configuration..."
         if ssh "$WEB_SERVER_USER@$WEB_SERVER" "[ -d /etc/nginx ]" 2>/dev/null; then
             echo "   Configuration directory: /etc/nginx"
@@ -128,15 +88,6 @@ if [ "$IS_LOCAL" = false ]; then
                 ENABLED_SITES=$(ssh "$WEB_SERVER_USER@$WEB_SERVER" "ls -1 /etc/nginx/sites-enabled/ 2>/dev/null | grep -v default || echo 'none'")
                 echo "🔗 Enabled sites:"
                 echo "$ENABLED_SITES" | sed 's/^/   - /'
-                echo ""
-            fi
-            
-            # Check for docs configuration
-            if ssh "$WEB_SERVER_USER@$WEB_SERVER" "[ -f /etc/nginx/sites-available/docs ] || [ -L /etc/nginx/sites-enabled/docs ]" 2>/dev/null; then
-                echo "✅ Documentation site configuration found"
-                echo ""
-            else
-                echo "⚠️  Documentation site configuration NOT found"
                 echo ""
             fi
         fi
@@ -153,18 +104,14 @@ if [ "$IS_LOCAL" = false ]; then
         if [ "$NGINX_RUNNING" = "running" ] || [ "$NGINX_RUNNING" = "active" ]; then
             echo "✅ Nginx is installed and running"
             echo ""
-            echo "📝 Note: Some checks (like configuration test) require sudo"
+            echo "📝 Note: Configuration test requires sudo"
             echo "   To test config, run on server: sudo nginx -t"
-            echo "   Or run script locally: sudo $REMOTE_SCRIPT_PATH"
         else
             echo "⚠️  Nginx is installed but NOT running"
             echo ""
             echo "📝 To start nginx:"
             echo "   ssh $WEB_SERVER_USER@$WEB_SERVER"
             echo "   sudo systemctl start nginx"
-            echo ""
-            echo "💡 For full checks with sudo, run on server:"
-            echo "   sudo $REMOTE_SCRIPT_PATH"
         fi
         echo ""
     else
@@ -222,14 +169,6 @@ else
                 echo "$ENABLED_SITES" | sed 's/^/   - /'
                 echo ""
             fi
-            
-            # Check for docs configuration
-            if [ -f /etc/nginx/sites-available/docs ] || [ -L /etc/nginx/sites-enabled/docs ]; then
-                echo "✅ Documentation site configuration found"
-            else
-                echo "⚠️  Documentation site configuration NOT found"
-            fi
-            echo ""
             
             # Test nginx configuration (can use sudo locally)
             echo "🧪 Testing nginx configuration..."
