@@ -72,28 +72,28 @@ if [ -n "$NGINX_INSTALLED" ]; then
     
     echo ""
     echo "🛑 Stopping and removing nginx..."
-    echo "$SUDO_PASSWORD" | ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
-        echo '$SUDO_PASSWORD' | sudo -S systemctl stop nginx 2>/dev/null || echo '$SUDO_PASSWORD' | sudo -S service nginx stop 2>/dev/null || true
+    ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "SUDO_PASS='$SUDO_PASSWORD' bash -c '
+        echo \"\$SUDO_PASS\" | sudo -S systemctl stop nginx 2>/dev/null || echo \"\$SUDO_PASS\" | sudo -S service nginx stop 2>/dev/null || true
         
         # Remove nginx
         if command -v apt-get &> /dev/null; then
-            echo '$SUDO_PASSWORD' | sudo -S apt-get remove --purge -y nginx nginx-common nginx-core 2>/dev/null || true
-            echo '$SUDO_PASSWORD' | sudo -S apt-get autoremove -y 2>/dev/null || true
-            echo '$SUDO_PASSWORD' | sudo -S apt-get autoclean 2>/dev/null || true
+            echo \"\$SUDO_PASS\" | sudo -S apt-get remove --purge -y nginx nginx-common nginx-core 2>/dev/null || true
+            echo \"\$SUDO_PASS\" | sudo -S apt-get autoremove -y 2>/dev/null || true
+            echo \"\$SUDO_PASS\" | sudo -S apt-get autoclean 2>/dev/null || true
         elif command -v yum &> /dev/null; then
-            echo '$SUDO_PASSWORD' | sudo -S yum remove -y nginx 2>/dev/null || true
+            echo \"\$SUDO_PASS\" | sudo -S yum remove -y nginx 2>/dev/null || true
         elif command -v dnf &> /dev/null; then
-            echo '$SUDO_PASSWORD' | sudo -S dnf remove -y nginx 2>/dev/null || true
+            echo \"\$SUDO_PASS\" | sudo -S dnf remove -y nginx 2>/dev/null || true
         fi
         
         # Remove nginx configuration directories
-        echo '$SUDO_PASSWORD' | sudo -S rm -rf /etc/nginx 2>/dev/null || true
-        echo '$SUDO_PASSWORD' | sudo -S rm -rf /var/log/nginx 2>/dev/null || true
-        echo '$SUDO_PASSWORD' | sudo -S rm -rf /var/lib/nginx 2>/dev/null || true
+        echo \"\$SUDO_PASS\" | sudo -S rm -rf /etc/nginx 2>/dev/null || true
+        echo \"\$SUDO_PASS\" | sudo -S rm -rf /var/log/nginx 2>/dev/null || true
+        echo \"\$SUDO_PASS\" | sudo -S rm -rf /var/lib/nginx 2>/dev/null || true
         
         # Kill any remaining nginx processes
-        echo '$SUDO_PASSWORD' | sudo -S pkill -9 nginx 2>/dev/null || true
-    "
+        echo \"\$SUDO_PASS\" | sudo -S pkill -9 nginx 2>/dev/null || true
+    '"
     
     echo "✅ Nginx removed completely"
     echo ""
@@ -101,16 +101,16 @@ fi
 
 # Install nginx and create docs directory
 echo "📦 Installing nginx and setting up directories..."
-echo "$SUDO_PASSWORD" | ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
+ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "SUDO_PASS='$SUDO_PASSWORD' bash -c '
     # Install nginx
-    echo '$SUDO_PASSWORD' | sudo -S apt-get update
-    echo '$SUDO_PASSWORD' | sudo -S apt-get install -y nginx
+    echo \"\$SUDO_PASS\" | sudo -S apt-get update
+    echo \"\$SUDO_PASS\" | sudo -S apt-get install -y nginx
     
     # Create docs directory
-    echo '$SUDO_PASSWORD' | sudo -S mkdir -p $DOCS_DEPLOY_PATH
-    echo '$SUDO_PASSWORD' | sudo -S chown -R www-data:www-data $DOCS_DEPLOY_PATH
-    echo '$SUDO_PASSWORD' | sudo -S chmod -R 755 $DOCS_DEPLOY_PATH
-"
+    echo \"\$SUDO_PASS\" | sudo -S mkdir -p $DOCS_DEPLOY_PATH
+    echo \"\$SUDO_PASS\" | sudo -S chown -R www-data:www-data $DOCS_DEPLOY_PATH
+    echo \"\$SUDO_PASS\" | sudo -S chmod -R 755 $DOCS_DEPLOY_PATH
+'"
 
 # Deploy nginx configurations
 echo "⚙️  Deploying nginx configurations..."
@@ -129,24 +129,24 @@ fi
 
 # Deploy all configs in one SSH session
 if [ -f "$SCRIPT_DIR/nginx_docs.conf" ]; then
-    echo "$SUDO_PASSWORD" | ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
+    ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "SUDO_PASS='$SUDO_PASSWORD' bash -c '
         # Deploy nginx_docs.conf
-        echo '$SUDO_PASSWORD' | sudo -S cp /tmp/nginx_docs.conf $NGINX_CONFIG
-        echo '$SUDO_PASSWORD' | sudo -S chmod 644 $NGINX_CONFIG
+        echo \"\$SUDO_PASS\" | sudo -S cp /tmp/nginx_docs.conf $NGINX_CONFIG
+        echo \"\$SUDO_PASS\" | sudo -S chmod 644 $NGINX_CONFIG
         rm /tmp/nginx_docs.conf
-        echo '✅ nginx_docs.conf deployed'
+        echo \"✅ nginx_docs.conf deployed\"
         
         # Deploy bifrost.conf if available
         if [ -f /tmp/bifrost.conf ]; then
-            echo '$SUDO_PASSWORD' | sudo -S cp /tmp/bifrost.conf /etc/nginx/sites-available/bifrost
-            echo '$SUDO_PASSWORD' | sudo -S chmod 644 /etc/nginx/sites-available/bifrost
+            echo \"\$SUDO_PASS\" | sudo -S cp /tmp/bifrost.conf /etc/nginx/sites-available/bifrost
+            echo \"\$SUDO_PASS\" | sudo -S chmod 644 /etc/nginx/sites-available/bifrost
             rm /tmp/bifrost.conf
-            echo '✅ bifrost.conf deployed (not enabled by default)'
+            echo \"✅ bifrost.conf deployed (not enabled by default)\"
         fi
-    "
+    '"
 else
     echo "   ⚠️  Warning: nginx_docs.conf not found, creating inline..."
-    echo "$SUDO_PASSWORD" | ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "echo '$SUDO_PASSWORD' | sudo -S tee $NGINX_CONFIG > /dev/null" << 'EOF'
+    ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "SUDO_PASS='$SUDO_PASSWORD' bash -c 'echo \"\$SUDO_PASS\" | sudo -S tee $NGINX_CONFIG > /dev/null'" << 'EOF'
 server {
     listen 80;
     server_name 10.0.0.75;
@@ -182,53 +182,53 @@ server {
     }
 }
 EOF
-    echo "$SUDO_PASSWORD" | ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "echo '$SUDO_PASSWORD' | sudo -S chmod 644 $NGINX_CONFIG"
+    ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "SUDO_PASS='$SUDO_PASSWORD' bash -c 'echo \"\$SUDO_PASS\" | sudo -S chmod 644 $NGINX_CONFIG'"
 fi
 
 # Enable site, test config, and start nginx (all in one session)
 echo "🔗 Enabling site, testing config, and starting nginx..."
-echo "$SUDO_PASSWORD" | ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
+ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "SUDO_PASS='$SUDO_PASSWORD' bash -c '
     # Remove default site if it exists
     if [ -L /etc/nginx/sites-enabled/default ]; then
-        echo '$SUDO_PASSWORD' | sudo -S rm /etc/nginx/sites-enabled/default
-        echo '✅ Removed default site'
+        echo \"\$SUDO_PASS\" | sudo -S rm /etc/nginx/sites-enabled/default
+        echo \"✅ Removed default site\"
     fi
     
     # Enable docs site
     if [ ! -L /etc/nginx/sites-enabled/docs ]; then
-        echo '$SUDO_PASSWORD' | sudo -S ln -s $NGINX_CONFIG /etc/nginx/sites-enabled/
-        echo '✅ Docs site enabled'
+        echo \"\$SUDO_PASS\" | sudo -S ln -s $NGINX_CONFIG /etc/nginx/sites-enabled/
+        echo \"✅ Docs site enabled\"
     else
         # Remove old symlink and create new one to ensure it points to correct config
-        echo '$SUDO_PASSWORD' | sudo -S rm /etc/nginx/sites-enabled/docs
-        echo '$SUDO_PASSWORD' | sudo -S ln -s $NGINX_CONFIG /etc/nginx/sites-enabled/
-        echo '✅ Docs site re-enabled with latest config'
+        echo \"\$SUDO_PASS\" | sudo -S rm /etc/nginx/sites-enabled/docs
+        echo \"\$SUDO_PASS\" | sudo -S ln -s $NGINX_CONFIG /etc/nginx/sites-enabled/
+        echo \"✅ Docs site re-enabled with latest config\"
     fi
     
     # Disable bifrost site if it exists (to avoid conflicts)
     if [ -L /etc/nginx/sites-enabled/bifrost ]; then
-        echo '$SUDO_PASSWORD' | sudo -S rm /etc/nginx/sites-enabled/bifrost
-        echo '⚠️  Bifrost site disabled (can be enabled later if needed)'
+        echo \"\$SUDO_PASS\" | sudo -S rm /etc/nginx/sites-enabled/bifrost
+        echo \"⚠️  Bifrost site disabled (can be enabled later if needed)\"
     fi
     
     # Test nginx configuration
-    echo ''
-    echo '🧪 Testing nginx configuration...'
-    if echo '$SUDO_PASSWORD' | sudo -S nginx -t; then
-        echo '✅ Nginx configuration is valid'
+    echo \"\"
+    echo \"🧪 Testing nginx configuration...\"
+    if echo \"\$SUDO_PASS\" | sudo -S nginx -t; then
+        echo \"✅ Nginx configuration is valid\"
     else
-        echo '❌ Error: Nginx configuration test failed'
+        echo \"❌ Error: Nginx configuration test failed\"
         exit 1
     fi
     
     # Start/reload nginx
-    echo ''
-    echo '🔄 Starting nginx...'
-    echo '$SUDO_PASSWORD' | sudo -S systemctl enable nginx
-    echo '$SUDO_PASSWORD' | sudo -S systemctl start nginx
-    echo '$SUDO_PASSWORD' | sudo -S systemctl reload nginx 2>/dev/null || true
-    echo '✅ Nginx started and enabled'
-"
+    echo \"\"
+    echo \"🔄 Starting nginx...\"
+    echo \"\$SUDO_PASS\" | sudo -S systemctl enable nginx
+    echo \"\$SUDO_PASS\" | sudo -S systemctl start nginx
+    echo \"\$SUDO_PASS\" | sudo -S systemctl reload nginx 2>/dev/null || true
+    echo \"✅ Nginx started and enabled\"
+'"
 
 # Verify nginx is running
 echo "🔍 Verifying nginx is running..."
