@@ -48,7 +48,7 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 
 ### Database Schema Management
 
-**⭐ Single Source of Truth:** `scripts/database/schema_canonical.sql`
+**⭐ Single Source of Truth:** `scripts/database/schema.sql`
 
 All database changes must follow this workflow:
 1. Update `scripts/database/schema.sql` (SINGLE SOURCE OF TRUTH)

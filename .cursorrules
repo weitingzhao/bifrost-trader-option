@@ -341,7 +341,7 @@ connector = await get_connector()
 - ❌ Don't create circular dependencies
 - ❌ Don't use absolute imports starting with `src.` (use relative)
 - ❌ Don't modify database schema without following the canonical schema workflow
-- ❌ Don't modify Django or SQLAlchemy models without updating schema_canonical.sql first
+- ❌ Don't modify Django or SQLAlchemy models without updating schema.sql first
 - ❌ Don't commit secrets or credentials
 - ❌ Don't create files outside the defined structure
 - ❌ Don't bypass the ORM for database access (use repositories)
