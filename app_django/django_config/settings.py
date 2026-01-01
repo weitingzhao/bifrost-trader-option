@@ -6,9 +6,18 @@ This will include database configuration, installed apps, etc.
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Load environment variables from .env file
+# .env file should be in the project root (one level up from app_django)
 BASE_DIR = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = BASE_DIR.parent  # Project root directory
+env_path = PROJECT_ROOT / '.env'
+if env_path.exists():
+    load_dotenv(dotenv_path=env_path)
+else:
+    # Fallback: try loading from current directory
+    load_dotenv()
 
 # TODO: Set up proper secret key management
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-change-this-in-production')
