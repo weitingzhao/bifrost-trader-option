@@ -209,9 +209,11 @@ def generate_markdown(tables: dict, output_file: Path):
         f.write("## Regenerating This Documentation\n\n")
         f.write("This documentation is auto-generated from `schema_all.sql`. To regenerate:\n\n")
         f.write("```bash\n")
-        f.write("./scripts/database/combine_schemas.sh\n")
-        f.write("./scripts/database/generate_schema_docs.sh\n")
+        f.write("./scripts/database/refresh_schema.sh\n")
         f.write("```\n\n")
+        f.write("This single command will:\n")
+        f.write("1. Combine all app-specific schema files into `schema_all.sql`\n")
+        f.write("2. Generate this markdown documentation\n\n")
         f.write("---\n\n")
         f.write("**Last Updated**: Auto-generated from schema files\n")
 
@@ -223,7 +225,7 @@ def main():
     
     if not schema_file.exists():
         print(f"❌ Error: schema_all.sql not found at {schema_file}")
-        print("   Run ./scripts/database/combine_schemas.sh first")
+        print("   Run ./scripts/database/refresh_schema.sh first")
         sys.exit(1)
     
     print("📄 Reading schema_all.sql...")

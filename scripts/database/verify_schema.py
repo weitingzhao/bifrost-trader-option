@@ -320,7 +320,7 @@ def main():
         print(f"   1. Update Django models (if needed) - SINGLE SOURCE OF TRUTH")
         print(f"   2. Update SQLAlchemy models to match Django models")
         print(f"   3. Update schema files (schema_*.sql) to match Django models")
-        print(f"   4. Regenerate schema_all.sql: ./scripts/database/combine_schemas.sh")
+        print(f"   4. Regenerate schema files: ./scripts/database/refresh_schema.sh")
         print(f"   5. Run this script again to verify")
         return 1
 
