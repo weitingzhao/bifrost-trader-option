@@ -19,6 +19,8 @@ from typing import Dict, List, Set, Tuple
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
+# Add app_django to path for Django imports
+sys.path.insert(0, str(project_root / 'app_django'))
 
 # Color output
 GREEN = '\033[0;32m'
@@ -40,23 +42,47 @@ def get_django_tables() -> Dict[str, Dict]:
         
         from django.apps import apps
         
-        # Get all models
+        # Get all models (exclude Django system apps)
+        django_system_apps = {'admin', 'auth', 'contenttypes', 'sessions'}
+        
         for app_config in apps.get_app_configs():
+            # Skip Django system apps
+            if app_config.name in django_system_apps:
+                continue
+                
             for model in app_config.get_models():
                 db_table = model._meta.db_table
                 fields = {}
                 
-                # Extract field information
+                # Extract field information (only actual database columns, not relationships)
                 for field in model._meta.get_fields():
+                    # Skip reverse relations and many-to-many relations
+                    if field.many_to_many or (hasattr(field, 'related_model') and not hasattr(field, 'db_column')):
+                        continue
+                    
+                    # Get the actual database column name
                     if hasattr(field, 'db_column'):
                         field_name = field.db_column or field.name
-                        field_type = type(field).__name__
-                        fields[field_name] = {
-                            'type': field_type,
-                            'null': getattr(field, 'null', False),
-                            'blank': getattr(field, 'blank', False),
-                            'unique': getattr(field, 'unique', False),
-                        }
+                    elif hasattr(field, 'column'):
+                        field_name = field.column
+                    else:
+                        field_name = field.name
+                    
+                    # Skip relationship fields (they use _id suffix in database)
+                    if hasattr(field, 'related_model'):
+                        # ForeignKey fields have _id in database, but we want the actual column
+                        if hasattr(field, 'attname'):
+                            field_name = field.attname  # This gives us stock_id instead of stock
+                        else:
+                            continue
+                    
+                    field_type = type(field).__name__
+                    fields[field_name] = {
+                        'type': field_type,
+                        'null': getattr(field, 'null', False),
+                        'blank': getattr(field, 'blank', False),
+                        'unique': getattr(field, 'unique', False),
+                    }
                 
                 # Extract indexes
                 indexes = []
@@ -126,37 +152,66 @@ def get_sqlalchemy_tables() -> Dict[str, Dict]:
 
 
 def get_schema_sql_tables() -> Dict[str, Set[str]]:
-    """Extract table names from schema.sql."""
-    schema_file = project_root / 'scripts' / 'database' / 'schema.sql'
+    """Extract table names from schema files."""
+    schema_dir = project_root / 'scripts' / 'database'
+    
+    # Try schema_all.sql first (combined file), then fall back to individual files
+    schema_files = [
+        schema_dir / 'schema_all.sql',  # Combined file (preferred)
+        schema_dir / 'schema_options.sql',  # Options app
+        schema_dir / 'schema_strategies.sql',  # Strategies app
+        schema_dir / 'schema_data_collection.sql',  # Data collection app
+    ]
+    
     tables = {}
+    found_files = []
     
-    if not schema_file.exists():
-        print(f"{YELLOW}⚠️  Warning: schema.sql not found at {schema_file}{NC}")
+    for schema_file in schema_files:
+        if schema_file.exists():
+            found_files.append(schema_file.name)
+            try:
+                with open(schema_file, 'r') as f:
+                    content = f.read()
+                
+                # Simple extraction of table names from CREATE TABLE statements
+                import re
+                table_pattern = r'CREATE TABLE IF NOT EXISTS (\w+)'
+                matches = re.findall(table_pattern, content, re.IGNORECASE)
+                
+                for table_name in matches:
+                    tables[table_name] = set()  # Placeholder for now
+                
+            except Exception as e:
+                print(f"{YELLOW}⚠️  Warning: Could not parse {schema_file.name}: {e}{NC}")
+    
+    if not found_files:
+        print(f"{YELLOW}⚠️  Warning: No schema files found in {schema_dir}{NC}")
+        print(f"{YELLOW}   Looking for: schema_all.sql or schema_*.sql files{NC}")
         return {}
     
-    try:
-        with open(schema_file, 'r') as f:
-            content = f.read()
-        
-        # Simple extraction of table names from CREATE TABLE statements
-        import re
-        table_pattern = r'CREATE TABLE IF NOT EXISTS (\w+)'
-        matches = re.findall(table_pattern, content, re.IGNORECASE)
-        
-        for table_name in matches:
-            tables[table_name] = set()  # Placeholder for now
-        
-        return tables
+    if found_files:
+        print(f"   Found tables in: {', '.join(found_files)}")
     
-    except Exception as e:
-        print(f"{YELLOW}⚠️  Warning: Could not parse schema.sql: {e}{NC}")
-        return {}
+    return tables
 
 
 def compare_tables(django_tables: Dict, sqlalchemy_tables: Dict, schema_tables: Dict) -> Tuple[bool, List[str]]:
     """Compare tables across all three sources."""
     issues = []
-    all_table_names = set(django_tables.keys()) | set(sqlalchemy_tables.keys()) | set(schema_tables.keys())
+    
+    # Django system tables that we don't need to track in SQLAlchemy or schema.sql
+    django_system_tables = {
+        'django_migrations', 'django_content_type', 'django_session', 
+        'django_admin_log', 'auth_user', 'auth_group', 'auth_permission',
+        'auth_user_groups', 'auth_user_user_permissions', 'auth_group_permissions'
+    }
+    
+    # Filter out Django system tables from comparison
+    django_app_tables = {k: v for k, v in django_tables.items() if k not in django_system_tables}
+    sqlalchemy_app_tables = {k: v for k, v in sqlalchemy_tables.items() if k not in django_system_tables}
+    schema_app_tables = {k: v for k, v in schema_tables.items() if k not in django_system_tables}
+    
+    all_table_names = set(django_app_tables.keys()) | set(sqlalchemy_app_tables.keys()) | set(schema_app_tables.keys())
     
     # Check if all tables exist in all three
     for table_name in all_table_names:
@@ -169,21 +224,42 @@ def compare_tables(django_tables: Dict, sqlalchemy_tables: Dict, schema_tables: 
         if not in_sqlalchemy:
             issues.append(f"❌ Table '{table_name}' missing in SQLAlchemy models")
         if not in_schema:
-            issues.append(f"⚠️  Table '{table_name}' missing in schema.sql")
+            issues.append(f"⚠️  Table '{table_name}' missing in schema files")
     
     # Compare fields for tables that exist in both Django and SQLAlchemy
-    for table_name in django_tables.keys():
-        if table_name in sqlalchemy_tables:
-            django_fields = set(django_tables[table_name]['fields'].keys())
-            sqlalchemy_fields = set(sqlalchemy_tables[table_name]['fields'].keys())
+    for table_name in django_app_tables.keys():
+        if table_name in sqlalchemy_app_tables:
+            django_fields = set(django_app_tables[table_name]['fields'].keys())
+            sqlalchemy_fields = set(sqlalchemy_app_tables[table_name]['fields'].keys())
             
-            missing_in_sqlalchemy = django_fields - sqlalchemy_fields
-            missing_in_django = sqlalchemy_fields - django_fields
+            # Normalize field names (handle relationship vs column name differences)
+            # Django might have 'stock' but SQLAlchemy has 'stock_id'
+            normalized_django_fields = set()
+            for field in django_fields:
+                # If it's a relationship field, check for _id version
+                if field.endswith('_id'):
+                    normalized_django_fields.add(field)
+                else:
+                    # Check if there's a corresponding _id field
+                    if f"{field}_id" in sqlalchemy_fields:
+                        normalized_django_fields.add(f"{field}_id")
+                    else:
+                        normalized_django_fields.add(field)
+            
+            missing_in_sqlalchemy = normalized_django_fields - sqlalchemy_fields
+            missing_in_django = sqlalchemy_fields - normalized_django_fields
+            
+            # Filter out common Django system fields that might not be in SQLAlchemy
+            django_system_fields = {'id'}  # id is usually auto-generated
+            missing_in_sqlalchemy = missing_in_sqlalchemy - django_system_fields
             
             if missing_in_sqlalchemy:
                 issues.append(f"❌ Table '{table_name}': Fields missing in SQLAlchemy: {missing_in_sqlalchemy}")
-            if missing_in_django:
-                issues.append(f"⚠️  Table '{table_name}': Extra fields in SQLAlchemy: {missing_in_django}")
+            if missing_in_django and table_name not in ['django_migrations']:  # Ignore migrations table
+                # Only warn about extra fields if they're significant
+                significant_extra = missing_in_django - {'id'}  # id is usually fine
+                if significant_extra:
+                    issues.append(f"⚠️  Table '{table_name}': Extra fields in SQLAlchemy: {significant_extra}")
     
     return len(issues) == 0, issues
 
@@ -207,9 +283,9 @@ def main():
     sqlalchemy_tables = get_sqlalchemy_tables()
     print(f"   Found {len(sqlalchemy_tables)} tables in SQLAlchemy models")
     
-    print(f"{BLUE}Loading schema.sql...{NC}")
+    print(f"{BLUE}Loading schema files...{NC}")
     schema_tables = get_schema_sql_tables()
-    print(f"   Found {len(schema_tables)} tables in schema.sql")
+    print(f"   Found {len(schema_tables)} tables in schema files")
     print()
     
     # Compare
@@ -224,9 +300,15 @@ def main():
         print(f"{GREEN}✅ All schemas are in sync!{NC}")
         print()
         print(f"{GREEN}Summary:{NC}")
-        print(f"   - Django models: {len(django_tables)} tables")
+        # Count only app tables (exclude Django system tables)
+        django_app_count = len([t for t in django_tables.keys() if t not in {
+            'django_migrations', 'django_content_type', 'django_session', 
+            'django_admin_log', 'auth_user', 'auth_group', 'auth_permission',
+            'auth_user_groups', 'auth_user_user_permissions', 'auth_group_permissions'
+        }])
+        print(f"   - Django models: {django_app_count} app tables (plus {len(django_tables) - django_app_count} Django system tables)")
         print(f"   - SQLAlchemy models: {len(sqlalchemy_tables)} tables")
-        print(f"   - schema.sql: {len(schema_tables)} tables")
+        print(f"   - Schema files: {len(schema_tables)} tables")
         return 0
     else:
         print(f"{RED}❌ Schema discrepancies found:{NC}")
@@ -237,8 +319,9 @@ def main():
         print(f"{YELLOW}⚠️  Fix discrepancies by:{NC}")
         print(f"   1. Update Django models (if needed) - SINGLE SOURCE OF TRUTH")
         print(f"   2. Update SQLAlchemy models to match Django models")
-        print(f"   3. Update schema.sql to match Django models")
-        print(f"   4. Run this script again to verify")
+        print(f"   3. Update schema files (schema_*.sql) to match Django models")
+        print(f"   4. Regenerate schema_all.sql: ./scripts/database/combine_schemas.sh")
+        print(f"   5. Run this script again to verify")
         return 1
 
 
