@@ -1,92 +1,148 @@
 #!/bin/bash
-# Check if nginx is installed and running on the server
-# This script provides information about nginx status
+# Check nginx status on web server (10.0.0.75)
+# This script SSH into the server and checks if nginx is installed and running
 
 set -e
 
+# Configuration
+WEB_SERVER="10.0.0.75"
+WEB_SERVER_USER="vision"
+
 echo "=========================================="
-echo "Checking Nginx Status"
+echo "Checking Nginx Status on Web Server"
 echo "=========================================="
+echo ""
+echo "📡 Server: $WEB_SERVER_USER@$WEB_SERVER"
+echo ""
+
+# Test SSH connection
+echo "🔌 Testing SSH connection..."
+if ! ssh -o ConnectTimeout=5 -o BatchMode=yes "$WEB_SERVER_USER@$WEB_SERVER" exit 2>/dev/null; then
+    echo "❌ Error: Cannot connect to $WEB_SERVER"
+    echo ""
+    echo "Please ensure:"
+    echo "   1. Server is accessible: ping $WEB_SERVER"
+    echo "   2. SSH key is configured: ssh-copy-id $WEB_SERVER_USER@$WEB_SERVER"
+    echo "   3. User has SSH access"
+    exit 1
+fi
+
+echo "✅ SSH connection successful"
 echo ""
 
 # Check if nginx is installed
-if command -v nginx &> /dev/null; then
-    NGINX_VERSION=$(nginx -v 2>&1 | cut -d'/' -f2)
+echo "🔍 Checking nginx installation..."
+NGINX_INSTALLED=$(ssh "$WEB_SERVER_USER@$WEB_SERVER" "command -v nginx 2>/dev/null" || echo "")
+
+if [ -n "$NGINX_INSTALLED" ]; then
+    NGINX_VERSION=$(ssh "$WEB_SERVER_USER@$WEB_SERVER" "nginx -v 2>&1 | cut -d'/' -f2" || echo "unknown")
     echo "✅ Nginx is INSTALLED"
     echo "   Version: $NGINX_VERSION"
+    echo "   Path: $NGINX_INSTALLED"
     echo ""
     
     # Check if nginx is running
-    if systemctl is-active --quiet nginx 2>/dev/null || pgrep -x nginx > /dev/null; then
+    echo "🔍 Checking nginx service status..."
+    NGINX_RUNNING=$(ssh "$WEB_SERVER_USER@$WEB_SERVER" "systemctl is-active nginx 2>/dev/null || pgrep -x nginx > /dev/null && echo 'running' || echo 'stopped'" || echo "unknown")
+    
+    if [ "$NGINX_RUNNING" = "running" ] || [ "$NGINX_RUNNING" = "active" ]; then
         echo "🟢 Nginx is RUNNING"
         echo ""
         
         # Show running processes
         echo "📊 Nginx processes:"
-        ps aux | grep nginx | grep -v grep | head -5
+        ssh "$WEB_SERVER_USER@$WEB_SERVER" "ps aux | grep nginx | grep -v grep | head -5" || echo "   (Unable to get process list)"
         echo ""
         
         # Show listening ports
         echo "🔌 Listening ports:"
-        netstat -tlnp 2>/dev/null | grep nginx || ss -tlnp 2>/dev/null | grep nginx || echo "   (Unable to check ports)"
+        ssh "$WEB_SERVER_USER@$WEB_SERVER" "sudo netstat -tlnp 2>/dev/null | grep nginx || sudo ss -tlnp 2>/dev/null | grep nginx || echo '   (Unable to check ports - may need sudo)'" || echo "   (Unable to check ports)"
         echo ""
     else
         echo "🔴 Nginx is NOT RUNNING"
         echo ""
+        echo "⚠️  To start nginx:"
+        echo "   ssh $WEB_SERVER_USER@$WEB_SERVER"
+        echo "   sudo systemctl start nginx"
+        echo ""
     fi
     
     # Check nginx configuration
-    if [ -d /etc/nginx ]; then
-        echo "📁 Nginx configuration directory: /etc/nginx"
+    echo "📁 Checking nginx configuration..."
+    if ssh "$WEB_SERVER_USER@$WEB_SERVER" "[ -d /etc/nginx ]" 2>/dev/null; then
+        echo "   Configuration directory: /etc/nginx"
         echo ""
         
         # List enabled sites
-        if [ -d /etc/nginx/sites-enabled ]; then
-            ENABLED_SITES=$(ls -1 /etc/nginx/sites-enabled/ 2>/dev/null | grep -v default || echo "none")
+        if ssh "$WEB_SERVER_USER@$WEB_SERVER" "[ -d /etc/nginx/sites-enabled ]" 2>/dev/null; then
+            ENABLED_SITES=$(ssh "$WEB_SERVER_USER@$WEB_SERVER" "ls -1 /etc/nginx/sites-enabled/ 2>/dev/null | grep -v default || echo 'none'")
             echo "🔗 Enabled sites:"
             echo "$ENABLED_SITES" | sed 's/^/   - /'
             echo ""
         fi
         
-        # Check for existing docs configuration
-        if [ -f /etc/nginx/sites-available/docs ] || [ -L /etc/nginx/sites-enabled/docs ]; then
-            echo "⚠️  WARNING: Existing docs configuration found!"
-            echo "   This will be removed during setup"
+        # Check for docs configuration
+        if ssh "$WEB_SERVER_USER@$WEB_SERVER" "[ -f /etc/nginx/sites-available/docs ] || [ -L /etc/nginx/sites-enabled/docs ]" 2>/dev/null; then
+            echo "✅ Documentation site configuration found"
+            echo ""
+        else
+            echo "⚠️  Documentation site configuration NOT found"
             echo ""
         fi
-    fi
-    
-    # Check nginx service status
-    if systemctl list-unit-files | grep -q nginx.service; then
-        echo "⚙️  Systemd service status:"
-        systemctl status nginx --no-pager -l | head -10 || true
+        
+        # Test nginx configuration
+        echo "🧪 Testing nginx configuration..."
+        CONFIG_TEST=$(ssh "$WEB_SERVER_USER@$WEB_SERVER" "sudo nginx -t 2>&1" || echo "error")
+        if echo "$CONFIG_TEST" | grep -q "syntax is ok"; then
+            echo "   ✅ Configuration syntax is OK"
+            if echo "$CONFIG_TEST" | grep -q "test is successful"; then
+                echo "   ✅ Configuration test is successful"
+            fi
+        else
+            echo "   ❌ Configuration has errors:"
+            echo "$CONFIG_TEST" | sed 's/^/      /'
+        fi
         echo ""
     fi
     
+    # Check nginx service status
+    echo "⚙️  Systemd service status:"
+    ssh "$WEB_SERVER_USER@$WEB_SERVER" "systemctl status nginx --no-pager -l 2>/dev/null | head -15" || echo "   (Unable to get service status)"
+    echo ""
+    
     echo "=========================================="
-    echo "RECOMMENDATION:"
+    echo "SUMMARY"
     echo "=========================================="
     echo ""
-    echo "The setup script will:"
-    echo "   1. Stop nginx service"
-    echo "   2. Remove nginx completely"
-    echo "   3. Remove nginx configuration files"
-    echo "   4. Reinstall nginx fresh"
-    echo "   5. Configure for documentation"
-    echo ""
-    echo "To proceed, run:"
-    echo "   sudo ~/bifrost-scripts/docs/setup_web_server.sh"
+    if [ "$NGINX_RUNNING" = "running" ] || [ "$NGINX_RUNNING" = "active" ]; then
+        echo "✅ Nginx is installed and running"
+        echo ""
+        echo "📝 Next steps:"
+        echo "   - Test access: curl http://$WEB_SERVER/docs/"
+        echo "   - View logs: ssh $WEB_SERVER_USER@$WEB_SERVER 'sudo tail -f /var/log/nginx/error.log'"
+        echo "   - Reload config: ssh $WEB_SERVER_USER@$WEB_SERVER 'sudo systemctl reload nginx'"
+    else
+        echo "⚠️  Nginx is installed but NOT running"
+        echo ""
+        echo "📝 To start nginx:"
+        echo "   ssh $WEB_SERVER_USER@$WEB_SERVER"
+        echo "   sudo systemctl start nginx"
+        echo "   sudo systemctl enable nginx  # Enable on boot"
+    fi
     echo ""
     
 else
     echo "❌ Nginx is NOT INSTALLED"
     echo ""
-    echo "The setup script will install nginx fresh."
+    echo "📝 To install and setup nginx:"
     echo ""
-    echo "To proceed, run:"
-    echo "   sudo ~/bifrost-scripts/docs/setup_web_server.sh"
+    echo "   1. Copy setup scripts to server:"
+    echo "      ./scripts/nginx/copy_setup_to_server.sh"
+    echo ""
+    echo "   2. SSH into server and run setup:"
+    echo "      ssh $WEB_SERVER_USER@$WEB_SERVER"
+    echo "      sudo ~/bifrost-scripts/nginx/setup_web_server.sh"
     echo ""
 fi
 
 echo "=========================================="
-
