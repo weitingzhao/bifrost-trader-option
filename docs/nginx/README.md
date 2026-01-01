@@ -26,7 +26,7 @@ Nginx is used on the Web-Server (10.0.0.75) to serve:
 
 1. **Copy nginx setup scripts to server:**
    ```bash
-   ./scripts/nginx/copy_setup_to_server.sh
+   ./scripts/nginx/setup_app_mkdocs.sh
    ```
 
 2. **Check nginx status:**

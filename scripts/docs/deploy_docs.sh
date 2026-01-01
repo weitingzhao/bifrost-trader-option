@@ -64,9 +64,17 @@ fi
 echo "✅ SSH connection successful"
 echo ""
 
-# Create remote directory if it doesn't exist
-echo "📁 Creating remote directory..."
-ssh "$WEB_SERVER_USER@$WEB_SERVER" "sudo mkdir -p $DOCS_DEPLOY_PATH && sudo chown $WEB_SERVER_USER:$WEB_SERVER_USER $DOCS_DEPLOY_PATH"
+# Ensure remote directory exists and has correct permissions
+echo "📁 Ensuring remote directory exists..."
+ssh "$WEB_SERVER_USER@$WEB_SERVER" "
+    sudo mkdir -p $DOCS_DEPLOY_PATH
+    sudo chown $WEB_SERVER_USER:$WEB_SERVER_USER $DOCS_DEPLOY_PATH
+    sudo chmod 755 $DOCS_DEPLOY_PATH
+" || {
+    echo "⚠️  Warning: Could not create directory"
+    echo "   Run ./scripts/nginx/setup_app_mkdocs.sh first to setup directory"
+    exit 1
+}
 
 # Backup existing docs if they exist
 echo "💾 Backing up existing documentation..."

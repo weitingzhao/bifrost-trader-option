@@ -16,7 +16,7 @@ The easiest way is to use the provided setup script:
 
 ```bash
 # From dev PC: Copy nginx setup scripts to server
-./scripts/nginx/copy_setup_to_server.sh
+./scripts/nginx/setup_app_mkdocs.sh
 
 # SSH into server
 ssh vision@10.0.0.75
