@@ -61,10 +61,11 @@ nav:
 
   - Database:
       - database/database.md
-      - database/SCHEMA.md
-      - database/SCHEMA_OPTIONS.md
-      - database/SCHEMA_STRATEGIES.md
-      - database/SCHEMA_DATA_COLLECTION.md
+      - Database Schema:
+          - database/SCHEMA.md
+          - database/SCHEMA_OPTIONS.md
+          - database/SCHEMA_STRATEGIES.md
+          - database/SCHEMA_DATA_COLLECTION.md
 
   - Nginx & Web Server:
       - nginx/README.md
