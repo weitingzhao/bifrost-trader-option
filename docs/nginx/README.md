@@ -13,8 +13,8 @@ Nginx is used on the Web-Server (10.0.0.75) to serve:
 ## Files
 
 ### Configuration Files
-- **[nginx_docs.conf](../scripts/nginx/nginx_docs.conf)** - Nginx configuration for documentation server
-- **[bifrost.conf](../scripts/nginx/bifrost.conf)** - Main nginx configuration for Bifrost services
+- **nginx_docs.conf** - Nginx configuration for documentation server (located in `scripts/nginx/nginx_docs.conf`)
+- **bifrost.conf** - Main nginx configuration for Bifrost services (located in `scripts/nginx/bifrost.conf`)
 
 ### Documentation
 - **[SETUP.md](SETUP.md)** - Nginx setup and installation guide
@@ -113,7 +113,7 @@ ps aux | grep nginx
 
 ## Related Documentation
 
-- [Documentation Deployment](../DEPLOYMENT.md) - Deploying MkDocs to web server
 - [Project Plan](../PROJECT_PLAN.md) - Overall architecture
 - [Setup Guide](../setup/NEXT_STEPS.md) - Initial project setup
+- [Deploy Documentation Script](../../scripts/docs/deploy_docs.sh) - Script to deploy MkDocs to web server
 

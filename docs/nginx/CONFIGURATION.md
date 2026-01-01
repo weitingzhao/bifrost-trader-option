@@ -320,5 +320,5 @@ sudo grep error /var/log/nginx/error.log | tail -20
 
 - [Nginx README](README.md) - Overview
 - [Setup Guide](SETUP.md) - Installation and setup
-- [Documentation Deployment](../DEPLOYMENT.md) - Deploying docs
+- [Deploy Documentation Script](../../scripts/docs/deploy_docs.sh) - Script to deploy MkDocs to web server
 

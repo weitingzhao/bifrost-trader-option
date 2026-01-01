@@ -78,6 +78,9 @@ nav:
     - setup/SETUP_COMPLETE.md
     - setup/README.md
   
+  - Deployment:
+    - mkdoc/DEPLOYMENT.md
+  
   - Development:
     - development/PHASE1_RESTRUCTURE.md
     - development/STRUCTURE_VERIFICATION.md

@@ -231,5 +231,5 @@ See [CONFIGURATION.md](CONFIGURATION.md) for detailed troubleshooting.
 
 - [Nginx README](README.md) - Overview and quick reference
 - [Configuration Guide](CONFIGURATION.md) - Detailed configuration
-- [Documentation Deployment](../DEPLOYMENT.md) - Deploying docs
+- [Deploy Documentation Script](../../scripts/docs/deploy_docs.sh) - Script to deploy MkDocs to web server
 
