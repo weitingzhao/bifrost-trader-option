@@ -13,7 +13,7 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 
 1. **Read the [Project Plan](PROJECT_PLAN.md)** for architecture overview
 2. **Follow [Setup Guide](setup/NEXT_STEPS.md)** for installation
-3. **Check [Database Documentation](database/index.md)** for database setup
+3. **Check [Database Documentation](database/database.md)** for database setup
 4. **Review [API Development Guide](api/API_DEVELOPMENT_GUIDE.md)** for API development
 
 ## Documentation Structure
@@ -26,7 +26,7 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 - **[API Changelog](api/API_CHANGELOG.md)** - API version tracking
 
 ### 🗄️ Database
-- **[Database Documentation](database/index.md)** ⭐ - Database schema management and guides (SINGLE SOURCE OF TRUTH)
+- **[Database Documentation](database/database.md)** ⭐ - Database schema management and guides (SINGLE SOURCE OF TRUTH)
 
 ### 🧪 Testing
 - **[Test Strategy](testing/TEST_STRATEGY.md)** - Comprehensive test strategies
@@ -57,7 +57,7 @@ All database changes must follow this workflow:
 4. Update SQLAlchemy models
 5. Verify all are in sync
 
-See [Database Documentation](database/index.md) for details.
+See [Database Documentation](database/database.md) for details.
 
 ### Architecture
 
@@ -70,7 +70,7 @@ See [Database Documentation](database/index.md) for details.
 
 - Check the [Project Plan](PROJECT_PLAN.md) for architecture decisions
 - Review [API Development Guide](api/API_DEVELOPMENT_GUIDE.md) for API questions
-- See [Database Documentation](database/index.md) for database changes
+- See [Database Documentation](database/database.md) for database changes
 - Check [Test Strategy](testing/TEST_STRATEGY.md) for testing guidance
 
 ## Contributing

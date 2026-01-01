@@ -46,6 +46,6 @@ tests/
 ## Related Documentation
 
 - Main project plan: [../PROJECT_PLAN.md](../PROJECT_PLAN.md)
-- Database setup: [../database/index.md](../database/index.md)
+- Database setup: [../database/database.md](../database/database.md)
 - Development guides: [../development/README.md](../development/README.md)
 
