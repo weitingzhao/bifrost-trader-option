@@ -53,20 +53,12 @@ nav:
   
   - Database:
     - database/SCHEMA_MANAGEMENT.md
-    - database/DATABASE_CONNECTION_DBEAVER.md
-    - database/DATABASE_VERIFICATION.md
-    - database/DATABASE_SERVER_INFO.md
-    - database/DBEAVER_CONNECTION_QUICK_REFERENCE.md
-    - database/EXPORT_SCHEMA_GUIDE.md
-    - database/DATABASE_SCHEMA_EXPORT.md
-    - database/REINSTALL_POSTGRESQL.md
   
   - Testing:
     - testing/TEST_STRATEGY.md
     - testing/TEST_DATABASE_COVERAGE.md
-    - testing/TEST_FIXES.md
-    - testing/TEST_WARNINGS_FIXED.md
     - testing/TEST_AND_SCHEMA_SUMMARY.md
+    - testing/README.md
   
   - Setup & Installation:
     - setup/NEXT_STEPS.md

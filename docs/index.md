@@ -26,10 +26,7 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 - **[API Changelog](api/API_CHANGELOG.md)** - API version tracking
 
 ### 🗄️ Database
-- **[Schema Management](database/SCHEMA_MANAGEMENT.md)** ⭐ - Database schema change workflow
-- **[DBeaver Connection](database/DATABASE_CONNECTION_DBEAVER.md)** - Connect to PostgreSQL
-- **[Database Verification](database/DATABASE_VERIFICATION.md)** - Verify database setup
-- **[Reinstall PostgreSQL](database/REINSTALL_POSTGRESQL.md)** - Fresh installation guide
+- **[Schema Management](database/SCHEMA_MANAGEMENT.md)** ⭐ - Database schema change workflow (SINGLE SOURCE OF TRUTH)
 
 ### 🧪 Testing
 - **[Test Strategy](testing/TEST_STRATEGY.md)** - Comprehensive test strategies
