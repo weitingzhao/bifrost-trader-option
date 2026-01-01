@@ -5,9 +5,16 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 cd "$PROJECT_ROOT"
+
+# Verify we're in the right directory
+if [ ! -f "mkdocs.yml" ]; then
+    echo "❌ Error: mkdocs.yml not found in $PROJECT_ROOT"
+    echo "   Current directory: $(pwd)"
+    exit 1
+fi
 
 echo "=========================================="
 echo "Building MkDocs Documentation"
