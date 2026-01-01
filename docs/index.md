@@ -48,14 +48,14 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 
 ### Database Schema Management
 
-**⭐ Single Source of Truth:** `scripts/database/schema.sql`
+**⭐ Single Source of Truth:** `app_django/apps/*/models.py` (Django Models)
 
 All database changes must follow this workflow:
-1. Update `scripts/database/schema.sql` (SINGLE SOURCE OF TRUTH)
-2. Update Django models
-3. Generate Django migrations
-4. Update SQLAlchemy models
-5. Verify all are in sync
+1. Update Django models (SINGLE SOURCE OF TRUTH)
+2. Generate Django migrations
+3. Update SQLAlchemy models to match Django models
+4. Update schema.sql to match Django models
+5. Run verify_schema.py to verify all three are in sync
 
 See [Database Documentation](database/database.md) for details.
 

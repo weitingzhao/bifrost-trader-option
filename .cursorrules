@@ -104,60 +104,70 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 
 ### Schema Management - CRITICAL WORKFLOW
 
-**⭐ SINGLE SOURCE OF TRUTH: `scripts/database/schema.sql`**
+**⭐ SINGLE SOURCE OF TRUTH: `app_django/apps/*/models.py` (Django Models)**
 
 **ALL database schema changes MUST follow this exact workflow:**
 
 ```
-1. Update scripts/database/schema.sql (SINGLE SOURCE OF TRUTH) ⭐
+1. Update Django models (app_django/apps/*/models.py) ⭐ SINGLE SOURCE OF TRUTH
    ↓
-2. Update Django models (app_django/apps/*/models.py)
+2. Generate Django migrations (python manage.py makemigrations)
    ↓
-3. Generate Django migrations (python manage.py makemigrations)
+3. Update SQLAlchemy models (src/database/models.py) to match Django models
    ↓
-4. Update SQLAlchemy models (src/database/models.py) to match
+4. Update scripts/database/schema.sql to match Django models
    ↓
-5. Verify all three are in sync
+5. Run verify_schema.py to verify all three are in sync
 ```
 
 **When making ANY database schema change:**
 
-1. **ALWAYS start with `scripts/database/schema.sql`**
+1. **ALWAYS start with Django models** (`app_django/apps/*/models.py`)
    - This is the authoritative schema definition
-   - Document changes in the version tracking section at the bottom
-   - Use `IF NOT EXISTS` / `IF EXISTS` for idempotent operations
-   - Include comments for new tables/columns
+   - All changes start here
+   - Use proper Django field types and constraints
+   - Django models are the single source of truth
 
-2. **Then update Django models** in appropriate files:
-   - `app_django/apps/options/models.py` - For stocks, option_snapshots, option_contracts
-   - `app_django/apps/strategies/models.py` - For strategy_history, market_conditions
-   - `app_django/apps/data_collection/models.py` - For collection_jobs
-
-3. **Generate Django migrations:**
+2. **Generate Django migrations:**
    ```bash
    cd app_django
    python manage.py makemigrations
    python manage.py migrate
    ```
+   - Review generated migrations to ensure they match your intended changes
+   - Migrations track all schema changes automatically
 
-4. **Update SQLAlchemy models** in `src/database/models.py` to match Django models exactly
+3. **Update SQLAlchemy models** in `src/database/models.py` to match Django models exactly
+   - Must mirror Django models field-by-field
+   - Match field types, constraints, and indexes
+   - Keep `__tablename__` matching Django's `db_table`
+   - Update docstrings to reference Django model
+
+4. **Update schema.sql** in `scripts/database/schema.sql` to match Django models
+   - Use `IF NOT EXISTS` / `IF EXISTS` for idempotent operations
+   - Document changes in version tracking section (optional, for reference)
+   - Include comments for new tables/columns
 
 5. **Verify synchronization:**
-   - Canonical schema updated ✅
-   - Django models updated ✅
-   - SQLAlchemy models updated ✅
-   - Migrations generated ✅
+   ```bash
+   ./scripts/database/verify_schema.py
+   ```
+   - Compares Django models, SQLAlchemy models, and schema.sql
+   - All three should match
+   - If discrepancies found, fix starting from Django models (source of truth)
 
 **Important Rules:**
-- ❌ **NEVER** modify Django models first - always start with canonical schema
-- ❌ **NEVER** modify SQLAlchemy models without updating canonical schema first
-- ✅ **ALWAYS** document changes in schema.sql version tracking section
-- ✅ **ALWAYS** use idempotent SQL (`IF NOT EXISTS`, `IF EXISTS`)
-- ✅ **ALWAYS** keep all three representations in sync (canonical, Django, SQLAlchemy)
+- ✅ **ALWAYS** update Django models first (single source of truth)
+- ✅ **ALWAYS** generate and review Django migrations
+- ✅ **ALWAYS** update SQLAlchemy models to match Django models
+- ✅ **ALWAYS** update schema.sql to match Django models
+- ✅ **ALWAYS** run verify_schema.py to verify all three are in sync
+- ❌ **NEVER** modify SQLAlchemy models or schema.sql without updating Django models first
+- ❌ **NEVER** skip the verification step
 
 **Reference Documentation:**
 - Complete guide: `docs/database/database.md` (Schema Management)
-- Canonical schema: `scripts/database/schema.sql` (Single Source of Truth)
+- Django models: `app_django/apps/*/models.py` (Single Source of Truth)
 
 ### Database Access
 - FastAPI: Use SQLAlchemy with async engine for database access
@@ -272,30 +282,38 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 ### Database Schema Changes (CRITICAL)
 **MUST follow this workflow in order:**
 
-1. **Update `scripts/database/schema.sql`** ⭐ (SINGLE SOURCE OF TRUTH)
+1. **Update Django models** (`app_django/apps/*/models.py`) ⭐ (SINGLE SOURCE OF TRUTH)
    - Add/modify table definitions
-   - Add indexes, constraints, comments
-   - Document changes in version tracking section
-   - Use idempotent SQL (`IF NOT EXISTS`, `IF EXISTS`)
+   - Add indexes, constraints in Meta class
+   - Use proper Django field types
+   - Django models are the authoritative source
 
-2. **Update Django models** (`app_django/apps/*/models.py`)
-   - Match canonical schema exactly
-   - Add appropriate field types and constraints
-
-3. **Generate Django migrations**
+2. **Generate Django migrations**
    ```bash
    cd app_django
    python manage.py makemigrations
+   python manage.py migrate
    ```
+   - Review generated migrations
+   - Migrations track all schema changes
 
-4. **Update SQLAlchemy models** (`src/database/models.py`)
+3. **Update SQLAlchemy models** (`src/database/models.py`)
    - Mirror Django models exactly
    - Match field types, constraints, indexes
+   - Keep `__tablename__` matching Django's `db_table`
+
+4. **Update schema.sql** (`scripts/database/schema.sql`)
+   - Match Django models
+   - Use idempotent SQL (`IF NOT EXISTS`, `IF EXISTS`)
+   - Document changes in version tracking section (optional)
 
 5. **Verify synchronization**
-   - All three representations match
-   - Run migrations successfully
-   - Test database operations
+   ```bash
+   ./scripts/database/verify_schema.py
+   ```
+   - Compares Django models, SQLAlchemy models, and schema.sql
+   - All three should match
+   - Fix any discrepancies starting from Django models
 
 **See `docs/database/database.md` for detailed examples and best practices.**
 

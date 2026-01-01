@@ -54,46 +54,45 @@ watch:
 nav:
   - Home: index.md
   - Project Plan: PROJECT_PLAN.md
-  
+
   - API Documentation:
-    - api/API_DEVELOPMENT_GUIDE.md
-    - api/API_CHANGELOG.md
-  
+      - api/API_DEVELOPMENT_GUIDE.md
+      - api/API_CHANGELOG.md
+
   - Database:
-    - database/database.md
-    - database/DJANGO_VS_SQLALCHEMY.md
-  
+      - database/database.md
+
   - Nginx & Web Server:
-    - nginx/README.md
-    - nginx/SETUP.md
-    - nginx/CONFIGURATION.md
-  
+      - nginx/README.md
+      - nginx/SETUP.md
+      - nginx/CONFIGURATION.md
+
   - Testing:
-    - testing/TEST_STRATEGY.md
-    - testing/TEST_DATABASE_COVERAGE.md
-    - testing/TEST_AND_SCHEMA_SUMMARY.md
-    - testing/README.md
-  
+      - testing/TEST_STRATEGY.md
+      - testing/TEST_DATABASE_COVERAGE.md
+      - testing/TEST_AND_SCHEMA_SUMMARY.md
+      - testing/README.md
+
   - Setup & Installation:
-    - setup/NEXT_STEPS.md
-    - setup/SETUP_COMPLETE.md
-    - setup/README.md
-  
+      - setup/NEXT_STEPS.md
+      - setup/SETUP_COMPLETE.md
+      - setup/README.md
+
   - Deployment:
-    - mkdoc/DEPLOYMENT.md
-  
+      - mkdoc/DEPLOYMENT.md
+
   - Development:
-    - development/PHASE1_RESTRUCTURE.md
-    - development/STRUCTURE_VERIFICATION.md
-    - development/README.md
-  
+      - development/PHASE1_RESTRUCTURE.md
+      - development/STRUCTURE_VERIFICATION.md
+      - development/README.md
+
   - Status & Progress:
-    - status/IMPLEMENTATION_COMPLETE.md
-    - status/IMPLEMENTATION_STATUS.md
-    - status/PHASE1_COMPLETE.md
-    - status/PHASE1_STATUS.md
-    - status/PHASE3_VECTORBT_COMPLETE.md
-    - status/README.md
+      - status/IMPLEMENTATION_COMPLETE.md
+      - status/IMPLEMENTATION_STATUS.md
+      - status/PHASE1_COMPLETE.md
+      - status/PHASE1_STATUS.md
+      - status/PHASE3_VECTORBT_COMPLETE.md
+      - status/README.md
 
 # Markdown extensions
 markdown_extensions:
@@ -122,4 +121,3 @@ extra:
       link: https://github.com/your-username/bifrost-trader-option
   version:
     provider: mike
-
