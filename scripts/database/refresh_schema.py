@@ -42,7 +42,7 @@ def parse_schema_files(schema_dir: Path) -> dict:
         schema_dir / "schema_strategies.sql",
         schema_dir / "schema_data_collection.sql",
     ]
-    
+
     content = ""
     for schema_file in schema_files:
         if schema_file.exists():
@@ -50,7 +50,7 @@ def parse_schema_files(schema_dir: Path) -> dict:
                 content += f.read() + "\n"
         else:
             print(f"{YELLOW}⚠️  Warning: {schema_file.name} not found{NC}")
-    
+
     return parse_schema_content(content)
 
 
