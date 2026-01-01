@@ -22,15 +22,15 @@ The documentation is built locally and deployed to the web server where it's ser
 
 ### 1. Initial Setup (One-time, on Web Server)
 
-**Step 1: Copy scripts to web server**
+**Step 1: Copy nginx setup scripts to web server**
 
 From your dev PC (10.0.0.90):
 
 ```bash
-./scripts/docs/copy_setup_to_server.sh
+./scripts/nginx/copy_setup_to_server.sh
 ```
 
-This copies the setup scripts to the web server.
+This copies the nginx setup scripts to the web server.
 
 **Step 2: Check nginx status (optional)**
 
@@ -38,7 +38,7 @@ SSH into the web server and check if nginx exists:
 
 ```bash
 ssh vision@10.0.0.75
-~/bifrost-scripts/docs/check_nginx.sh
+~/bifrost-scripts/nginx/check_nginx.sh
 ```
 
 This will show:
@@ -57,7 +57,7 @@ The setup script will automatically:
 
 ```bash
 ssh vision@10.0.0.75
-sudo ~/bifrost-scripts/docs/setup_web_server.sh
+sudo ~/bifrost-scripts/nginx/setup_web_server.sh
 ```
 
 **Note**: The script will prompt for confirmation before removing existing nginx.
@@ -238,13 +238,14 @@ jobs:
 ```
 scripts/docs/
 ├── build_docs.sh          # Build documentation locally
-├── deploy_docs.sh          # Deploy to web server
-├── setup_web_server.sh     # Initial nginx setup (run on server)
-└── copy_setup_to_server.sh # Copy scripts to server
+└── deploy_docs.sh         # Deploy to web server
 
 scripts/nginx/
 ├── nginx_docs.conf        # Nginx config for documentation
-└── bifrost.conf           # Nginx config for main application
+├── bifrost.conf           # Nginx config for main application
+├── setup_web_server.sh    # Initial nginx setup (run on server)
+├── check_nginx.sh         # Check nginx status
+└── copy_setup_to_server.sh # Copy setup scripts to server
 
 docs/nginx/
 ├── README.md              # Nginx overview

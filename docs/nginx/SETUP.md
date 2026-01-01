@@ -15,17 +15,17 @@ Complete guide for setting up and configuring nginx on the Web-Server (10.0.0.75
 The easiest way is to use the provided setup script:
 
 ```bash
-# From dev PC: Copy scripts to server
-./scripts/docs/copy_setup_to_server.sh
+# From dev PC: Copy nginx setup scripts to server
+./scripts/nginx/copy_setup_to_server.sh
 
 # SSH into server
 ssh vision@10.0.0.75
 
 # Check nginx status (optional)
-~/bifrost-scripts/docs/check_nginx.sh
+~/bifrost-scripts/nginx/check_nginx.sh
 
 # Run setup (will handle existing nginx)
-sudo ~/bifrost-scripts/docs/setup_web_server.sh
+sudo ~/bifrost-scripts/nginx/setup_web_server.sh
 ```
 
 ### Manual Installation

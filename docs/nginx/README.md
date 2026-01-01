@@ -24,20 +24,20 @@ Nginx is used on the Web-Server (10.0.0.75) to serve:
 
 ### Initial Setup
 
-1. **Copy setup scripts to server:**
+1. **Copy nginx setup scripts to server:**
    ```bash
-   ./scripts/docs/copy_setup_to_server.sh
+   ./scripts/nginx/copy_setup_to_server.sh
    ```
 
 2. **Check nginx status:**
    ```bash
    ssh vision@10.0.0.75
-   ~/bifrost-scripts/docs/check_nginx.sh
+   ~/bifrost-scripts/nginx/check_nginx.sh
    ```
 
 3. **Run setup:**
    ```bash
-   sudo ~/bifrost-scripts/docs/setup_web_server.sh
+   sudo ~/bifrost-scripts/nginx/setup_web_server.sh
    ```
 
 ### Configuration Locations

@@ -1,6 +1,6 @@
 #!/bin/bash
 # Deploy MkDocs documentation to web server (10.0.0.75)
-# This script builds and deploys the documentation to the web server
+# Simple script that builds and deploys documentation to nginx docs path
 
 set -e
 
@@ -22,13 +22,13 @@ echo ""
 echo "📡 Target: $WEB_SERVER_USER@$WEB_SERVER:$DOCS_DEPLOY_PATH"
 echo ""
 
-# Check if site directory exists
+# Build documentation if needed
 if [ ! -d "$LOCAL_SITE_DIR" ]; then
-    echo "⚠️  Site directory not found. Building documentation..."
+    echo "📖 Building documentation..."
     "$SCRIPT_DIR/build_docs.sh"
 fi
 
-# Check if site directory still doesn't exist after build
+# Verify site directory exists
 if [ ! -d "$LOCAL_SITE_DIR" ]; then
     echo "❌ Error: Site directory not found after build"
     exit 1
@@ -61,7 +61,7 @@ ssh "$WEB_SERVER_USER@$WEB_SERVER" "sudo mkdir -p $DOCS_DEPLOY_PATH && sudo chow
 # Backup existing docs if they exist
 echo "💾 Backing up existing documentation..."
 ssh "$WEB_SERVER_USER@$WEB_SERVER" "
-    if [ -d $DOCS_DEPLOY_PATH ]; then
+    if [ -d $DOCS_DEPLOY_PATH ] && [ \"\$(ls -A $DOCS_DEPLOY_PATH 2>/dev/null)\" ]; then
         sudo mv $DOCS_DEPLOY_PATH ${DOCS_DEPLOY_PATH}.backup.\$(date +%Y%m%d_%H%M%S) 2>/dev/null || true
     fi
     sudo mkdir -p $DOCS_DEPLOY_PATH
@@ -88,8 +88,5 @@ echo ""
 echo "🌐 To access from other PCs:"
 echo "   http://10.0.0.75/docs/"
 echo ""
-echo "📝 Next steps:"
-echo "   1. Configure nginx on web server (see scripts/nginx/nginx_docs.conf)"
-echo "   2. Test access from another PC"
+echo "📝 Note: Ensure nginx is configured (see scripts/nginx/ for setup scripts)"
 echo ""
-
