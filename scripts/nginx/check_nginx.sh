@@ -62,27 +62,6 @@ if [ "$IS_LOCAL" = false ]; then
     ssh "$WEB_SERVER_USER@$WEB_SERVER" "chmod +x $REMOTE_SCRIPT_PATH"
     echo "✅ Script copied to: $REMOTE_SCRIPT_PATH"
     echo ""
-    echo "=========================================="
-    echo "Checking Nginx Status on Web Server"
-    echo "=========================================="
-    echo ""
-    echo "📡 Server: $WEB_SERVER_USER@$WEB_SERVER"
-    echo ""
-    
-    # Test SSH connection
-    echo "🔌 Testing SSH connection..."
-    if ! ssh -o ConnectTimeout=5 -o BatchMode=yes "$WEB_SERVER_USER@$WEB_SERVER" exit 2>/dev/null; then
-        echo "❌ Error: Cannot connect to $WEB_SERVER"
-        echo ""
-        echo "Please ensure:"
-        echo "   1. Server is accessible: ping $WEB_SERVER"
-        echo "   2. SSH key is configured: ssh-copy-id $WEB_SERVER_USER@$WEB_SERVER"
-        echo "   3. User has SSH access"
-        exit 1
-    fi
-    
-    echo "✅ SSH connection successful"
-    echo ""
     
     # Check if nginx is installed
     echo "🔍 Checking nginx installation..."
