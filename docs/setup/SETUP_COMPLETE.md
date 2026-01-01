@@ -25,7 +25,7 @@
    - Verifies TimescaleDB extension
    - Checks table existence
 
-5. **`scripts/database/README.md`**
+5. **`docs/database/HOME.md`**
    - Complete database setup guide
    - Troubleshooting tips
    - Manual setup alternatives

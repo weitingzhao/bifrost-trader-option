@@ -133,7 +133,7 @@ python manage.py collect_options SPY
 
 ## Documentation
 
-- `scripts/database/README.md` - Detailed database setup guide
+- `docs/database/HOME.md` - Detailed database setup guide
 - `docs/PROJECT_PLAN.md` - Complete project plan
 - `PHASE1_STATUS.md` - Phase 1 completion status
 
@@ -179,7 +179,7 @@ Once database is set up:
 ## Support
 
 For issues or questions:
-- Check `scripts/database/README.md` for database setup
+- Check `docs/database/HOME.md` for database setup
 - Review `docs/PROJECT_PLAN.md` for architecture details
 - Check service logs for errors
 
