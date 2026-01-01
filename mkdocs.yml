@@ -59,6 +59,11 @@ nav:
   - Database:
     - database/README.md
   
+  - Nginx & Web Server:
+    - nginx/README.md
+    - nginx/SETUP.md
+    - nginx/CONFIGURATION.md
+  
   - Testing:
     - testing/TEST_STRATEGY.md
     - testing/TEST_DATABASE_COVERAGE.md
