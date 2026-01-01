@@ -225,7 +225,7 @@ def generate_markdown(tables: dict, output_dir: Path):
     index_file = output_dir / "SCHEMA.md"
     with open(index_file, "w") as f:
         # Header
-        f.write("# Database Schema\n\n")
+        f.write("# Schema Summary\n\n")
         f.write(
             "This document provides a human-readable view of the complete database schema.\n\n"
         )
