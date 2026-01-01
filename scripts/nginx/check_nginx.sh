@@ -90,10 +90,13 @@ if [ -n "$NGINX_INSTALLED" ]; then
             echo ""
         fi
         
-        # Test nginx configuration
+        # Test nginx configuration (if sudo is available without password)
         echo "🧪 Testing nginx configuration..."
-        CONFIG_TEST=$(ssh "$WEB_SERVER_USER@$WEB_SERVER" "sudo nginx -t 2>&1" || echo "error")
-        if echo "$CONFIG_TEST" | grep -q "syntax is ok"; then
+        CONFIG_TEST=$(ssh "$WEB_SERVER_USER@$WEB_SERVER" "sudo -n nginx -t 2>&1" 2>/dev/null || echo "")
+        if [ -z "$CONFIG_TEST" ]; then
+            echo "   ⚠️  Cannot test configuration (sudo requires password)"
+            echo "   To test manually: ssh $WEB_SERVER_USER@$WEB_SERVER 'sudo nginx -t'"
+        elif echo "$CONFIG_TEST" | grep -q "syntax is ok"; then
             echo "   ✅ Configuration syntax is OK"
             if echo "$CONFIG_TEST" | grep -q "test is successful"; then
                 echo "   ✅ Configuration test is successful"
