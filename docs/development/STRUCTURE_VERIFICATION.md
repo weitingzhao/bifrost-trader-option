@@ -37,10 +37,10 @@ src/
     └── validators.py            ✓ Created (placeholder)
 ```
 
-### Django Structure (django_app/)
+### Django Structure (app_django/)
 
 ```
-django_app/                       ✓ Created
+app_django/                       ✓ Created
 ├── manage.py                    ✓ Created
 ├── django_config/               ✓ Created
 │   ├── settings.py              ✓ Created (basic config)

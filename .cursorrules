@@ -42,9 +42,9 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 - **src/strategies/**: Strategy implementations (base_strategy, covered_call, iron_condor)
 - **src/utils/**: Utility functions (logger, validators)
 
-### Django Code Organization (django_app/)
-- **django_app/django_config/**: Django project settings
-- **django_app/apps/**: Django apps
+### Django Code Organization (app_django/)
+- **app_django/django_config/**: Django project settings
+- **app_django/apps/**: Django apps
   - `options/`: Options data models & admin
   - `strategies/`: Strategy history models & admin
   - `data_collection/`: Data collection management commands

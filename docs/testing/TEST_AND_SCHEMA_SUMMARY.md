@@ -109,7 +109,7 @@ pg_dump -h localhost -U username -d database_name \
 #### From Django
 
 ```bash
-cd django_app
+cd app_django
 python manage.py sqlmigrate options 0001
 python manage.py sqlmigrate strategies 0001
 ```

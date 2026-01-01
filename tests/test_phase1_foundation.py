@@ -63,13 +63,13 @@ class TestStreamlitMonitoring:
     
     def test_monitoring_app_exists(self):
         """Verify monitoring app file exists."""
-        monitoring_app = project_root / 'streamlit_apps' / 'monitoring' / 'app.py'
+        monitoring_app = project_root / 'apps_streamlit' / 'monitoring' / 'app.py'
         assert monitoring_app.exists(), "Monitoring app.py not found"
     
     def test_monitoring_app_imports(self):
         """Verify monitoring app can be imported."""
         import sys
-        sys.path.insert(0, str(project_root / 'streamlit_apps' / 'monitoring'))
+        sys.path.insert(0, str(project_root / 'apps_streamlit' / 'monitoring'))
         try:
             import app
             assert app is not None
@@ -120,19 +120,19 @@ class TestDjangoStructure:
     
     def test_django_manage_exists(self):
         """Verify Django manage.py exists."""
-        manage_py = project_root / 'django_app' / 'manage.py'
+        manage_py = project_root / 'app_django' / 'manage.py'
         assert manage_py.exists(), "Django manage.py not found"
     
     def test_django_config_exists(self):
         """Verify Django config directory exists."""
-        config_dir = project_root / 'django_app' / 'django_config'
+        config_dir = project_root / 'app_django' / 'django_config'
         assert config_dir.exists(), "Django config directory not found"
         assert (config_dir / 'settings.py').exists(), "Django settings.py not found"
     
-    def test_django_apps_exist(self):
+    def test_app_djangos_exist(self):
         """Verify all required Django apps exist."""
         required_apps = ['options', 'strategies', 'data_collection']
-        apps_dir = project_root / 'django_app' / 'apps'
+        apps_dir = project_root / 'app_django' / 'apps'
         
         for app_name in required_apps:
             app_dir = apps_dir / app_name
@@ -159,7 +159,7 @@ class TestDatabaseConfiguration:
     def test_django_models_exist(self):
         """Verify Django models exist."""
         import sys
-        sys.path.insert(0, str(project_root / 'django_app'))
+        sys.path.insert(0, str(project_root / 'app_django'))
         
         try:
             from apps.options.models import OptionSnapshot

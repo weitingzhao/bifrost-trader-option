@@ -94,7 +94,7 @@ bifrost-trader-option/
 │   ├── strategies/              # Strategy implementations ✓
 │   └── utils/                   # Utilities ✓
 │
-├── django_app/                  # Django Application ✓
+├── app_django/                  # Django Application ✓
 │   ├── django_config/           # Django settings ✓
 │   └── apps/                    # Django apps ✓
 │       ├── options/             # Options models & admin ✓
@@ -107,7 +107,7 @@ bifrost-trader-option/
 │   ├── data_collector.py        # Data collection service ✓
 │   └── scheduler.py             # APScheduler ✓
 │
-├── streamlit_apps/              # Streamlit Applications ✓
+├── apps_streamlit/              # Streamlit Applications ✓
 │   ├── monitoring/              # System monitoring (existing) ✓
 │   └── analytics/              # Analytics dashboards ✓
 │
@@ -223,7 +223,7 @@ python3 -m src.api.main
 
 ### Django
 ```bash
-cd django_app
+cd app_django
 python manage.py runserver 0.0.0.0:8001
 ```
 
@@ -234,7 +234,7 @@ celery -A services.celery_app worker --loglevel=info
 
 ### Streamlit Analytics
 ```bash
-cd streamlit_apps/analytics
+cd apps_streamlit/analytics
 streamlit run app.py
 ```
 

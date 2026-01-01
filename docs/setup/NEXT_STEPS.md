@@ -55,7 +55,7 @@ nano .env  # Update all values, especially:
 ./scripts/database/run_migrations.sh
 
 # Or manually:
-cd django_app
+cd app_django
 python manage.py makemigrations
 python manage.py migrate
 ```
@@ -81,7 +81,7 @@ python scripts/database/test_connection.py
 **On APP-SERVER:**
 
 ```bash
-cd django_app
+cd app_django
 python manage.py createsuperuser
 ```
 
@@ -95,7 +95,7 @@ python3 -m src.api.main
 # Should start on http://0.0.0.0:8000
 
 # Test Django
-cd django_app
+cd app_django
 python manage.py runserver 0.0.0.0:8001
 # Should start on http://0.0.0.0:8001
 

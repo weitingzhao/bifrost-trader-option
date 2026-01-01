@@ -87,7 +87,7 @@ bifrost-trader-option/
 │   ├── database/                # SQLAlchemy models & repositories
 │   └── utils/
 │
-├── django_app/                   # Django Application (Admin & Management)
+├── app_django/                   # Django Application (Admin & Management)
 │   ├── manage.py
 │   ├── django_config/            # Django settings
 │   └── apps/
@@ -103,7 +103,7 @@ bifrost-trader-option/
 │   │   └── utils/
 │   └── package.json
 │
-├── streamlit_apps/              # Streamlit Applications
+├── apps_streamlit/              # Streamlit Applications
 │   ├── monitoring/              # System monitoring (existing)
 │   └── analytics/                # Strategy analytics dashboards
 │       ├── app.py

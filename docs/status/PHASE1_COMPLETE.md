@@ -49,7 +49,7 @@ src/
 ### 2. Created Django Project Structure ✓
 
 ```
-django_app/
+app_django/
 ├── manage.py              # Django management script
 ├── django_config/          # Django project settings
 │   ├── settings.py        # Basic Django configuration
@@ -112,14 +112,14 @@ bifrost-trader-option/
 │   ├── database/          # Database layer ✓
 │   ├── strategies/        # Strategy implementations ✓
 │   └── utils/             # Utilities ✓
-├── django_app/            # Django Application ✓
+├── app_django/            # Django Application ✓
 │   ├── django_config/     # Django settings ✓
 │   └── apps/              # Django apps (placeholders) ✓
 ├── shared/                # Shared code ✓
 ├── services/              # Background services ✓
 ├── frontend/              # Frontend (placeholder) ✓
 ├── ml_services/           # ML services (placeholder) ✓
-├── streamlit_apps/        # Streamlit apps (existing) ✓
+├── apps_streamlit/        # Streamlit apps (existing) ✓
 ├── scripts/               # Management scripts ✓
 └── docs/                  # Documentation ✓
 ```

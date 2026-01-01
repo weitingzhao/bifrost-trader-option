@@ -20,7 +20,7 @@ Real-time status monitoring dashboard for APP-SERVER (10.0.0.80).
 ## Quick Start
 
 ```bash
-cd streamlit_apps/monitoring
+cd apps_streamlit/monitoring
 streamlit run app.py
 ```
 

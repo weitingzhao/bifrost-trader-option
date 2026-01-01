@@ -47,8 +47,7 @@ ENV/
 logs/
 
 # MkDocs
-site/
-mkdocs_site/
+app_mkdocs/
 .mkdocs_cache/
 
 # OS

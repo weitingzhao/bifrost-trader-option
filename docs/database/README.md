@@ -17,7 +17,7 @@ When making any database schema changes, follow this process:
 ```
 1. Update scripts/database/schema.sql (SINGLE SOURCE OF TRUTH)
    ↓
-2. Update Django models (django_app/apps/*/models.py)
+2. Update Django models (app_django/apps/*/models.py)
    ↓
 3. Generate Django migrations (python manage.py makemigrations)
    ↓
@@ -46,9 +46,9 @@ CREATE INDEX idx_stocks_market_cap ON stocks(market_cap);
 #### 2. Update Django Models
 
 Edit the appropriate Django model file:
-- `django_app/apps/options/models.py` - For stocks, option_snapshots, option_contracts
-- `django_app/apps/strategies/models.py` - For strategy_history, market_conditions
-- `django_app/apps/data_collection/models.py` - For collection_jobs
+- `app_django/apps/options/models.py` - For stocks, option_snapshots, option_contracts
+- `app_django/apps/strategies/models.py` - For strategy_history, market_conditions
+- `app_django/apps/data_collection/models.py` - For collection_jobs
 
 ```python
 class Stock(models.Model):
@@ -64,12 +64,12 @@ class Stock(models.Model):
 #### 3. Generate Django Migrations
 
 ```bash
-cd django_app
+cd app_django
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-This creates migration files in `django_app/apps/*/migrations/`.
+This creates migration files in `app_django/apps/*/migrations/`.
 
 #### 4. Update SQLAlchemy Models
 
@@ -95,7 +95,7 @@ Run the verification script:
 
 Or manually compare:
 - `scripts/database/schema.sql` (source of truth)
-- Django models in `django_app/apps/*/models.py`
+- Django models in `app_django/apps/*/models.py`
 - SQLAlchemy models in `src/database/models.py`
 
 ## Schema Files
@@ -107,7 +107,7 @@ Or manually compare:
    - All changes start here
    - Includes indexes, constraints, comments
 
-2. **`django_app/apps/*/models.py`** (Django Models)
+2. **`app_django/apps/*/models.py`** (Django Models)
    - Django ORM models
    - Generates migrations
    - Must match canonical schema
@@ -137,7 +137,7 @@ All schema changes must be documented in `scripts/database/schema.sql`:
 -- Version 1.1.0 (2026-01-15)
 --   - Added market_cap column to stocks table
 --   - Added index on market_cap
---   - Migration: django_app/apps/options/migrations/0002_add_market_cap.py
+--   - Migration: app_django/apps/options/migrations/0002_add_market_cap.py
 ```
 
 ## Best Practices
@@ -179,7 +179,7 @@ Always update the version tracking section:
 -- Version 1.2.0 (2026-02-01)
 --   - Added expiration_date to option_contracts
 --   - Changed option_type from VARCHAR(4) to VARCHAR(10)
---   - Migration: django_app/apps/options/migrations/0003_update_option_contracts.py
+--   - Migration: app_django/apps/options/migrations/0003_update_option_contracts.py
 ```
 
 ### 4. Test Migrations
