@@ -64,13 +64,14 @@ WSGI_APPLICATION = 'django_config.wsgi.application'
 
 # Database
 # Shared PostgreSQL + TimescaleDB connection (same as FastAPI)
+# Database is located on APP-SERVER (10.0.0.80)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('DB_NAME', 'options_db'),
         'USER': os.getenv('DB_USER', 'bifrost'),
         'PASSWORD': os.getenv('DB_PASSWORD', ''),
-        'HOST': os.getenv('DB_HOST', 'localhost'),
+        'HOST': os.getenv('DB_HOST', '10.0.0.80'),  # APP-SERVER where database is located
         'PORT': os.getenv('DB_PORT', '5432'),
         'OPTIONS': {
             'connect_timeout': 10,

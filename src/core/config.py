@@ -31,10 +31,11 @@ class Config:
     DEFAULT_STOCK_QUANTITY: int = 100  # Standard lot size
     
     # Database Settings (shared with Django)
+    # Database is located on APP-SERVER (10.0.0.80)
     DB_NAME: str = os.getenv("DB_NAME", "options_db")
     DB_USER: str = os.getenv("DB_USER", "bifrost")
     DB_PASSWORD: str = os.getenv("DB_PASSWORD", "")
-    DB_HOST: str = os.getenv("DB_HOST", "localhost")
+    DB_HOST: str = os.getenv("DB_HOST", "10.0.0.80")  # APP-SERVER where database is located
     DB_PORT: str = os.getenv("DB_PORT", "5432")
     
     @property
