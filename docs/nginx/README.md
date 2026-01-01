@@ -115,5 +115,5 @@ ps aux | grep nginx
 
 - [Project Plan](../PROJECT_PLAN.md) - Overall architecture
 - [Setup Guide](../setup/NEXT_STEPS.md) - Initial project setup
-- [Deploy Documentation Script](../../scripts/docs/deploy_docs.sh) - Script to deploy MkDocs to web server
+- [Deployment Guide](../mkdoc/DEPLOYMENT.md) - Complete deployment guide
 
