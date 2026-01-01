@@ -22,23 +22,45 @@ The documentation is built locally and deployed to the web server where it's ser
 
 ### 1. Initial Setup (One-time, on Web Server)
 
-SSH into the web server and run:
+**Step 1: Copy scripts to web server**
+
+From your dev PC (10.0.0.90):
+
+```bash
+./scripts/docs/copy_setup_to_server.sh
+```
+
+This copies the setup scripts to the web server.
+
+**Step 2: Check nginx status (optional)**
+
+SSH into the web server and check if nginx exists:
 
 ```bash
 ssh vision@10.0.0.75
-sudo ./scripts/docs/setup_web_server.sh
+~/bifrost-scripts/docs/check_nginx.sh
 ```
 
-Or manually:
+This will show:
+- Whether nginx is installed
+- If nginx is running
+- Current nginx configuration
+- Recommendation for next steps
+
+**Step 3: Run setup**
+
+The setup script will automatically:
+- Detect if nginx exists
+- Remove nginx completely if found
+- Reinstall nginx fresh
+- Configure for documentation
 
 ```bash
-# Copy setup script to server
-scp scripts/docs/setup_web_server.sh vision@10.0.0.75:~/
-
-# SSH and run
 ssh vision@10.0.0.75
-sudo bash ~/setup_web_server.sh
+sudo ~/bifrost-scripts/docs/setup_web_server.sh
 ```
+
+**Note**: The script will prompt for confirmation before removing existing nginx.
 
 ### 2. Deploy Documentation (From Dev PC)
 

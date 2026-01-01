@@ -1,6 +1,7 @@
 #!/bin/bash
 # Setup nginx on web server (10.0.0.75) to serve MkDocs documentation
 # Run this script on the web server (10.0.0.75)
+# This script will completely remove and reinstall nginx if it exists
 
 set -e
 
@@ -23,11 +24,56 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # Check if nginx is installed
-if ! command -v nginx &> /dev/null; then
-    echo "📦 Installing nginx..."
-    apt-get update
-    apt-get install -y nginx
+if command -v nginx &> /dev/null; then
+    NGINX_VERSION=$(nginx -v 2>&1 | cut -d'/' -f2)
+    echo "⚠️  Nginx is already installed (version: $NGINX_VERSION)"
+    echo ""
+    echo "This script will:"
+    echo "   1. Stop nginx service"
+    echo "   2. Completely remove nginx"
+    echo "   3. Remove nginx configuration"
+    echo "   4. Reinstall nginx fresh"
+    echo ""
+    read -p "Continue with nginx removal and reinstall? (y/N): " -n 1 -r
+    echo ""
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "❌ Aborted by user"
+        exit 1
+    fi
+    
+    echo ""
+    echo "🛑 Stopping nginx service..."
+    systemctl stop nginx 2>/dev/null || service nginx stop 2>/dev/null || true
+    
+    echo "🗑️  Removing nginx..."
+    # Remove nginx completely
+    if command -v apt-get &> /dev/null; then
+        apt-get remove --purge -y nginx nginx-common nginx-core 2>/dev/null || true
+        apt-get autoremove -y 2>/dev/null || true
+        apt-get autoclean 2>/dev/null || true
+    elif command -v yum &> /dev/null; then
+        yum remove -y nginx 2>/dev/null || true
+    elif command -v dnf &> /dev/null; then
+        dnf remove -y nginx 2>/dev/null || true
+    fi
+    
+    # Remove nginx configuration directories
+    echo "🧹 Cleaning up nginx configuration..."
+    rm -rf /etc/nginx 2>/dev/null || true
+    rm -rf /var/log/nginx 2>/dev/null || true
+    rm -rf /var/lib/nginx 2>/dev/null || true
+    
+    # Kill any remaining nginx processes
+    pkill -9 nginx 2>/dev/null || true
+    
+    echo "✅ Nginx removed completely"
+    echo ""
 fi
+
+# Install nginx fresh
+echo "📦 Installing nginx fresh..."
+apt-get update
+apt-get install -y nginx
 
 # Create docs directory
 echo "📁 Creating documentation directory..."
