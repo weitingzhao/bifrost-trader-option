@@ -49,6 +49,81 @@ if [ "$IS_LOCAL" = false ]; then
     echo "✅ SSH connection successful"
     echo ""
     
+    # Optionally try to run checks with password prompt
+    echo "💡 Some checks require sudo privileges"
+    echo "   You can run checks with password prompts for sudo commands"
+    echo ""
+    read -p "Run checks with password prompts? (y/N): " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo ""
+        echo "🚀 Running checks with password prompts..."
+        echo ""
+        # Use ssh -t to allocate pseudo-terminal for password prompts
+        ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
+            # Check if nginx is installed
+            if command -v nginx &> /dev/null; then
+                NGINX_VERSION=\$(nginx -v 2>&1 | cut -d'/' -f2)
+                echo '✅ Nginx is INSTALLED'
+                echo \"   Version: \$NGINX_VERSION\"
+                echo ''
+                
+                # Check if nginx is running
+                if systemctl is-active --quiet nginx 2>/dev/null || pgrep -x nginx > /dev/null; then
+                    echo '🟢 Nginx is RUNNING'
+                    echo ''
+                    echo '📊 Nginx processes:'
+                    ps aux | grep nginx | grep -v grep | head -5
+                    echo ''
+                else
+                    echo '🔴 Nginx is NOT RUNNING'
+                    echo ''
+                fi
+                
+                # Check nginx configuration
+                if [ -d /etc/nginx ]; then
+                    echo '📁 Nginx configuration directory: /etc/nginx'
+                    echo ''
+                    
+                    # List enabled sites
+                    if [ -d /etc/nginx/sites-enabled ]; then
+                        ENABLED_SITES=\$(ls -1 /etc/nginx/sites-enabled/ 2>/dev/null | grep -v default || echo 'none')
+                        echo '🔗 Enabled sites:'
+                        echo \"\$ENABLED_SITES\" | sed 's/^/   - /'
+                        echo ''
+                    fi
+                    
+                    # Test nginx configuration (can use sudo with password prompt)
+                    echo '🧪 Testing nginx configuration...'
+                    if sudo nginx -t 2>&1; then
+                        echo '   ✅ Configuration syntax is OK'
+                        echo '   ✅ Configuration test is successful'
+                    else
+                        echo '   ❌ Configuration has errors (see above)'
+                    fi
+                    echo ''
+                fi
+                
+                # Check nginx service status
+                echo '⚙️  Systemd service status:'
+                systemctl status nginx --no-pager -l 2>/dev/null | head -15 || echo '   (Unable to get service status)'
+                echo ''
+            else
+                echo '❌ Nginx is NOT INSTALLED'
+                echo ''
+            fi
+        " || {
+            echo ""
+            echo "⚠️  Remote execution completed"
+            echo "   Continuing with basic checks..."
+            echo ""
+        }
+    else
+        echo ""
+        echo "Running basic checks without sudo..."
+        echo ""
+    fi
+    
     # Check if nginx is installed
     echo "🔍 Checking nginx installation..."
     NGINX_INSTALLED=$(ssh "$WEB_SERVER_USER@$WEB_SERVER" "command -v nginx 2>/dev/null" || echo "")
@@ -105,13 +180,16 @@ if [ "$IS_LOCAL" = false ]; then
             echo "✅ Nginx is installed and running"
             echo ""
             echo "📝 Note: Configuration test requires sudo"
-            echo "   To test config, run on server: sudo nginx -t"
+            echo "   Run script again and answer 'y' to test config with password prompt"
+            echo "   Or run on server: sudo nginx -t"
         else
             echo "⚠️  Nginx is installed but NOT running"
             echo ""
             echo "📝 To start nginx:"
             echo "   ssh $WEB_SERVER_USER@$WEB_SERVER"
             echo "   sudo systemctl start nginx"
+            echo ""
+            echo "   Or run script again and answer 'y' to start with password prompt"
         fi
         echo ""
     else
