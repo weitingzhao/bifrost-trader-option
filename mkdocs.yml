@@ -42,6 +42,10 @@ plugins:
   - git-revision-date-localized:
       enable_creation_date: true
 
+# Exclude README.md from docs root (conflicts with index.md)
+exclude_docs: |
+  README.md
+
 # Navigation
 nav:
   - Home: index.md
