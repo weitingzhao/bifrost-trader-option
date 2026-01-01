@@ -1,19 +1,14 @@
 #!/bin/bash
-# Generate markdown documentation from schema_all.sql
-# Creates a readable schema documentation for MkDocs
+# DEPRECATED: This script has been merged into refresh_schema.sh
+# Use refresh_schema.sh instead: ./scripts/database/refresh_schema.sh
+# This file is kept for backward compatibility
 
 set -e
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-echo "=========================================="
-echo "Generating Schema Documentation"
-echo "=========================================="
+echo "⚠️  Warning: generate_schema_docs.sh is deprecated"
+echo "   Use refresh_schema.sh instead: ./scripts/database/refresh_schema.sh"
+echo ""
+echo "Running refresh_schema.sh..."
 echo ""
 
-# Run Python script
-python3 "$SCRIPT_DIR/generate_schema_docs.py"
-
-echo ""
-echo "✅ Done! Schema documentation generated in docs/database/SCHEMA.md"
-echo ""
+exec "$(dirname "$0")/refresh_schema.sh"

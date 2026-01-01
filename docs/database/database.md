@@ -172,18 +172,17 @@ This script compares:
 ### Viewing the Complete Schema
 
 The complete database schema is available in:
-- **`docs/database/schema_all.sql`** - Full schema for documentation (auto-updated)
 - **`scripts/database/schema_all.sql`** - Full schema for deployment (auto-generated)
+- **`docs/database/SCHEMA.md`** - Formatted markdown documentation for MkDocs (auto-generated)
 
-To regenerate the combined schema file:
+To regenerate both files:
 ```bash
-./scripts/database/combine_schemas.sh
+./scripts/database/refresh_schema.sh
 ```
 
 This will:
-1. Combine all app-specific schema files
-2. Create `scripts/database/schema_all.sql` for deployment
-3. Copy to `docs/database/schema_all.sql` for documentation
+1. Combine all app-specific schema files into `schema_all.sql`
+2. Generate markdown documentation in `docs/database/SCHEMA.md`
 
 ## Version Tracking
 
