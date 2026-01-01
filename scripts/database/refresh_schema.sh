@@ -113,6 +113,7 @@ echo "📝 Step 2: Generating markdown documentation..."
 echo ""
 
 # Run Python script to generate markdown (it will also verify schema)
+# Note: Python script reads schema_*.sql files directly, no need for schema_all.sql
 python3 "$SCRIPT_DIR/refresh_schema.py"
 
 echo ""
@@ -123,6 +124,11 @@ echo ""
 echo "📁 Generated files:"
 echo "   ✅ scripts/database/schema_all.sql (for deployment)"
 echo "   ✅ docs/database/SCHEMA.md (for MkDocs documentation)"
+echo ""
+echo "💡 Note:"
+echo "   - schema_all.sql is generated for deployment use"
+echo "   - Verification and docs generation read schema_*.sql files directly"
+echo "   - No duplicate processing needed!"
 echo ""
 echo "📝 Usage:"
 echo "   psql -U bifrost -d options_db -f $OUTPUT_FILE"
