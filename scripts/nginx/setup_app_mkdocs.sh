@@ -35,22 +35,38 @@ echo ""
 
 # Create documentation directory
 echo "📁 Creating documentation directory..."
-ssh "$WEB_SERVER_USER@$WEB_SERVER" "
+if ssh "$WEB_SERVER_USER@$WEB_SERVER" "
     # Create directory if it doesn't exist
-    sudo mkdir -p $DOCS_DEPLOY_PATH
+    sudo mkdir -p $DOCS_DEPLOY_PATH 2>&1
     
     # Set ownership to allow deployment
-    sudo chown $WEB_SERVER_USER:$WEB_SERVER_USER $DOCS_DEPLOY_PATH
+    sudo chown $WEB_SERVER_USER:$WEB_SERVER_USER $DOCS_DEPLOY_PATH 2>&1
     
     # Set permissions (755 for directory, allows read/execute)
-    sudo chmod 755 $DOCS_DEPLOY_PATH
+    sudo chmod 755 $DOCS_DEPLOY_PATH 2>&1
     
     # Create a placeholder index.html if directory is empty
     if [ ! -f $DOCS_DEPLOY_PATH/index.html ]; then
-        echo '<!DOCTYPE html><html><head><title>Bifrost Documentation</title></head><body><h1>Documentation will be deployed here</h1><p>Run ./scripts/docs/deploy_docs.sh to deploy documentation.</p></body></html>' | sudo tee $DOCS_DEPLOY_PATH/index.html > /dev/null
-        sudo chown $WEB_SERVER_USER:$WEB_SERVER_USER $DOCS_DEPLOY_PATH/index.html
+        echo '<!DOCTYPE html><html><head><title>Bifrost Documentation</title></head><body><h1>Documentation will be deployed here</h1><p>Run ./scripts/docs/deploy_docs.sh to deploy documentation.</p></body></html>' | sudo tee $DOCS_DEPLOY_PATH/index.html > /dev/null 2>&1
+        sudo chown $WEB_SERVER_USER:$WEB_SERVER_USER $DOCS_DEPLOY_PATH/index.html 2>&1
     fi
-"
+" 2>&1; then
+    echo "✅ Directory setup completed"
+else
+    echo "⚠️  Warning: Sudo commands may require password"
+    echo ""
+    echo "💡 If sudo password is required, you can:"
+    echo "   1. SSH into server and run commands manually:"
+    echo "      ssh $WEB_SERVER_USER@$WEB_SERVER"
+    echo "      sudo mkdir -p $DOCS_DEPLOY_PATH"
+    echo "      sudo chown $WEB_SERVER_USER:$WEB_SERVER_USER $DOCS_DEPLOY_PATH"
+    echo "      sudo chmod 755 $DOCS_DEPLOY_PATH"
+    echo ""
+    echo "   2. Or configure passwordless sudo for this user"
+    echo ""
+    echo "   Continuing with verification..."
+fi
+echo ""
 
 # Verify directory was created
 echo "🔍 Verifying directory setup..."
@@ -96,6 +112,10 @@ echo "      ./scripts/docs/deploy_docs.sh"
 echo ""
 echo "   2. Verify deployment:"
 echo "      curl http://$WEB_SERVER/docs/"
+echo ""
+echo "💡 Note: If you encountered sudo password prompts, you may need to:"
+echo "   - Configure passwordless sudo, or"
+echo "   - Run this script's commands manually on the server"
 echo ""
 echo "=========================================="
 
