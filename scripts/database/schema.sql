@@ -6,7 +6,7 @@
 -- 
 -- This file (scripts/database/schema.sql) is the authoritative database schema.
 -- All database changes MUST start here, then:
---   1. Update Django models (django_app/apps/*/models.py)
+--   1. Update Django models (app_django/apps/*/models.py)
 --   2. Generate Django migrations (python manage.py makemigrations)
 --   3. Update SQLAlchemy models (src/database/models.py) to match
 --   4. Document changes in version tracking section below
