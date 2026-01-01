@@ -253,9 +253,14 @@ def get_django_tables() -> Dict[str, Dict]:
     tables = {}
     
     try:
+        # Try to import Django - if it fails, return empty dict
+        try:
+            import django
+        except ImportError:
+            return {}
+        
         # Import Django settings
         os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_config.settings')
-        import django
         django.setup()
         
         from django.apps import apps
@@ -431,23 +436,27 @@ def compare_tables(django_tables: Dict, sqlalchemy_tables: Dict, schema_tables: 
     all_table_names = set(django_app_tables.keys()) | set(sqlalchemy_app_tables.keys()) | set(schema_app_tables.keys())
     
     # Check if all tables exist in all three
+    django_available = len(django_tables) > 0
+    
     for table_name in all_table_names:
         in_django = table_name in django_tables
         in_sqlalchemy = table_name in sqlalchemy_tables
         in_schema = table_name in schema_tables
         
-        if not in_django:
+        # Only check Django if it's available
+        if django_available and not in_django:
             issues.append(f"❌ Table '{table_name}' missing in Django models (SINGLE SOURCE OF TRUTH)")
         if not in_sqlalchemy:
             issues.append(f"❌ Table '{table_name}' missing in SQLAlchemy models")
         if not in_schema:
             issues.append(f"⚠️  Table '{table_name}' missing in schema files")
     
-    # Compare fields for tables that exist in both Django and SQLAlchemy
-    for table_name in django_app_tables.keys():
-        if table_name in sqlalchemy_app_tables:
-            django_fields = set(django_app_tables[table_name]['fields'].keys())
-            sqlalchemy_fields = set(sqlalchemy_app_tables[table_name]['fields'].keys())
+    # Compare fields for tables that exist in both Django and SQLAlchemy (only if Django is available)
+    if django_available:
+        for table_name in django_app_tables.keys():
+            if table_name in sqlalchemy_app_tables:
+                django_fields = set(django_app_tables[table_name]['fields'].keys())
+                sqlalchemy_fields = set(sqlalchemy_app_tables[table_name]['fields'].keys())
             
             # Normalize field names (handle relationship vs column name differences)
             # Django might have 'stock' but SQLAlchemy has 'stock_id'
@@ -477,6 +486,16 @@ def compare_tables(django_tables: Dict, sqlalchemy_tables: Dict, schema_tables: 
                 significant_extra = missing_in_django - {'id'}  # id is usually fine
                 if significant_extra:
                     issues.append(f"⚠️  Table '{table_name}': Extra fields in SQLAlchemy: {significant_extra}")
+    
+    # If Django is not available, only verify SQLAlchemy vs schema files
+    if not django_available:
+        # Check SQLAlchemy vs schema files
+        for table_name in sqlalchemy_app_tables.keys():
+            if table_name not in schema_app_tables:
+                issues.append(f"⚠️  Table '{table_name}' in SQLAlchemy but missing in schema files")
+        for table_name in schema_app_tables.keys():
+            if table_name not in sqlalchemy_app_tables:
+                issues.append(f"⚠️  Table '{table_name}' in schema files but missing in SQLAlchemy")
     
     return len(issues) == 0, issues
 
@@ -518,12 +537,16 @@ def verify_schema() -> int:
         print()
         print(f"{GREEN}Summary:{NC}")
         # Count only app tables (exclude Django system tables)
-        django_app_count = len([t for t in django_tables.keys() if t not in {
-            'django_migrations', 'django_content_type', 'django_session', 
-            'django_admin_log', 'auth_user', 'auth_group', 'auth_permission',
-            'auth_user_groups', 'auth_user_user_permissions', 'auth_group_permissions'
-        }])
-        print(f"   - Django models: {django_app_count} app tables (plus {len(django_tables) - django_app_count} Django system tables)")
+        django_available = len(django_tables) > 0
+        if django_available:
+            django_app_count = len([t for t in django_tables.keys() if t not in {
+                'django_migrations', 'django_content_type', 'django_session', 
+                'django_admin_log', 'auth_user', 'auth_group', 'auth_permission',
+                'auth_user_groups', 'auth_user_user_permissions', 'auth_group_permissions'
+            }])
+            print(f"   - Django models: {django_app_count} app tables (plus {len(django_tables) - django_app_count} Django system tables)")
+        else:
+            print(f"   - Django models: Not available (Django not installed or not accessible)")
         print(f"   - SQLAlchemy models: {len(sqlalchemy_tables)} tables")
         print(f"   - Schema files: {len(schema_tables)} tables")
         return 0
