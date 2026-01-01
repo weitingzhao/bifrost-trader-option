@@ -213,16 +213,16 @@ The database schema is organized into three Django apps:
 
 ## Regenerating This Documentation
 
-This documentation is auto-generated from `schema_all.sql`. To regenerate:
+This documentation is auto-generated from `schema_*.sql` files. To regenerate:
 
 ```bash
 ./scripts/database/refresh_schema.sh
 ```
 
-This single command will:
-1. Combine all app-specific schema files into `schema_all.sql`
+This command will:
+1. Read all `schema_*.sql` files directly
 2. Generate this markdown documentation
-3. Verify schema synchronization
+3. Verify schema synchronization (Django → SQLAlchemy → schema files)
 
 ---
 

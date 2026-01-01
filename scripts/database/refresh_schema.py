@@ -322,15 +322,15 @@ def generate_markdown(tables: dict, output_file: Path):
         f.write("  - `schema_data_collection.sql` - Data collection app tables\n\n")
         f.write("## Regenerating This Documentation\n\n")
         f.write(
-            "This documentation is auto-generated from `schema_all.sql`. To regenerate:\n\n"
+            "This documentation is auto-generated from `schema_*.sql` files. To regenerate:\n\n"
         )
         f.write("```bash\n")
         f.write("./scripts/database/refresh_schema.sh\n")
         f.write("```\n\n")
-        f.write("This single command will:\n")
-        f.write("1. Combine all app-specific schema files into `schema_all.sql`\n")
+        f.write("This command will:\n")
+        f.write("1. Read all `schema_*.sql` files directly\n")
         f.write("2. Generate this markdown documentation\n")
-        f.write("3. Verify schema synchronization\n\n")
+        f.write("3. Verify schema synchronization (Django → SQLAlchemy → schema files)\n\n")
         f.write("---\n\n")
         f.write("**Last Updated**: Auto-generated from schema files\n")
 
