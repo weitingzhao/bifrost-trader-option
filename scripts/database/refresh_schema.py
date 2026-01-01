@@ -291,9 +291,9 @@ def generate_markdown(tables: dict, output_dir: Path):
             with open(app_file, "w") as f:
                 # Map app titles to shorter schema titles
                 schema_title_map = {
-                    "Options App": "Options Schema",
-                    "Strategies App": "Strategies Schema",
-                    "Data Collection App": "Data Collection Schema",
+                    "Options App": "Options",
+                    "Strategies App": "Strategies",
+                    "Data Collection App": "Data Collection",
                 }
                 schema_title = schema_title_map.get(
                     app_title, f"{app_title} - Database Schema"

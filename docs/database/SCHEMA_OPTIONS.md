@@ -1,4 +1,4 @@
-# Options Schema
+# Options
 
 Stock symbols, option snapshots, and option contracts
 

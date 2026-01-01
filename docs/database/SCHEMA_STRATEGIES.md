@@ -1,4 +1,4 @@
-# Strategies Schema
+# Strategies
 
 Strategy history and market conditions
 

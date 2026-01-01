@@ -1,4 +1,4 @@
-# Data Collection Schema
+# Data Collection
 
 Collection job tracking
 
