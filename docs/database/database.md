@@ -109,7 +109,7 @@ CREATE INDEX IF NOT EXISTS idx_stocks_market_cap ON stocks(market_cap);
 Run the verification script to ensure all three are in sync:
 
 ```bash
-./scripts/database/verify_schema.py
+./scripts/database/refresh_schema.py --verify-only
 ```
 
 This script compares:
@@ -265,7 +265,7 @@ cd app_django
 python manage.py migrate
 
 # Verify all three are in sync
-./scripts/database/verify_schema.py
+./scripts/database/refresh_schema.py --verify-only
 ```
 
 ### 5. Use Idempotent SQL in schema.sql
@@ -325,7 +325,7 @@ CREATE TABLE IF NOT EXISTS new_table (
 
 5. **Verify synchronization:**
 ```bash
-./scripts/database/verify_schema.py
+./scripts/database/refresh_schema.py --verify-only
 ```
 
 ### Adding a Column
@@ -360,7 +360,7 @@ ALTER TABLE stocks ADD COLUMN IF NOT EXISTS new_column VARCHAR(50);
 
 5. **Verify synchronization:**
 ```bash
-./scripts/database/verify_schema.py
+./scripts/database/refresh_schema.py --verify-only
 ```
 
 ### Adding an Index
@@ -403,7 +403,7 @@ CREATE INDEX IF NOT EXISTS idx_stocks_new_column ON stocks(new_column);
 
 5. **Verify synchronization:**
 ```bash
-./scripts/database/verify_schema.py
+./scripts/database/refresh_schema.py --verify-only
 ```
 
 ## Verification
@@ -412,7 +412,7 @@ CREATE INDEX IF NOT EXISTS idx_stocks_new_column ON stocks(new_column);
 
 ```bash
 # Verify schema matches models
-./scripts/database/verify_schema.py
+./scripts/database/refresh_schema.py --verify-only
 
 # Export and compare schemas
 ./scripts/database/export_schema.sh
@@ -435,7 +435,7 @@ If schemas get out of sync:
 
 1. **Identify the difference:**
    ```bash
-   ./scripts/database/verify_schema.py
+   ./scripts/database/refresh_schema.py --verify-only
    ```
 
 2. **Fix Django models first** (source of truth)
@@ -448,7 +448,7 @@ If schemas get out of sync:
 
 5. **Verify synchronization:**
    ```bash
-   ./scripts/database/verify_schema.py
+   ./scripts/database/refresh_schema.py --verify-only
    ```
 
 ### Migration Conflicts
@@ -470,7 +470,7 @@ If Django migrations conflict:
 5. **Test thoroughly before applying:**
    ```bash
    python manage.py migrate
-   ./scripts/database/verify_schema.py
+   ./scripts/database/refresh_schema.py --verify-only
    ```
 
 ## Summary

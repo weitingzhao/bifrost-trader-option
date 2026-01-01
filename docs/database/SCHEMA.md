@@ -223,6 +223,7 @@ This documentation is auto-generated from `schema_all.sql`. To regenerate:
 This single command will:
 1. Combine all app-specific schema files into `schema_all.sql`
 2. Generate this markdown documentation
+3. Verify schema synchronization
 
 ---
 

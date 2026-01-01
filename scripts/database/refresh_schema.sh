@@ -112,7 +112,7 @@ echo ""
 echo "📝 Step 2: Generating markdown documentation..."
 echo ""
 
-# Run Python script to generate markdown
+# Run Python script to generate markdown (it will also verify schema)
 python3 "$SCRIPT_DIR/refresh_schema.py"
 
 echo ""
