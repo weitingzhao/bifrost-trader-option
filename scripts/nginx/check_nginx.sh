@@ -8,6 +8,11 @@ set -e
 # Configuration
 WEB_SERVER="10.0.0.75"
 WEB_SERVER_USER="vision"
+REMOTE_SCRIPT_PATH="~/bifrost-scripts/nginx/check_nginx.sh"
+
+# Get script directory and path
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_FILE="$SCRIPT_DIR/check_nginx.sh"
 
 # Detect if running locally on server or remotely via SSH
 # If HOSTNAME contains the server name or we're on the server, run locally
@@ -26,8 +31,37 @@ else
     fi
 fi
 
-# If not local, assume we need to SSH
+# If not local, copy script to server first, then SSH
 if [ "$IS_LOCAL" = false ]; then
+    echo "=========================================="
+    echo "Checking Nginx Status on Web Server"
+    echo "=========================================="
+    echo ""
+    echo "📡 Server: $WEB_SERVER_USER@$WEB_SERVER"
+    echo ""
+    
+    # Test SSH connection
+    echo "🔌 Testing SSH connection..."
+    if ! ssh -o ConnectTimeout=5 -o BatchMode=yes "$WEB_SERVER_USER@$WEB_SERVER" exit 2>/dev/null; then
+        echo "❌ Error: Cannot connect to $WEB_SERVER"
+        echo ""
+        echo "Please ensure:"
+        echo "   1. Server is accessible: ping $WEB_SERVER"
+        echo "   2. SSH key is configured: ssh-copy-id $WEB_SERVER_USER@$WEB_SERVER"
+        echo "   3. User has SSH access"
+        exit 1
+    fi
+    
+    echo "✅ SSH connection successful"
+    echo ""
+    
+    # Copy script to server
+    echo "📋 Copying check_nginx.sh to server..."
+    ssh "$WEB_SERVER_USER@$WEB_SERVER" "mkdir -p ~/bifrost-scripts/nginx"
+    scp "$SCRIPT_FILE" "$WEB_SERVER_USER@$WEB_SERVER:$REMOTE_SCRIPT_PATH"
+    ssh "$WEB_SERVER_USER@$WEB_SERVER" "chmod +x $REMOTE_SCRIPT_PATH"
+    echo "✅ Script copied to: $REMOTE_SCRIPT_PATH"
+    echo ""
     echo "=========================================="
     echo "Checking Nginx Status on Web Server"
     echo "=========================================="
@@ -117,14 +151,14 @@ if [ "$IS_LOCAL" = false ]; then
             echo "📝 Note: Configuration test requires sudo password"
             echo "   To test config, run on server: sudo nginx -t"
         else
-            echo "⚠️  Nginx is installed but NOT running"
-            echo ""
-            echo "📝 To start nginx:"
-            echo "   ssh $WEB_SERVER_USER@$WEB_SERVER"
-            echo "   sudo systemctl start nginx"
-            echo ""
-            echo "   Or run this script locally on server:"
-            echo "   ~/bifrost-scripts/nginx/check_nginx.sh"
+        echo "⚠️  Nginx is installed but NOT running"
+        echo ""
+        echo "📝 To start nginx:"
+        echo "   ssh $WEB_SERVER_USER@$WEB_SERVER"
+        echo "   sudo systemctl start nginx"
+        echo ""
+        echo "💡 For full checks with sudo, run on server:"
+        echo "   $REMOTE_SCRIPT_PATH"
         fi
         echo ""
     else
