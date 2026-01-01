@@ -35,23 +35,28 @@ NC = "\033[0m"  # No Color
 
 
 def parse_schema_files(schema_dir: Path) -> dict:
-    """Parse all schema_*.sql files and extract table information."""
-    # Read all app-specific schema files
+    """Parse all schema_*.sql files and extract table information with app mapping."""
+    # Read all app-specific schema files with their app names
     schema_files = [
-        schema_dir / "schema_options.sql",
-        schema_dir / "schema_strategies.sql",
-        schema_dir / "schema_data_collection.sql",
+        (schema_dir / "schema_options.sql", "options"),
+        (schema_dir / "schema_strategies.sql", "strategies"),
+        (schema_dir / "schema_data_collection.sql", "data_collection"),
     ]
-
-    content = ""
-    for schema_file in schema_files:
+    
+    all_tables = {}
+    for schema_file, app_name in schema_files:
         if schema_file.exists():
             with open(schema_file, "r") as f:
-                content += f.read() + "\n"
+                content = f.read()
+            tables = parse_schema_content(content)
+            # Add app name to each table
+            for table_name, table_info in tables.items():
+                table_info["app"] = app_name
+                all_tables[table_name] = table_info
         else:
             print(f"{YELLOW}⚠️  Warning: {schema_file.name} not found{NC}")
-
-    return parse_schema_content(content)
+    
+    return all_tables
 
 
 def parse_schema_content(content: str) -> dict:
@@ -197,7 +202,9 @@ def generate_markdown(tables: dict, output_file: Path):
             "> **Note:** This is an auto-generated file. The source of truth is Django models (`app_django/apps/*/models.py`).\n"
         )
         f.write("> \n")
-        f.write("> For the raw SQL schema files, see the app-specific schema files in `scripts/database/`.\n\n")
+        f.write(
+            "> For the raw SQL schema files, see the app-specific schema files in `scripts/database/`.\n\n"
+        )
         f.write("## Schema Overview\n\n")
         f.write("The database schema is organized into three Django apps:\n\n")
         f.write(
@@ -207,19 +214,48 @@ def generate_markdown(tables: dict, output_file: Path):
         f.write("- **Data Collection App**: Collection job tracking\n\n")
         f.write("---\n\n")
 
-        # Write each table
-        for table_name, table_info in sorted(tables.items()):
-            f.write(f"## {table_name}\n\n")
-            f.write(f"**Description:** {table_info['description']}\n\n")
-            if table_info["django_model"]:
-                f.write(f"**Django Model:** `{table_info['django_model']}`\n\n")
+        # Organize tables by app
+        app_tables = {
+            "options": [],
+            "strategies": [],
+            "data_collection": [],
+        }
+        
+        for table_name, table_info in tables.items():
+            app = table_info.get("app", "unknown")
+            if app in app_tables:
+                app_tables[app].append((table_name, table_info))
+            else:
+                # Fallback for tables without app info
+                app_tables["options"].append((table_name, table_info))
+        
+        # Define app order and descriptions
+        app_order = [
+            ("options", "Options App", "Stock symbols, option snapshots, and option contracts"),
+            ("strategies", "Strategies App", "Strategy history and market conditions"),
+            ("data_collection", "Data Collection App", "Collection job tracking"),
+        ]
+        
+        # Write tables grouped by app
+        for app_key, app_title, app_description in app_order:
+            if app_tables[app_key]:
+                f.write(f"## {app_title}\n\n")
+                f.write(f"{app_description}\n\n")
+                f.write("### Tables\n\n")
+                
+                # Sort tables within each app
+                for table_name, table_info in sorted(app_tables[app_key]):
+                    f.write(f"#### {table_name}\n\n")
+                    f.write(f"**Description:** {table_info['description']}\n\n")
+                    if table_info["django_model"]:
+                        f.write(f"**Django Model:** `{table_info['django_model']}`\n\n")
 
-            # Columns
-            f.write("### Columns\n\n")
-            f.write("| Column Name | Type | Constraints | Description |\n")
-            f.write("|------------|------|-------------|-------------|\n")
+                    # Columns
+                    f.write("**Columns:**\n\n")
+                    f.write("| Column Name | Type | Constraints | Description |\n")
+                    f.write("|------------|------|-------------|-------------|\n")
 
-            for col in table_info["columns"]:
+                    for col in table_info["columns"]:
                 constraints_str = (
                     ", ".join(col["constraints"]) if col["constraints"] else "-"
                 )
@@ -286,29 +322,31 @@ def generate_markdown(tables: dict, output_file: Path):
                 else:
                     desc = "-"
 
-                f.write(
-                    f"| `{col['name']}` | `{col['type']}` | {constraints_str} | {desc} |\n"
-                )
+                        f.write(
+                            f"| `{col['name']}` | `{col['type']}` | {constraints_str} | {desc} |\n"
+                        )
 
-            f.write("\n")
+                    f.write("\n")
 
-            # Foreign Keys
-            if table_info["foreign_keys"]:
-                f.write("### Foreign Keys\n\n")
-                for fk in table_info["foreign_keys"]:
-                    f.write(
-                        f"- `{fk['column']}` → `{fk['references_table']}.{fk['references_column']}`\n"
-                    )
+                    # Foreign Keys
+                    if table_info["foreign_keys"]:
+                        f.write("**Foreign Keys:**\n\n")
+                        for fk in table_info["foreign_keys"]:
+                            f.write(
+                                f"- `{fk['column']}` → `{fk['references_table']}.{fk['references_column']}`\n"
+                            )
+                        f.write("\n")
+
+                    # Indexes
+                    if table_info["indexes"]:
+                        f.write("**Indexes:**\n\n")
+                        for idx in table_info["indexes"]:
+                            f.write(f"- `{idx}`\n")
+                        f.write("\n")
+
+                    f.write("---\n\n")
+                
                 f.write("\n")
-
-            # Indexes
-            if table_info["indexes"]:
-                f.write("### Indexes\n\n")
-                for idx in table_info["indexes"]:
-                    f.write(f"- `{idx}`\n")
-                f.write("\n")
-
-            f.write("---\n\n")
 
         # Footer
         f.write("## Related Files\n\n")
@@ -330,7 +368,9 @@ def generate_markdown(tables: dict, output_file: Path):
         f.write("This command will:\n")
         f.write("1. Read all `schema_*.sql` files directly\n")
         f.write("2. Generate this markdown documentation\n")
-        f.write("3. Verify schema synchronization (Django → SQLAlchemy → schema files)\n\n")
+        f.write(
+            "3. Verify schema synchronization (Django → SQLAlchemy → schema files)\n\n"
+        )
         f.write("---\n\n")
         f.write("**Last Updated**: Auto-generated from schema files\n")
 
