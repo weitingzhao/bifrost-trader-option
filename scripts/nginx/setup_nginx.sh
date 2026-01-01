@@ -59,15 +59,13 @@ if [ -n "$NGINX_INSTALLED" ]; then
     fi
     
     echo ""
-    echo "🛑 Stopping nginx service..."
-    echo "💡 This requires sudo privileges (will prompt for password)"
+    echo "🛑 Stopping and removing nginx..."
+    echo "💡 This requires sudo privileges (will prompt for password once)"
     ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
+        # Stop nginx
         sudo systemctl stop nginx 2>/dev/null || sudo service nginx stop 2>/dev/null || true
-    "
-    
-    echo "🗑️  Removing nginx..."
-    echo "💡 This requires sudo privileges (will prompt for password)"
-    ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
+        
+        # Remove nginx
         if command -v apt-get &> /dev/null; then
             sudo apt-get remove --purge -y nginx nginx-common nginx-core 2>/dev/null || true
             sudo apt-get autoremove -y 2>/dev/null || true
@@ -91,18 +89,15 @@ if [ -n "$NGINX_INSTALLED" ]; then
     echo ""
 fi
 
-# Install nginx fresh
-echo "📦 Installing nginx..."
-echo "💡 This requires sudo privileges (will prompt for password)"
+# Install nginx and create docs directory
+echo "📦 Installing nginx and setting up directories..."
+echo "💡 This requires sudo privileges (will prompt for password once)"
 ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
+    # Install nginx
     sudo apt-get update
     sudo apt-get install -y nginx
-"
-
-# Create docs directory
-echo "📁 Creating documentation directory..."
-echo "💡 This requires sudo privileges (will prompt for password)"
-ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
+    
+    # Create docs directory
     sudo mkdir -p $DOCS_DEPLOY_PATH
     sudo chown -R www-data:www-data $DOCS_DEPLOY_PATH
     sudo chmod -R 755 $DOCS_DEPLOY_PATH
@@ -110,17 +105,36 @@ ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
 
 # Deploy nginx configurations
 echo "⚙️  Deploying nginx configurations..."
-echo "💡 This requires sudo (will prompt for password)"
+echo "💡 This requires sudo (will prompt for password once)"
 
 # Deploy nginx_docs.conf
 if [ -f "$SCRIPT_DIR/nginx_docs.conf" ]; then
     echo "   📋 Deploying nginx_docs.conf..."
     scp "$SCRIPT_DIR/nginx_docs.conf" "$WEB_SERVER_USER@$WEB_SERVER:/tmp/nginx_docs.conf"
+fi
+
+# Deploy bifrost.conf if available
+if [ -f "$SCRIPT_DIR/bifrost.conf" ]; then
+    echo "   📋 Preparing bifrost.conf..."
+    scp "$SCRIPT_DIR/bifrost.conf" "$WEB_SERVER_USER@$WEB_SERVER:/tmp/bifrost.conf"
+fi
+
+# Deploy all configs in one SSH session
+if [ -f "$SCRIPT_DIR/nginx_docs.conf" ]; then
     ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
+        # Deploy nginx_docs.conf
         sudo cp /tmp/nginx_docs.conf $NGINX_CONFIG
         sudo chmod 644 $NGINX_CONFIG
         rm /tmp/nginx_docs.conf
         echo '✅ nginx_docs.conf deployed'
+        
+        # Deploy bifrost.conf if available
+        if [ -f /tmp/bifrost.conf ]; then
+            sudo cp /tmp/bifrost.conf /etc/nginx/sites-available/bifrost
+            sudo chmod 644 /etc/nginx/sites-available/bifrost
+            rm /tmp/bifrost.conf
+            echo '✅ bifrost.conf deployed (not enabled by default)'
+        fi
     "
 else
     echo "   ⚠️  Warning: nginx_docs.conf not found, creating inline..."
@@ -163,21 +177,9 @@ EOF
     ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "sudo chmod 644 $NGINX_CONFIG"
 fi
 
-# Deploy bifrost.conf (optional, for future use)
-if [ -f "$SCRIPT_DIR/bifrost.conf" ]; then
-    echo "   📋 Deploying bifrost.conf..."
-    scp "$SCRIPT_DIR/bifrost.conf" "$WEB_SERVER_USER@$WEB_SERVER:/tmp/bifrost.conf"
-    ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
-        sudo cp /tmp/bifrost.conf /etc/nginx/sites-available/bifrost
-        sudo chmod 644 /etc/nginx/sites-available/bifrost
-        rm /tmp/bifrost.conf
-        echo '✅ bifrost.conf deployed (not enabled by default)'
-    "
-fi
-
-# Enable site and remove conflicting configs
-echo "🔗 Enabling nginx site..."
-echo "💡 This requires sudo (will prompt for password)"
+# Enable site, test config, and start nginx (all in one session)
+echo "🔗 Enabling site, testing config, and starting nginx..."
+echo "💡 This requires sudo (will prompt for password once)"
 ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
     # Remove default site if it exists
     if [ -L /etc/nginx/sites-enabled/default ]; then
@@ -201,22 +203,20 @@ ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
         sudo rm /etc/nginx/sites-enabled/bifrost
         echo '⚠️  Bifrost site disabled (can be enabled later if needed)'
     fi
-"
-
-# Test nginx configuration
-echo "🧪 Testing nginx configuration..."
-echo "💡 This requires sudo (will prompt for password)"
-if ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "sudo nginx -t"; then
-    echo "✅ Nginx configuration is valid"
-else
-    echo "❌ Error: Nginx configuration test failed"
-    exit 1
-fi
-
-# Start/reload nginx
-echo "🔄 Starting nginx..."
-echo "💡 This requires sudo (will prompt for password)"
-ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "
+    
+    # Test nginx configuration
+    echo ''
+    echo '🧪 Testing nginx configuration...'
+    if sudo nginx -t; then
+        echo '✅ Nginx configuration is valid'
+    else
+        echo '❌ Error: Nginx configuration test failed'
+        exit 1
+    fi
+    
+    # Start/reload nginx
+    echo ''
+    echo '🔄 Starting nginx...'
     sudo systemctl enable nginx
     sudo systemctl start nginx
     sudo systemctl reload nginx 2>/dev/null || true
