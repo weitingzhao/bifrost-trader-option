@@ -21,7 +21,7 @@ When making any database schema changes, follow this process:
    ↓
 3. Update SQLAlchemy models (src/database/models.py) to match Django models
    ↓
-4. Update scripts/database/schema.sql to match Django models
+4. Update app-specific schema files (schema_*.sql) to match Django models
    ↓
 5. Run refresh_schema.py --verify-only to verify all three are in sync
 ```
@@ -90,7 +90,7 @@ class Stock(Base):
 
 #### 4. Update Schema SQL
 
-Edit `scripts/database/schema.sql` to match Django models:
+Edit app-specific schema files (`schema_*.sql`) to match Django models:
 
 ```sql
 -- Update to match Django model changes
@@ -115,7 +115,7 @@ Run the verification script to ensure all three are in sync:
 This script compares:
 - Django models (`app_django/apps/*/models.py`)
 - SQLAlchemy models (`src/database/models.py`)
-- Schema SQL (`scripts/database/schema.sql`)
+- Schema SQL files (`scripts/database/schema_*.sql`)
 
 **Expected output:** All three should match. If not, fix discrepancies starting from Django models (source of truth).
 
@@ -233,7 +233,7 @@ class Stock(models.Model):
 **Then:**
 1. Generate Django migrations
 2. Update SQLAlchemy models to match
-3. Update schema.sql to match
+3. Update schema_*.sql files to match
 4. Run refresh_schema.py --verify-only to verify sync
 
 ### 2. Review Generated Migrations
@@ -268,9 +268,9 @@ python manage.py migrate
 ./scripts/database/refresh_schema.py --verify-only
 ```
 
-### 5. Use Idempotent SQL in schema.sql
+### 5. Use Idempotent SQL in Schema Files
 
-When updating `scripts/database/schema.sql`, always use `IF NOT EXISTS` and `IF EXISTS`:
+When updating app-specific schema files (`schema_*.sql`), always use `IF NOT EXISTS` and `IF EXISTS`:
 
 ```sql
 -- ✅ Good
@@ -314,7 +314,7 @@ class NewTable(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 ```
 
-4. **Update schema.sql** to match:
+4. **Update schema_*.sql files** to match:
 ```sql
 CREATE TABLE IF NOT EXISTS new_table (
     id SERIAL PRIMARY KEY,
@@ -353,7 +353,7 @@ class Stock(Base):
     new_column = Column(String(50), nullable=True)
 ```
 
-4. **Update schema.sql** to match:
+4. **Update schema_*.sql files** to match:
 ```sql
 ALTER TABLE stocks ADD COLUMN IF NOT EXISTS new_column VARCHAR(50);
 ```
@@ -396,7 +396,7 @@ class Stock(Base):
     )
 ```
 
-4. **Update schema.sql** to match:
+4. **Update schema_*.sql files** to match:
 ```sql
 CREATE INDEX IF NOT EXISTS idx_stocks_new_column ON stocks(new_column);
 ```
@@ -416,14 +416,14 @@ CREATE INDEX IF NOT EXISTS idx_stocks_new_column ON stocks(new_column);
 
 # Export and compare schemas
 ./scripts/database/export_schema.sh
-diff scripts/database/schema.sql scripts/database/schema_sqlalchemy.sql
+diff scripts/database/schema_all.sql scripts/database/schema_sqlalchemy.sql
 ```
 
 ### Manual Verification
 
 1. Check Django models are up to date (source of truth)
 2. Compare SQLAlchemy models with Django models
-3. Compare schema.sql with Django models
+3. Compare schema_*.sql files with Django models
 4. Run Django migrations to ensure database matches models
 5. Run tests to ensure everything works
 
@@ -480,7 +480,7 @@ If Django migrations conflict:
 - Always update Django models first
 - Generate Django migrations
 - Then update SQLAlchemy models to match Django models
-- Then update schema.sql to match Django models
+- Then update schema_*.sql files to match Django models
 - Run `refresh_schema.py --verify-only` to verify all three are in sync
 - Django migrations track all schema changes
 

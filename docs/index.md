@@ -54,7 +54,7 @@ All database changes must follow this workflow:
 1. Update Django models (SINGLE SOURCE OF TRUTH)
 2. Generate Django migrations
 3. Update SQLAlchemy models to match Django models
-4. Update schema.sql to match Django models
+4. Update schema_*.sql files to match Django models
 5. Run refresh_schema.py --verify-only to verify all three are in sync
 
 See [Database Documentation](database/database.md) for details.

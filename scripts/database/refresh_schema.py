@@ -421,7 +421,7 @@ def compare_tables(django_tables: Dict, sqlalchemy_tables: Dict, schema_tables: 
     """Compare tables across all three sources."""
     issues = []
     
-    # Django system tables that we don't need to track in SQLAlchemy or schema.sql
+    # Django system tables that we don't need to track in SQLAlchemy or schema files
     django_system_tables = {
         'django_migrations', 'django_content_type', 'django_session', 
         'django_admin_log', 'auth_user', 'auth_group', 'auth_permission',
@@ -507,7 +507,7 @@ def verify_schema() -> int:
     print("=" * 60)
     print()
     print(f"{BLUE}Single Source of Truth: Django Models{NC}")
-    print(f"{BLUE}Comparing: Django → SQLAlchemy → schema.sql{NC}")
+    print(f"{BLUE}Comparing: Django → SQLAlchemy → schema files{NC}")
     print()
     
     # Load all three sources

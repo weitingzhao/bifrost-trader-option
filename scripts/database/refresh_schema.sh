@@ -21,8 +21,8 @@ echo ""
 echo "📦 Step 1: Combining schema files..."
 echo ""
 
-# Start with master schema file (includes TimescaleDB extension)
-echo "📄 Reading master schema.sql..."
+# Start with header (includes TimescaleDB extension)
+echo "📄 Creating schema_all.sql..."
 cat > "$OUTPUT_FILE" << 'EOF'
 -- ============================================================================
 -- BIFROST TRADER OPTION - COMPLETE DATABASE SCHEMA
