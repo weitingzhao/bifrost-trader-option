@@ -120,4 +120,7 @@ echo ""
 echo "📚 Documentation:"
 echo "   Schema also available at: docs/database/schema_all.sql"
 echo ""
+echo "💡 Tip: Generate markdown documentation:"
+echo "   ./scripts/database/generate_schema_docs.sh"
+echo ""
 

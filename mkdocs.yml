@@ -61,6 +61,7 @@ nav:
 
   - Database:
       - database/database.md
+      - database/SCHEMA.md
 
   - Nginx & Web Server:
       - nginx/README.md
