@@ -133,7 +133,7 @@ This document provides a comprehensive status of all implementation phases from 
 - `src/backtesting/vectorbt_engine.py` - VectorBT integration
 - `src/backtesting/models.py` - Backtest result models
 - `src/api/routes/backtesting.py` - Backtesting API endpoints
-- `apps_streamlit/analytics/pages/backtesting.py` - Backtesting UI
+- `app_streamlit/analytics/pages/backtesting.py` - Backtesting UI
 
 ### Documentation
 - `docs/status/PHASE3_VECTORBT_COMPLETE.md` - VectorBT integration details

@@ -63,13 +63,13 @@ class TestStreamlitMonitoring:
     
     def test_monitoring_app_exists(self):
         """Verify monitoring app file exists."""
-        monitoring_app = project_root / 'apps_streamlit' / 'monitoring' / 'app.py'
+        monitoring_app = project_root / 'app_streamlit' / 'monitoring' / 'app.py'
         assert monitoring_app.exists(), "Monitoring app.py not found"
     
     def test_monitoring_app_imports(self):
         """Verify monitoring app can be imported."""
         import sys
-        sys.path.insert(0, str(project_root / 'apps_streamlit' / 'monitoring'))
+        sys.path.insert(0, str(project_root / 'app_streamlit' / 'monitoring'))
         try:
             import app
             assert app is not None

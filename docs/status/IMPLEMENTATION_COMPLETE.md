@@ -107,7 +107,7 @@ bifrost-trader-option/
 │   ├── data_collector.py        # Data collection service ✓
 │   └── scheduler.py             # APScheduler ✓
 │
-├── apps_streamlit/              # Streamlit Applications ✓
+├── app_streamlit/              # Streamlit Applications ✓
 │   ├── monitoring/              # System monitoring (existing) ✓
 │   └── analytics/              # Analytics dashboards ✓
 │
@@ -234,7 +234,7 @@ celery -A services.celery_app worker --loglevel=info
 
 ### Streamlit Analytics
 ```bash
-cd apps_streamlit/analytics
+cd app_streamlit/analytics
 streamlit run app.py
 ```
 

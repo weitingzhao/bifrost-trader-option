@@ -22,7 +22,7 @@ class TestPlotlyCharts:
     
     def test_analytics_pages_exist(self):
         """Verify analytics pages exist."""
-        pages_dir = project_root / 'apps_streamlit' / 'analytics' / 'pages'
+        pages_dir = project_root / 'app_streamlit' / 'analytics' / 'pages'
         required_pages = [
             'strategy_performance.py',
             'option_chain_viewer.py',
@@ -57,12 +57,12 @@ class TestStreamlitAnalytics:
     
     def test_analytics_app_exists(self):
         """Verify analytics app exists."""
-        analytics_app = project_root / 'apps_streamlit' / 'analytics' / 'app.py'
+        analytics_app = project_root / 'app_streamlit' / 'analytics' / 'app.py'
         assert analytics_app.exists(), "Analytics app.py not found"
     
     def test_all_pages_exist(self):
         """Verify all analytics pages exist."""
-        pages_dir = project_root / 'apps_streamlit' / 'analytics' / 'pages'
+        pages_dir = project_root / 'app_streamlit' / 'analytics' / 'pages'
         required_pages = [
             'strategy_performance.py',
             'option_chain_viewer.py',
@@ -139,12 +139,12 @@ class TestOptionChainVisualization:
     
     def test_option_chain_viewer_exists(self):
         """Verify option chain viewer page exists."""
-        viewer_page = project_root / 'apps_streamlit' / 'analytics' / 'pages' / 'option_chain_viewer.py'
+        viewer_page = project_root / 'app_streamlit' / 'analytics' / 'pages' / 'option_chain_viewer.py'
         assert viewer_page.exists(), "Option chain viewer page not found"
     
     def test_viewer_has_visualization_code(self):
         """Verify viewer has visualization code."""
-        viewer_page = project_root / 'apps_streamlit' / 'analytics' / 'pages' / 'option_chain_viewer.py'
+        viewer_page = project_root / 'app_streamlit' / 'analytics' / 'pages' / 'option_chain_viewer.py'
         
         with open(viewer_page, 'r') as f:
             content = f.read().lower()

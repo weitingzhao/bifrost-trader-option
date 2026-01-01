@@ -103,7 +103,7 @@ bifrost-trader-option/
 │   │   └── utils/
 │   └── package.json
 │
-├── apps_streamlit/              # Streamlit Applications
+├── app_streamlit/              # Streamlit Applications
 │   ├── monitoring/              # System monitoring (existing)
 │   └── analytics/                # Strategy analytics dashboards
 │       ├── app.py

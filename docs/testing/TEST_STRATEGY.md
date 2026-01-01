@@ -79,18 +79,18 @@ print('✓ IB connection manager has required methods')
 **Test Strategy:**
 ```bash
 # Test 1: Verify Streamlit monitoring app exists
-test -f apps_streamlit/monitoring/app.py && echo "✓ Monitoring app exists"
+test -f app_streamlit/monitoring/app.py && echo "✓ Monitoring app exists"
 
 # Test 2: Verify app imports
 python3 -c "
 import sys
-sys.path.insert(0, 'apps_streamlit/monitoring')
+sys.path.insert(0, 'app_streamlit/monitoring')
 import app
 print('✓ Monitoring app imports successfully')
 "
 
 # Test 3: Check for required pages
-ls apps_streamlit/monitoring/pages/ | grep -q ".*\.py" && echo "✓ Pages directory exists"
+ls app_streamlit/monitoring/pages/ | grep -q ".*\.py" && echo "✓ Pages directory exists"
 ```
 
 **Expected Results:**
@@ -99,7 +99,7 @@ ls apps_streamlit/monitoring/pages/ | grep -q ".*\.py" && echo "✓ Pages direct
 - Pages directory exists with page files
 
 **Verification Checklist:**
-- [ ] `apps_streamlit/monitoring/app.py` exists
+- [ ] `app_streamlit/monitoring/app.py` exists
 - [ ] App can be imported
 - [ ] Pages directory exists
 - [ ] No import errors
@@ -492,9 +492,9 @@ grep -q "plotly" requirements.txt && echo "✓ Plotly in requirements"
 python3 << 'EOF'
 import os
 analytics_pages = [
-    'apps_streamlit/analytics/pages/strategy_performance.py',
-    'apps_streamlit/analytics/pages/option_chain_viewer.py',
-    'apps_streamlit/analytics/pages/profit_analysis.py'
+    'app_streamlit/analytics/pages/strategy_performance.py',
+    'app_streamlit/analytics/pages/option_chain_viewer.py',
+    'app_streamlit/analytics/pages/profit_analysis.py'
 ]
 for page in analytics_pages:
     if os.path.exists(page):
@@ -558,7 +558,7 @@ EOF
 **Test Strategy:**
 ```bash
 # Test 1: Verify analytics app exists
-test -f apps_streamlit/analytics/app.py && echo "✓ Analytics app exists"
+test -f app_streamlit/analytics/app.py && echo "✓ Analytics app exists"
 
 # Test 2: Verify pages exist
 python3 << 'EOF'
@@ -569,7 +569,7 @@ pages = [
     'profit_analysis.py',
     'backtesting.py'
 ]
-pages_dir = 'apps_streamlit/analytics/pages'
+pages_dir = 'app_streamlit/analytics/pages'
 for page in pages:
     if os.path.exists(f'{pages_dir}/{page}'):
         print(f"✓ {page} exists")
@@ -580,7 +580,7 @@ EOF
 # Test 3: Verify app imports
 python3 -c "
 import sys
-sys.path.insert(0, 'apps_streamlit/analytics')
+sys.path.insert(0, 'app_streamlit/analytics')
 import app
 print('✓ Analytics app imports successfully')
 "
@@ -592,7 +592,7 @@ print('✓ Analytics app imports successfully')
 - App imports successfully
 
 **Verification Checklist:**
-- [ ] `apps_streamlit/analytics/app.py` exists
+- [ ] `app_streamlit/analytics/app.py` exists
 - [ ] All page files exist
 - [ ] App imports without errors
 
@@ -673,11 +673,11 @@ print('✓ Pricing utilities exist')
 **Test Strategy:**
 ```bash
 # Test 1: Verify option chain viewer page
-test -f apps_streamlit/analytics/pages/option_chain_viewer.py && echo "✓ Option chain viewer exists"
+test -f app_streamlit/analytics/pages/option_chain_viewer.py && echo "✓ Option chain viewer exists"
 
 # Test 2: Check for visualization code
 python3 << 'EOF'
-with open('apps_streamlit/analytics/pages/option_chain_viewer.py', 'r') as f:
+with open('app_streamlit/analytics/pages/option_chain_viewer.py', 'r') as f:
     content = f.read()
     if 'plotly' in content.lower() or 'chart' in content.lower():
         print("✓ Option chain viewer has visualization code")

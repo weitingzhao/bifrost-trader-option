@@ -18,7 +18,7 @@ VectorBT has been successfully integrated for options strategy backtesting. This
    - `GET /api/backtesting/compare` - Compare multiple strategies
 
 3. **Streamlit Backtesting Page**
-   - `apps_streamlit/analytics/pages/backtesting.py` - Interactive backtesting UI
+   - `app_streamlit/analytics/pages/backtesting.py` - Interactive backtesting UI
    - Added to analytics dashboard navigation
 
 4. **Requirements Updated**
@@ -72,7 +72,7 @@ POST /api/backtesting/run
 ### Streamlit
 
 ```bash
-cd apps_streamlit/analytics
+cd app_streamlit/analytics
 streamlit run app.py
 # Navigate to "Backtesting" page
 ```

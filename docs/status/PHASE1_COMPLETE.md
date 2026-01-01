@@ -119,7 +119,7 @@ bifrost-trader-option/
 ├── services/              # Background services ✓
 ├── frontend/              # Frontend (placeholder) ✓
 ├── ml_services/           # ML services (placeholder) ✓
-├── apps_streamlit/        # Streamlit apps (existing) ✓
+├── app_streamlit/        # Streamlit apps (existing) ✓
 ├── scripts/               # Management scripts ✓
 └── docs/                  # Documentation ✓
 ```
