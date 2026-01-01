@@ -3,7 +3,7 @@
 # This script creates the documentation directory with correct permissions
 # Run this before deploying documentation to prevent nginx folder exceptions
 
-set -e
+# Note: set -e removed to allow graceful error handling for sudo password prompts
 
 # Configuration
 WEB_SERVER="10.0.0.75"
