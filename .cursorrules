@@ -79,17 +79,17 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 ### Portal UI (app_portal/)
 - **app_portal/**: Vue.js 3 portal UI application
   - Uses Skote Nodejs v4.2.0 theme as **design reference only**
-  - Theme located in `ref_themes/skote_nodejs_v4.2.0/` (excluded from git)
+  - Theme located in `reference/themes/skote_nodejs_v4.2.0/` (excluded from git)
   - Build custom Vue.js components following Skote's design patterns
   - Convert EJS patterns to Vue.js patterns
   - Reference SCSS styling from theme
 
-### Theme Reference (ref_themes/)
-- **ref_themes/skote_nodejs_v4.2.0/**: Purchased Skote theme (EXCLUDED from git)
+### Theme Reference (reference/)
+- **reference/themes/skote_nodejs_v4.2.0/**: Purchased Skote theme (EXCLUDED from git)
   - **Type**: Node.js/Express.js backend template with EJS views
   - **Purpose**: Design reference template for building Vue.js portal UI
   - **Usage**: Reference only - convert EJS patterns to Vue.js
-  - **Launch**: Use `./scripts/portal_ui/launch_skote.sh admin` to view theme in browser
+  - **Launch**: Use `./scripts/launch/launch-ref-skote.sh admin` to view theme in browser
   - **Important**: This is NOT a Vue.js template - use as design reference only
 
 ## Import Conventions
@@ -162,7 +162,7 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 - Use management commands for background tasks
 
 ### Portal UI (Vue.js) Best Practices
-- Reference Skote theme in `ref_themes/skote_nodejs_v4.2.0/` for design patterns
+- Reference Skote theme in `reference/themes/skote_nodejs_v4.2.0/` for design patterns
 - Convert EJS templates to Vue.js components
 - Follow Skote's SCSS styling patterns
 - Build custom trading components in `app_portal/src/components/trading/`
@@ -387,11 +387,11 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 **See `docs/database/database.md` for detailed examples and best practices.**
 
 ### Portal UI Development
-1. **Reference Skote Theme**: Study `ref_themes/skote_nodejs_v4.2.0/Admin/views/` for design patterns
+1. **Reference Skote Theme**: Study `reference/themes/skote_nodejs_v4.2.0/Admin/views/` for design patterns
 2. **Convert EJS to Vue.js**: Transform EJS templates to Vue.js components
-3. **Reference SCSS**: Study `ref_themes/skote_nodejs_v4.2.0/Admin/src/assets/scss/` for styling
+3. **Reference SCSS**: Study `reference/themes/skote_nodejs_v4.2.0/Admin/src/assets/scss/` for styling
 4. **Build Custom Components**: Create trading-specific components in `app_portal/src/components/trading/`
-5. **Launch Theme**: Use `./scripts/portal_ui/launch_skote.sh admin` to view theme in browser for reference
+5. **Launch Theme**: Use `./scripts/launch/launch-ref-skote.sh admin` to view theme in browser for reference
 
 ## Common Patterns
 
@@ -485,14 +485,14 @@ import { useOptionsStore } from '@/store/options'
 
 ### Using Skote Theme as Template
 
-**Location**: `ref_themes/skote_nodejs_v4.2.0/` (excluded from git)
+**Location**: `reference/themes/skote_nodejs_v4.2.0/` (excluded from git)
 
 **Important Notes**:
 - ⚠️ This is a **Node.js/Express.js template** (EJS views), NOT Vue.js
 - ✅ Use as **design reference only** - convert EJS patterns to Vue.js
 - ✅ Reference SCSS styling from `Admin/src/assets/scss/`
 - ✅ Study layout structure from `Admin/views/layouts/` and `Admin/views/partials/`
-- ✅ Launch theme to view in browser: `./scripts/portal_ui/launch_skote.sh admin`
+- ✅ Launch theme to view in browser: `./scripts/launch/launch-ref-skote.sh admin`
 
 **Conversion Approach**:
 1. Study EJS templates in `Admin/views/`
@@ -507,7 +507,7 @@ import { useOptionsStore } from '@/store/options'
 - SCSS: Reference color variables, spacing, typography
 
 **When Building Portal UI**:
-- Always reference `ref_themes/skote_nodejs_v4.2.0/` for design patterns
+- Always reference `reference/themes/skote_nodejs_v4.2.0/` for design patterns
 - Convert EJS to Vue.js, don't copy directly
 - Follow Skote's design system and styling
 - Build custom components for trading functionality
@@ -520,5 +520,5 @@ import { useOptionsStore } from '@/store/options'
 - Keep FastAPI and Django code separate
 - Test imports and functionality after changes
 - Reference Skote theme for portal UI design patterns
-- See `ref_themes/THEME_STRUCTURE.md` for theme analysis
+- See `reference/THEME_STRUCTURE.md` for theme analysis
 - See `app_portal/THEME_INTEGRATION.md` for integration guide

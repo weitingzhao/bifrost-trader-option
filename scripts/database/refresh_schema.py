@@ -257,7 +257,7 @@ def generate_markdown(tables: dict, output_dir: Path):
         f.write(
             "- **Django Models**: `app_admin/apps/*/models.py` (Single Source of Truth)\n"
         )
-        f.write("- **SQLAlchemy Models**: `src/database/models.py`\n")
+        f.write("- **SQLAlchemy Models**: `app_api/database/models.py`\n")
         f.write("- **App-Specific SQL Schema Files** (in `scripts/database/`):\n")
         f.write("  - `schema_options.sql` - Options app tables\n")
         f.write("  - `schema_strategies.sql` - Strategies app tables\n")
@@ -422,7 +422,7 @@ def generate_markdown(tables: dict, output_dir: Path):
                 f.write(
                     f"- **Django Models**: `app_admin/apps/{app_key}/models.py` (Single Source of Truth)\n"
                 )
-                f.write("- **SQLAlchemy Models**: `src/database/models.py`\n")
+                f.write("- **SQLAlchemy Models**: `app_api/database/models.py`\n")
                 schema_file_map = {
                     "options": "schema_options.sql",
                     "strategies": "schema_strategies.sql",
@@ -542,7 +542,7 @@ def get_sqlalchemy_tables() -> Dict[str, Dict]:
     tables = {}
 
     try:
-        from src.database.models import Base
+        from app_api.database.models import Base
         from sqlalchemy import inspect
 
         # Get all tables from Base metadata
@@ -682,40 +682,40 @@ def compare_tables(
                     sqlalchemy_app_tables[table_name]["fields"].keys()
                 )
 
-            # Normalize field names (handle relationship vs column name differences)
-            # Django might have 'stock' but SQLAlchemy has 'stock_id'
-            normalized_django_fields = set()
-            for field in django_fields:
-                # If it's a relationship field, check for _id version
-                if field.endswith("_id"):
-                    normalized_django_fields.add(field)
-                else:
-                    # Check if there's a corresponding _id field
-                    if f"{field}_id" in sqlalchemy_fields:
-                        normalized_django_fields.add(f"{field}_id")
-                    else:
+                # Normalize field names (handle relationship vs column name differences)
+                # Django might have 'stock' but SQLAlchemy has 'stock_id'
+                normalized_django_fields = set()
+                for field in django_fields:
+                    # If it's a relationship field, check for _id version
+                    if field.endswith("_id"):
                         normalized_django_fields.add(field)
+                    else:
+                        # Check if there's a corresponding _id field
+                        if f"{field}_id" in sqlalchemy_fields:
+                            normalized_django_fields.add(f"{field}_id")
+                        else:
+                            normalized_django_fields.add(field)
 
-            missing_in_sqlalchemy = normalized_django_fields - sqlalchemy_fields
-            missing_in_django = sqlalchemy_fields - normalized_django_fields
+                missing_in_sqlalchemy = normalized_django_fields - sqlalchemy_fields
+                missing_in_django = sqlalchemy_fields - normalized_django_fields
 
-            # Filter out common Django system fields that might not be in SQLAlchemy
-            django_system_fields = {"id"}  # id is usually auto-generated
-            missing_in_sqlalchemy = missing_in_sqlalchemy - django_system_fields
+                # Filter out common Django system fields that might not be in SQLAlchemy
+                django_system_fields = {"id"}  # id is usually auto-generated
+                missing_in_sqlalchemy = missing_in_sqlalchemy - django_system_fields
 
-            if missing_in_sqlalchemy:
-                issues.append(
-                    f"❌ Table '{table_name}': Fields missing in SQLAlchemy: {missing_in_sqlalchemy}"
-                )
-            if missing_in_django and table_name not in [
-                "django_migrations"
-            ]:  # Ignore migrations table
-                # Only warn about extra fields if they're significant
-                significant_extra = missing_in_django - {"id"}  # id is usually fine
-                if significant_extra:
+                if missing_in_sqlalchemy:
                     issues.append(
-                        f"⚠️  Table '{table_name}': Extra fields in SQLAlchemy: {significant_extra}"
+                        f"❌ Table '{table_name}': Fields missing in SQLAlchemy: {missing_in_sqlalchemy}"
                     )
+                if missing_in_django and table_name not in [
+                    "django_migrations"
+                ]:  # Ignore migrations table
+                    # Only warn about extra fields if they're significant
+                    significant_extra = missing_in_django - {"id"}  # id is usually fine
+                    if significant_extra:
+                        issues.append(
+                            f"⚠️  Table '{table_name}': Extra fields in SQLAlchemy: {significant_extra}"
+                        )
 
     # If Django is not available, only verify SQLAlchemy vs schema files
     if not django_available:

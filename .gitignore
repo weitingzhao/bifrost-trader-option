@@ -47,7 +47,7 @@ ENV/
 logs/
 
 # MkDocs
-gen_mkdoc/
+# Note: reference/mkdocs/ is excluded via reference/ exclusion below
 .mkdocs_cache/
 
 # OS
@@ -66,6 +66,6 @@ htmlcov/
 *.ibgateway
 
 # Themes (purchased commercial packages - exclude from git)
-ref_themes/
-!ref_themes/README.md
-!ref_themes/.gitkeep
+reference/
+!reference/README.md
+!reference/.gitkeep

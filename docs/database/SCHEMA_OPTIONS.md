@@ -113,7 +113,7 @@ Stock symbols, option snapshots, and option contracts
 ## Related Files
 
 - **Django Models**: `app_admin/apps/options/models.py` (Single Source of Truth)
-- **SQLAlchemy Models**: `src/database/models.py`
+- **SQLAlchemy Models**: `app_api/database/models.py`
 - **SQL Schema File**: `scripts/database/schema_options.sql`
 
 ## Navigation

@@ -76,7 +76,7 @@ Strategy history and market conditions
 ## Related Files
 
 - **Django Models**: `app_admin/apps/strategies/models.py` (Single Source of Truth)
-- **SQLAlchemy Models**: `src/database/models.py`
+- **SQLAlchemy Models**: `app_api/database/models.py`
 - **SQL Schema File**: `scripts/database/schema_strategies.sql`
 
 ## Navigation

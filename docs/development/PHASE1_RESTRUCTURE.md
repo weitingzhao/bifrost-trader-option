@@ -22,7 +22,7 @@
    - `shared/` for shared code between FastAPI and Django
    - `services/` for background services
    - `frontend/` placeholder structure
-   - `ml_services/` placeholder structure
+   - `app_api/services/machine_learning/` placeholder structure
    - `scripts/database/` and `scripts/deployment/` for management scripts
 
 4. **Split FastAPI routes**:

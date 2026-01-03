@@ -327,7 +327,7 @@ Potential improvements to the test suite:
 
 - [Testing Overview](README.md) - General testing documentation
 - [IB Setup Guide](IB_SETUP.md) - **Complete guide for setting up IB Gateway/TWS**
-- [IB Connector Source](../../src/core/connector/ib.py) - Source code documentation
+- IB Connector Source: `src/core/connector/ib.py` - Source code documentation
 - [API Development Guide](../api/API_DEVELOPMENT_GUIDE.md) - API testing guidelines
 
 ## Quick Setup Reference

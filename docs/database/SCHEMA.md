@@ -25,7 +25,7 @@ Click on the links above to view detailed schema documentation for each Django a
 ## Related Files
 
 - **Django Models**: `app_admin/apps/*/models.py` (Single Source of Truth)
-- **SQLAlchemy Models**: `src/database/models.py`
+- **SQLAlchemy Models**: `app_api/database/models.py`
 - **App-Specific SQL Schema Files** (in `scripts/database/`):
   - `schema_options.sql` - Options app tables
   - `schema_strategies.sql` - Strategies app tables

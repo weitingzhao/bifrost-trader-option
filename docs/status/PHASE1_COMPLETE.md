@@ -67,7 +67,7 @@ app_admin/
 - `shared/` - Shared code between FastAPI and Django
 - `services/` - Background services (data collector, history service)
 - `frontend/` - Frontend structure (placeholder)
-- `ml_services/` - ML services structure (placeholder)
+- `app_api/services/machine_learning/` - ML services structure (placeholder)
 - `scripts/database/` - Database management scripts
 - `scripts/deployment/` - Deployment scripts
 
@@ -118,7 +118,7 @@ bifrost-trader-option/
 ├── shared/                # Shared code ✓
 ├── services/              # Background services ✓
 ├── frontend/              # Frontend (placeholder) ✓
-├── ml_services/           # ML services (placeholder) ✓
+├── app_api/services/machine_learning/  # ML services (placeholder) ✓
 ├── app_monitor/        # Streamlit apps (existing) ✓
 ├── scripts/               # Management scripts ✓
 └── docs/                  # Documentation ✓

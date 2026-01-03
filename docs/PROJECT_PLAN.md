@@ -112,7 +112,7 @@ bifrost-trader-option/
 │           ├── option_chain_viewer.py
 │           └── profit_analysis.py
 │
-├── ml_services/                 # ML/AI Services (RTX4090-Server)
+├── app_api/services/machine_learning/  # ML/AI Services (RTX4090-Server)
 │   ├── api/                     # ML API endpoints
 │   ├── models/                  # ML model definitions
 │   ├── training/                # Training scripts

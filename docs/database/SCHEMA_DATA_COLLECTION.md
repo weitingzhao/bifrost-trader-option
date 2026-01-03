@@ -42,7 +42,7 @@ Collection job tracking
 ## Related Files
 
 - **Django Models**: `app_admin/apps/data_collection/models.py` (Single Source of Truth)
-- **SQLAlchemy Models**: `src/database/models.py`
+- **SQLAlchemy Models**: `app_api/database/models.py`
 - **SQL Schema File**: `scripts/database/schema_data_collection.sql`
 
 ## Navigation

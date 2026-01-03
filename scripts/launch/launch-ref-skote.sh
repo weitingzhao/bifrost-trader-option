@@ -6,7 +6,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-THEME_DIR="$PROJECT_ROOT/ref_themes/skote_nodejs_v4.2.0"
+THEME_DIR="$PROJECT_ROOT/reference/themes/skote_nodejs_v4.2.0"
 ADMIN_DIR="$THEME_DIR/Admin"
 STARTERKIT_DIR="$THEME_DIR/Starterkit"
 
@@ -24,7 +24,7 @@ echo ""
 # Check if theme directory exists
 if [ ! -d "$THEME_DIR" ]; then
     echo "❌ Error: Theme directory not found: $THEME_DIR"
-    echo "   Please ensure the Skote theme is extracted to: ref_themes/skote_nodejs_v4.2.0/"
+    echo "   Please ensure the Skote theme is extracted to: reference/themes/skote_nodejs_v4.2.0/"
     exit 1
 fi
 

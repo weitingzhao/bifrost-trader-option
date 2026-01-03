@@ -4,13 +4,13 @@ This directory contains scripts for managing and developing the Bifrost portal U
 
 ## Scripts
 
-### `launch-portal-ui.sh`
+### `launch-portal.sh`
 
 Launches the Bifrost portal UI (Skote Starterkit-based) for development and testing.
 
 **Usage:**
 ```bash
-./scripts/portal_ui/launch-portal-ui.sh
+./scripts/launch/launch-portal.sh
 ```
 
 **Features:**
@@ -25,13 +25,13 @@ Launches the Bifrost portal UI (Skote Starterkit-based) for development and test
 - Environment: Development mode
 - Access: `http://localhost:4100` (or `http://localhost:4200` if switched)
 
-### `launch_skote.sh`
+### `launch-ref-skote.sh`
 
 Launches the original Skote Nodejs v4.2.0 theme (Admin or Starterkit versions) or opens its documentation. This script is for **referencing the theme's design and structure**, not for running the Bifrost portal UI itself.
 
 **Usage:**
 ```bash
-./scripts/portal_ui/launch_skote.sh [admin|starterkit|docs]
+./scripts/launch/launch-ref-skote.sh [admin|starterkit|docs]
 ```
 
 **Options:**
@@ -41,7 +41,7 @@ Launches the original Skote Nodejs v4.2.0 theme (Admin or Starterkit versions) o
 
 **Example:**
 ```bash
-./scripts/portal_ui/launch_skote.sh starterkit
+./scripts/launch/launch-ref-skote.sh starterkit
 ```
 
 Access the launched theme in your browser at `http://localhost:3001` (or the port specified in its `config.env`).
@@ -51,13 +51,13 @@ Access the launched theme in your browser at `http://localhost:3001` (or the por
 1.  **Launch Theme Reference (Optional)**:
     If you need to refer to the original Skote theme's design:
     ```bash
-    ./scripts/portal_ui/launch_skote.sh starterkit
+    ./scripts/launch/launch-ref-skote.sh starterkit
     ```
-    (Access at `http://localhost:4100` if `app_portal/config.env` was previously updated by `launch-portal-ui.sh` to 4100, otherwise 3001)
+    (Access at `http://localhost:4100` if `app_portal/config.env` was previously updated by `launch-portal.sh` to 4100, otherwise 3001)
 
 2.  **Launch Bifrost Portal UI**:
     ```bash
-    ./scripts/portal_ui/launch-portal-ui.sh
+    ./scripts/launch/launch-portal.sh
     ```
     (Access at `http://localhost:4100` or `http://localhost:4200` if 4100 is busy)
 
@@ -72,4 +72,4 @@ Access the launched theme in your browser at `http://localhost:3001` (or the por
 - This will be gradually replaced by Vue.js components as development progresses.
 - `app_portal/api.js` is preserved for FastAPI integration.
 - The Starterkit code in `app_portal/` is excluded from Git via `app_portal/.gitignore`.
-- The original Skote theme package in `ref_themes/` is also excluded from Git.
+- The original Skote theme package in `reference/` is also excluded from Git.

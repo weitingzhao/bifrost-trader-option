@@ -71,7 +71,7 @@ frontend/                         ✓ Created
     └── services/
         └── api.js              ✓ Created (placeholder)
 
-ml_services/                     ✓ Created
+app_api/services/machine_learning/  ✓ Created
 └── (placeholder structure)
 
 scripts/

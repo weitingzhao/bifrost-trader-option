@@ -72,7 +72,7 @@ app_portal/src/
 To launch the copied Starterkit for reference:
 
 ```bash
-./scripts/portal_ui/launch-portal-ui.sh
+./scripts/launch/launch-portal.sh
 ```
 
 This script will:
