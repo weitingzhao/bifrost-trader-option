@@ -6,7 +6,7 @@ This directory contains all nginx-related documentation for the Bifrost project.
 
 Nginx is used on the Web-Server (10.0.0.75) to serve:
 - Static documentation (MkDocs)
-- Frontend application (React/Vue)
+- Portal UI application (React/Vue)
 - Reverse proxy to FastAPI and Django backends
 - WebSocket connections for real-time updates
 
@@ -26,7 +26,7 @@ Nginx is used on the Web-Server (10.0.0.75) to serve:
 
 1. **Copy nginx setup scripts to server:**
    ```bash
-   ./scripts/nginx/setup_app_mkdocs.sh
+   ./scripts/nginx/setup_app_doc.sh
    ```
 
 2. **Check nginx status:**
@@ -57,7 +57,7 @@ Nginx is used on the Web-Server (10.0.0.75) to serve:
 ### Main Application
 - **URL**: `http://10.0.0.75/`
 - **Config**: `bifrost.conf`
-- **Frontend**: `/opt/bifrost-frontend/build`
+- **Portal UI**: `/opt/bifrost-portal-ui/build`
 - **API Proxy**: `10.0.0.80:8000` (FastAPI)
 - **Admin Proxy**: `10.0.0.80:8001` (Django)
 

@@ -2,7 +2,7 @@
 -- BIFROST TRADER OPTION - DATA COLLECTION APP SCHEMA
 -- ============================================================================
 -- 
--- Schema for app_django/apps/data_collection/models.py
+-- Schema for app_admin/apps/data_collection/models.py
 -- 
 -- Tables:
 --   - collection_jobs: Data collection job tracking

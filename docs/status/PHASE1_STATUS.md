@@ -60,7 +60,7 @@ src/
 
 ### Django Structure ✓
 ```
-app_django/
+app_admin/
 ├── django_config/     ✓ Django settings
 └── apps/
     ├── options/       ✓ Options models & admin

@@ -47,7 +47,7 @@ ENV/
 logs/
 
 # MkDocs
-app_mkdocs/
+statics_mkdoc/
 .mkdocs_cache/
 
 # OS
@@ -66,6 +66,6 @@ htmlcov/
 *.ibgateway
 
 # Themes (purchased commercial packages - exclude from git)
-themes/
-!themes/README.md
-!themes/.gitkeep
+ref_themes/
+!ref_themes/README.md
+!ref_themes/.gitkeep

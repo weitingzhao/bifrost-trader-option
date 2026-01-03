@@ -79,18 +79,18 @@ print('✓ IB connection manager has required methods')
 **Test Strategy:**
 ```bash
 # Test 1: Verify Streamlit monitoring app exists
-test -f app_streamlit/monitoring/app.py && echo "✓ Monitoring app exists"
+test -f app_monitor/monitoring/app.py && echo "✓ Monitoring app exists"
 
 # Test 2: Verify app imports
 python3 -c "
 import sys
-sys.path.insert(0, 'app_streamlit/monitoring')
+sys.path.insert(0, 'app_monitor/monitoring')
 import app
 print('✓ Monitoring app imports successfully')
 "
 
 # Test 3: Check for required pages
-ls app_streamlit/monitoring/pages/ | grep -q ".*\.py" && echo "✓ Pages directory exists"
+ls app_monitor/monitoring/pages/ | grep -q ".*\.py" && echo "✓ Pages directory exists"
 ```
 
 **Expected Results:**
@@ -99,7 +99,7 @@ ls app_streamlit/monitoring/pages/ | grep -q ".*\.py" && echo "✓ Pages directo
 - Pages directory exists with page files
 
 **Verification Checklist:**
-- [ ] `app_streamlit/monitoring/app.py` exists
+- [ ] `app_monitor/monitoring/app.py` exists
 - [ ] App can be imported
 - [ ] Pages directory exists
 - [ ] No import errors
@@ -157,16 +157,16 @@ test -f src/database/connection.py && echo "✓ Database connection exists"
 **Test Strategy:**
 ```bash
 # Test 1: Verify Django structure
-test -f app_django/manage.py && echo "✓ Django manage.py exists"
-test -d app_django/django_config && echo "✓ Django config exists"
-test -d app_django/apps && echo "✓ Django apps directory exists"
+test -f app_admin/manage.py && echo "✓ Django manage.py exists"
+test -d app_admin/django_config && echo "✓ Django config exists"
+test -d app_admin/apps && echo "✓ Django apps directory exists"
 
 # Test 2: Verify Django apps
 python3 << 'EOF'
 import os
 required_apps = ['options', 'strategies', 'data_collection']
 for app in required_apps:
-    app_dir = f'app_django/apps/{app}'
+    app_dir = f'app_admin/apps/{app}'
     if not os.path.exists(app_dir):
         print(f"✗ Missing app: {app}")
         exit(1)
@@ -179,7 +179,7 @@ EOF
 # Test 3: Verify Django settings
 python3 -c "
 import sys
-sys.path.insert(0, 'app_django')
+sys.path.insert(0, 'app_admin')
 from django_config import settings
 assert hasattr(settings, 'DATABASES')
 print('✓ Django settings configured')
@@ -192,11 +192,11 @@ print('✓ Django settings configured')
 - Django settings are configured
 
 **Verification Checklist:**
-- [ ] `app_django/manage.py` exists
-- [ ] `app_django/django_config/` with settings
-- [ ] `app_django/apps/options/` with models
-- [ ] `app_django/apps/strategies/` with models
-- [ ] `app_django/apps/data_collection/` with models
+- [ ] `app_admin/manage.py` exists
+- [ ] `app_admin/django_config/` with settings
+- [ ] `app_admin/apps/options/` with models
+- [ ] `app_admin/apps/strategies/` with models
+- [ ] `app_admin/apps/data_collection/` with models
 - [ ] Django settings configured
 
 ---
@@ -214,7 +214,7 @@ print('✓ SQLAlchemy connection module imports')
 # Test 2: Verify Django database settings
 python3 -c "
 import sys
-sys.path.insert(0, 'app_django')
+sys.path.insert(0, 'app_admin')
 from django_config import settings
 assert 'DATABASES' in dir(settings)
 print('✓ Django database configured')
@@ -228,7 +228,7 @@ print('✓ SQLAlchemy models exist')
 
 python3 -c "
 import sys
-sys.path.insert(0, 'app_django')
+sys.path.insert(0, 'app_admin')
 from apps.options.models import OptionSnapshot as DjangoOptionSnapshot
 from apps.strategies.models import StrategyHistory as DjangoStrategyHistory
 print('✓ Django models exist')
@@ -296,7 +296,7 @@ print('✓ Scheduler configured')
 # Test 1: Verify Django models exist
 python3 << 'EOF'
 import sys
-sys.path.insert(0, 'app_django')
+sys.path.insert(0, 'app_admin')
 from apps.options.models import OptionSnapshot, Stock
 from apps.strategies.models import StrategyHistory
 print("✓ Django models import successfully")
@@ -305,7 +305,7 @@ EOF
 # Test 2: Verify model fields
 python3 << 'EOF'
 import sys
-sys.path.insert(0, 'app_django')
+sys.path.insert(0, 'app_admin')
 from apps.options.models import OptionSnapshot
 fields = [f.name for f in OptionSnapshot._meta.get_fields()]
 required = ['symbol', 'timestamp', 'underlying_price', 'contracts_data']
@@ -343,7 +343,7 @@ print('✓ SQLAlchemy models import')
 # Test 2: Compare model fields
 python3 << 'EOF'
 import sys
-sys.path.insert(0, 'app_django')
+sys.path.insert(0, 'app_admin')
 from src.database.models import OptionSnapshot as SQLAOptionSnapshot
 from apps.options.models import OptionSnapshot as DjangoOptionSnapshot
 
@@ -448,13 +448,13 @@ EOF
 **Test Strategy:**
 ```bash
 # Test 1: Verify admin files exist
-test -f app_django/apps/options/admin.py && echo "✓ Options admin exists"
-test -f app_django/apps/strategies/admin.py && echo "✓ Strategies admin exists"
+test -f app_admin/apps/options/admin.py && echo "✓ Options admin exists"
+test -f app_admin/apps/strategies/admin.py && echo "✓ Strategies admin exists"
 
 # Test 2: Verify admin registrations
 python3 << 'EOF'
 import sys
-sys.path.insert(0, 'app_django')
+sys.path.insert(0, 'app_admin')
 from apps.options.admin import admin
 from apps.options.models import OptionSnapshot
 
@@ -472,8 +472,8 @@ EOF
 - Models are registered in admin
 
 **Verification Checklist:**
-- [ ] `app_django/apps/options/admin.py` exists
-- [ ] `app_django/apps/strategies/admin.py` exists
+- [ ] `app_admin/apps/options/admin.py` exists
+- [ ] `app_admin/apps/strategies/admin.py` exists
 - [ ] Models registered in admin
 - [ ] Admin can be accessed
 
@@ -492,9 +492,9 @@ grep -q "plotly" requirements.txt && echo "✓ Plotly in requirements"
 python3 << 'EOF'
 import os
 analytics_pages = [
-    'app_streamlit/analytics/pages/strategy_performance.py',
-    'app_streamlit/analytics/pages/option_chain_viewer.py',
-    'app_streamlit/analytics/pages/profit_analysis.py'
+    'app_monitor/analytics/pages/strategy_performance.py',
+    'app_monitor/analytics/pages/option_chain_viewer.py',
+    'app_monitor/analytics/pages/profit_analysis.py'
 ]
 for page in analytics_pages:
     if os.path.exists(page):
@@ -558,7 +558,7 @@ EOF
 **Test Strategy:**
 ```bash
 # Test 1: Verify analytics app exists
-test -f app_streamlit/analytics/app.py && echo "✓ Analytics app exists"
+test -f app_monitor/analytics/app.py && echo "✓ Analytics app exists"
 
 # Test 2: Verify pages exist
 python3 << 'EOF'
@@ -569,7 +569,7 @@ pages = [
     'profit_analysis.py',
     'backtesting.py'
 ]
-pages_dir = 'app_streamlit/analytics/pages'
+pages_dir = 'app_monitor/analytics/pages'
 for page in pages:
     if os.path.exists(f'{pages_dir}/{page}'):
         print(f"✓ {page} exists")
@@ -580,7 +580,7 @@ EOF
 # Test 3: Verify app imports
 python3 -c "
 import sys
-sys.path.insert(0, 'app_streamlit/analytics')
+sys.path.insert(0, 'app_monitor/analytics')
 import app
 print('✓ Analytics app imports successfully')
 "
@@ -592,7 +592,7 @@ print('✓ Analytics app imports successfully')
 - App imports successfully
 
 **Verification Checklist:**
-- [ ] `app_streamlit/analytics/app.py` exists
+- [ ] `app_monitor/analytics/app.py` exists
 - [ ] All page files exist
 - [ ] App imports without errors
 
@@ -673,11 +673,11 @@ print('✓ Pricing utilities exist')
 **Test Strategy:**
 ```bash
 # Test 1: Verify option chain viewer page
-test -f app_streamlit/analytics/pages/option_chain_viewer.py && echo "✓ Option chain viewer exists"
+test -f app_monitor/analytics/pages/option_chain_viewer.py && echo "✓ Option chain viewer exists"
 
 # Test 2: Check for visualization code
 python3 << 'EOF'
-with open('app_streamlit/analytics/pages/option_chain_viewer.py', 'r') as f:
+with open('app_monitor/analytics/pages/option_chain_viewer.py', 'r') as f:
     content = f.read()
     if 'plotly' in content.lower() or 'chart' in content.lower():
         print("✓ Option chain viewer has visualization code")

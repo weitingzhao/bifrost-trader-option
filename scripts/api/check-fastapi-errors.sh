@@ -21,7 +21,7 @@ fi
 
 echo ""
 echo "2. Code Check:"
-if ssh "$SERVER" "cd $APP_PATH && test -f app_fastapi/api/main.py"; then
+if ssh "$SERVER" "cd $APP_PATH && test -f app_api/api/main.py"; then
     echo "   ✓ Code is deployed"
 else
     echo "   ✗ Code not found"
@@ -39,7 +39,7 @@ fi
 
 echo ""
 echo "4. Python Import Test:"
-IMPORT_TEST=$(ssh "$SERVER" "cd $APP_PATH && source venv/bin/activate && python -c 'from app_fastapi.api.main import app' 2>&1")
+IMPORT_TEST=$(ssh "$SERVER" "cd $APP_PATH && source venv/bin/activate && python -c 'from app_api.api.main import app' 2>&1")
 if [ $? -eq 0 ]; then
     echo "   ✓ Code imports successfully"
 else
@@ -50,7 +50,7 @@ fi
 echo ""
 echo "5. Manual Start Test:"
 echo "   Testing if FastAPI can start manually..."
-MANUAL_TEST=$(ssh "$SERVER" "cd $APP_PATH && source venv/bin/activate && timeout 3 uvicorn app_fastapi.api.main:app --host 0.0.0.0 --port 8000 2>&1" | head -10)
+MANUAL_TEST=$(ssh "$SERVER" "cd $APP_PATH && source venv/bin/activate && timeout 3 uvicorn app_api.api.main:app --host 0.0.0.0 --port 8000 2>&1" | head -10)
 if echo "$MANUAL_TEST" | grep -q "Application startup\|Uvicorn running\|Started server"; then
     echo "   ✓ FastAPI can start"
 else

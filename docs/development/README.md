@@ -15,7 +15,7 @@ This directory contains development guides, restructuring notes, and technical d
 
 ### Code Organization
 - FastAPI structure in `src/`
-- Django structure in `app_django/`
+- Django structure in `app_admin/`
 - Shared code in `shared/`
 - Services in `services/`
 

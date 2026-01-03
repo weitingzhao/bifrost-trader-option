@@ -27,7 +27,7 @@ The documentation is built locally and deployed to the web server where it's ser
 From your dev PC (10.0.0.90):
 
 ```bash
-./scripts/nginx/setup_app_mkdocs.sh
+./scripts/nginx/setup_app_doc.sh
 ```
 
 This copies the nginx setup scripts to the web server.
@@ -245,7 +245,7 @@ scripts/nginx/
 ├── bifrost.conf           # Nginx config for main application
 ├── setup_nginx.sh    # Initial nginx setup (run on server)
 ├── check_nginx.sh         # Check nginx status
-└── setup_app_mkdocs.sh # Copy setup scripts to server
+└── setup_app_doc.sh # Copy setup scripts to server
 
 docs/nginx/
 ├── README.md              # Nginx overview

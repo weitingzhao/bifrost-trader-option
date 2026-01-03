@@ -48,7 +48,7 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 
 ### Database Schema Management
 
-**⭐ Single Source of Truth:** `app_django/apps/*/models.py` (Django Models)
+**⭐ Single Source of Truth:** `app_admin/apps/*/models.py` (Django Models)
 
 All database changes must follow this workflow:
 1. Update Django models (SINGLE SOURCE OF TRUTH)

@@ -2,7 +2,7 @@
 -- BIFROST TRADER OPTION - STRATEGIES APP SCHEMA
 -- ============================================================================
 -- 
--- Schema for app_django/apps/strategies/models.py
+-- Schema for app_admin/apps/strategies/models.py
 -- 
 -- Tables:
 --   - strategy_history: Historical strategy analysis results

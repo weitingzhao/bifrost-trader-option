@@ -13,9 +13,9 @@
    - Kept `src/strategies/` as is (already properly structured)
 
 2. **Created Django project structure**:
-   - `app_django/` directory with Django project structure
-   - `app_django/django_config/` for Django settings
-   - `app_django/apps/` for Django apps (options, strategies, data_collection)
+   - `app_admin/` directory with Django project structure
+   - `app_admin/django_config/` for Django settings
+   - `app_admin/apps/` for Django apps (options, strategies, data_collection)
    - Placeholder files for Phase 2 implementation
 
 3. **Created supporting directories**:
@@ -77,7 +77,7 @@ src/
 │   └── validators.py       # (new, placeholder)
 └── __init__.py
 
-app_django/                   # (new directory)
+app_admin/                   # (new directory)
 ├── manage.py
 ├── django_config/
 │   ├── settings.py

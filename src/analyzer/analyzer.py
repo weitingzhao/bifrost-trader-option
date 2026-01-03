@@ -4,7 +4,7 @@ import logging
 from typing import List, Optional
 from datetime import datetime
 
-from app_fastapi.database.schemas import (
+from app_api.database.schemas import (
     OptionsChain,
     StrategyResult,
     StrategyType,

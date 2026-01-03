@@ -2,7 +2,7 @@
 
 Strategy history and market conditions
 
-> **Note:** This is an auto-generated file. The source of truth is Django models (`app_django/apps/*/models.py`).
+> **Note:** This is an auto-generated file. The source of truth is Django models (`app_admin/apps/*/models.py`).
 > 
 > For the raw SQL schema files, see the app-specific schema files in `scripts/database/`.
 
@@ -75,7 +75,7 @@ Strategy history and market conditions
 
 ## Related Files
 
-- **Django Models**: `app_django/apps/strategies/models.py` (Single Source of Truth)
+- **Django Models**: `app_admin/apps/strategies/models.py` (Single Source of Truth)
 - **SQLAlchemy Models**: `src/database/models.py`
 - **SQL Schema File**: `scripts/database/schema_strategies.sql`
 

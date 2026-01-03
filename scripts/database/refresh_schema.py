@@ -18,8 +18,8 @@ from typing import Dict, List, Set, Tuple
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
-# Add app_django to path for Django imports
-sys.path.insert(0, str(project_root / "app_django"))
+# Add app_admin to path for Django imports
+sys.path.insert(0, str(project_root / "app_admin"))
 
 # Color output
 GREEN = "\033[0;32m"
@@ -230,7 +230,7 @@ def generate_markdown(tables: dict, output_dir: Path):
             "This document provides a human-readable view of the complete database schema.\n\n"
         )
         f.write(
-            "> **Note:** This is an auto-generated file. The source of truth is Django models (`app_django/apps/*/models.py`).\n"
+            "> **Note:** This is an auto-generated file. The source of truth is Django models (`app_admin/apps/*/models.py`).\n"
         )
         f.write("> \n")
         f.write(
@@ -255,7 +255,7 @@ def generate_markdown(tables: dict, output_dir: Path):
         f.write("---\n\n")
         f.write("## Related Files\n\n")
         f.write(
-            "- **Django Models**: `app_django/apps/*/models.py` (Single Source of Truth)\n"
+            "- **Django Models**: `app_admin/apps/*/models.py` (Single Source of Truth)\n"
         )
         f.write("- **SQLAlchemy Models**: `src/database/models.py`\n")
         f.write("- **App-Specific SQL Schema Files** (in `scripts/database/`):\n")
@@ -301,7 +301,7 @@ def generate_markdown(tables: dict, output_dir: Path):
                 f.write(f"# {schema_title}\n\n")
                 f.write(f"{app_description}\n\n")
                 f.write(
-                    "> **Note:** This is an auto-generated file. The source of truth is Django models (`app_django/apps/*/models.py`).\n"
+                    "> **Note:** This is an auto-generated file. The source of truth is Django models (`app_admin/apps/*/models.py`).\n"
                 )
                 f.write("> \n")
                 f.write(
@@ -420,7 +420,7 @@ def generate_markdown(tables: dict, output_dir: Path):
                 # Footer for app-specific file
                 f.write("## Related Files\n\n")
                 f.write(
-                    f"- **Django Models**: `app_django/apps/{app_key}/models.py` (Single Source of Truth)\n"
+                    f"- **Django Models**: `app_admin/apps/{app_key}/models.py` (Single Source of Truth)\n"
                 )
                 f.write("- **SQLAlchemy Models**: `src/database/models.py`\n")
                 schema_file_map = {

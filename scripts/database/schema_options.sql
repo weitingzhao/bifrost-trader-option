@@ -2,7 +2,7 @@
 -- BIFROST TRADER OPTION - OPTIONS APP SCHEMA
 -- ============================================================================
 -- 
--- Schema for app_django/apps/options/models.py
+-- Schema for app_admin/apps/options/models.py
 -- 
 -- Tables:
 --   - stocks: Stock symbols and metadata

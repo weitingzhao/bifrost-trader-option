@@ -14,13 +14,13 @@ class TestFastAPIStructure:
     
     def test_fastapi_app_imports(self):
         """Verify FastAPI app can be imported."""
-        from app_fastapi.api.main import app
+        from app_api.api.main import app
         assert app is not None
         assert app.title == "Bifrost Options Trading Strategy Analyzer"
     
     def test_all_routes_registered(self):
         """Verify all expected routes are registered."""
-        from app_fastapi.api.main import app
+        from app_api.api.main import app
         routes = [r.path for r in app.routes if hasattr(r, 'path')]
         
         expected_routes = [
@@ -37,7 +37,7 @@ class TestFastAPIStructure:
     
     def test_health_endpoint_exists(self):
         """Verify health endpoint is accessible."""
-        from app_fastapi.api.routes.health import router
+        from app_api.api.routes.health import router
         routes = [r.path for r in router.routes if hasattr(r, 'path')]
         assert '/api/health' in routes
 
@@ -63,13 +63,13 @@ class TestStreamlitMonitoring:
     
     def test_monitoring_app_exists(self):
         """Verify monitoring app file exists."""
-        monitoring_app = project_root / 'app_streamlit' / 'monitoring' / 'app.py'
+        monitoring_app = project_root / 'app_monitor' / 'monitoring' / 'app.py'
         assert monitoring_app.exists(), "Monitoring app.py not found"
     
     def test_monitoring_app_imports(self):
         """Verify monitoring app can be imported."""
         import sys
-        sys.path.insert(0, str(project_root / 'app_streamlit' / 'monitoring'))
+        sys.path.insert(0, str(project_root / 'app_monitor' / 'monitoring'))
         try:
             import app
             assert app is not None
@@ -83,8 +83,8 @@ class TestProjectStructure:
     def test_required_directories_exist(self):
         """Verify all required directories exist."""
         required_dirs = [
-            'app_fastapi/api',
-            'app_fastapi/api/routes',
+            'app_api/api',
+            'app_api/api/routes',
             'src/core',
             'src/analyzer',
             'src/database',
@@ -101,7 +101,7 @@ class TestProjectStructure:
     def test_key_files_exist(self):
         """Verify key files are in correct locations."""
         key_files = [
-            'app_fastapi/api/main.py',
+            'app_api/api/main.py',
             'src/core/connector/ib.py',
             'src/core/options_chain.py',
             'src/analyzer/analyzer.py',
@@ -120,19 +120,19 @@ class TestDjangoStructure:
     
     def test_django_manage_exists(self):
         """Verify Django manage.py exists."""
-        manage_py = project_root / 'app_django' / 'manage.py'
+        manage_py = project_root / 'app_admin' / 'manage.py'
         assert manage_py.exists(), "Django manage.py not found"
     
     def test_django_config_exists(self):
         """Verify Django config directory exists."""
-        config_dir = project_root / 'app_django' / 'django_config'
+        config_dir = project_root / 'app_admin' / 'django_config'
         assert config_dir.exists(), "Django config directory not found"
         assert (config_dir / 'settings.py').exists(), "Django settings.py not found"
     
-    def test_app_djangos_exist(self):
+    def test_app_admins_exist(self):
         """Verify all required Django apps exist."""
         required_apps = ['options', 'strategies', 'data_collection']
-        apps_dir = project_root / 'app_django' / 'apps'
+        apps_dir = project_root / 'app_admin' / 'apps'
         
         for app_name in required_apps:
             app_dir = apps_dir / app_name
@@ -159,7 +159,7 @@ class TestDatabaseConfiguration:
     def test_django_models_exist(self):
         """Verify Django models exist."""
         import sys
-        sys.path.insert(0, str(project_root / 'app_django'))
+        sys.path.insert(0, str(project_root / 'app_admin'))
         
         try:
             from apps.options.models import OptionSnapshot

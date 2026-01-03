@@ -5,7 +5,7 @@ import logging
 import pandas as pd
 import numpy as np
 
-from app_fastapi.database.schemas import StrategyResult, StrategyType
+from app_api.database.schemas import StrategyResult, StrategyType
 from ..strategies.base_strategy import BaseStrategy
 from .models import BacktestResult
 

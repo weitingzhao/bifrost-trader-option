@@ -15,7 +15,7 @@ import argparse
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from fastapi import FastAPI
-from app_fastapi.api.main import app
+from app_api.api.main import app
 
 
 def export_openapi_schema(output_path: str = "api_schemas"):

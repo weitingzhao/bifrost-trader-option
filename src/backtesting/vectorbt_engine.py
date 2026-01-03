@@ -13,7 +13,7 @@ except ImportError:
     logging.warning("VectorBT not available. Install with: pip install vectorbt>=0.25.0")
 
 from ..strategies.base_strategy import BaseStrategy
-from app_fastapi.database.schemas import StrategyType
+from app_api.database.schemas import StrategyType
 from .models import BacktestResult
 
 logger = logging.getLogger(__name__)

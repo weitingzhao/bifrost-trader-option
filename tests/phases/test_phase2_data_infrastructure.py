@@ -14,7 +14,7 @@ class TestDjangoModels:
     def test_option_snapshot_model_exists(self):
         """Verify OptionSnapshot model exists."""
         import sys
-        sys.path.insert(0, str(project_root / 'app_django'))
+        sys.path.insert(0, str(project_root / 'app_admin'))
         
         try:
             from apps.options.models import OptionSnapshot
@@ -32,7 +32,7 @@ class TestDjangoModels:
     def test_strategy_history_model_exists(self):
         """Verify StrategyHistory model exists."""
         import sys
-        sys.path.insert(0, str(project_root / 'app_django'))
+        sys.path.insert(0, str(project_root / 'app_admin'))
         
         try:
             from apps.strategies.models import StrategyHistory
@@ -123,8 +123,8 @@ class TestDjangoAdmin:
     def test_admin_files_exist(self):
         """Verify admin files exist."""
         admin_files = [
-            'app_django/apps/options/admin.py',
-            'app_django/apps/strategies/admin.py',
+            'app_admin/apps/options/admin.py',
+            'app_admin/apps/strategies/admin.py',
         ]
         
         for admin_file in admin_files:
@@ -134,7 +134,7 @@ class TestDjangoAdmin:
     def test_models_registered_in_admin(self):
         """Verify models are registered in admin."""
         import sys
-        sys.path.insert(0, str(project_root / 'app_django'))
+        sys.path.insert(0, str(project_root / 'app_admin'))
         
         try:
             from django.contrib import admin

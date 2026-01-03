@@ -4,7 +4,7 @@ This directory contains all database-related documentation for the Bifrost proje
 
 ## Single Source of Truth
 
-**`app_django/apps/*/models.py`** (Django Models) is the **single source of truth** for the database schema.
+**`app_admin/apps/*/models.py`** (Django Models) is the **single source of truth** for the database schema.
 
 Django models define the authoritative database schema. All other schema representations (SQLAlchemy models and schema.sql) must match Django models.
 
@@ -15,7 +15,7 @@ Django models define the authoritative database schema. All other schema represe
 When making any database schema changes, follow this process:
 
 ```
-1. Update Django models (app_django/apps/*/models.py) ⭐ SINGLE SOURCE OF TRUTH
+1. Update Django models (app_admin/apps/*/models.py) ⭐ SINGLE SOURCE OF TRUTH
    ↓
 2. Generate Django migrations (python manage.py makemigrations)
    ↓
@@ -31,9 +31,9 @@ When making any database schema changes, follow this process:
 #### 1. Update Django Models ⭐ SINGLE SOURCE OF TRUTH
 
 Edit the appropriate Django model file:
-- `app_django/apps/options/models.py` - For stocks, option_snapshots, option_contracts
-- `app_django/apps/strategies/models.py` - For strategy_history, market_conditions
-- `app_django/apps/data_collection/models.py` - For collection_jobs
+- `app_admin/apps/options/models.py` - For stocks, option_snapshots, option_contracts
+- `app_admin/apps/strategies/models.py` - For strategy_history, market_conditions
+- `app_admin/apps/data_collection/models.py` - For collection_jobs
 
 ```python
 class Stock(models.Model):
@@ -56,12 +56,12 @@ class Stock(models.Model):
 #### 2. Generate Django Migrations
 
 ```bash
-cd app_django
+cd app_admin
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-This creates migration files in `app_django/apps/*/migrations/`.
+This creates migration files in `app_admin/apps/*/migrations/`.
 
 **Note:** Review the generated migration to ensure it matches your intended changes.
 
@@ -113,7 +113,7 @@ Run the verification script to ensure all three are in sync:
 ```
 
 This script compares:
-- Django models (`app_django/apps/*/models.py`)
+- Django models (`app_admin/apps/*/models.py`)
 - SQLAlchemy models (`src/database/models.py`)
 - Schema SQL files (`scripts/database/schema_*.sql`)
 
@@ -123,7 +123,7 @@ This script compares:
 
 ### Primary Files
 
-1. **`app_django/apps/*/models.py`** ⭐ **SINGLE SOURCE OF TRUTH** (Django Models)
+1. **`app_admin/apps/*/models.py`** ⭐ **SINGLE SOURCE OF TRUTH** (Django Models)
    - Django ORM models
    - Authoritative schema definition
    - All changes start here
@@ -189,7 +189,7 @@ This will:
 All schema changes are tracked in Django migrations:
 
 ```python
-# app_django/apps/options/migrations/0002_add_market_cap.py
+# app_admin/apps/options/migrations/0002_add_market_cap.py
 class Migration(migrations.Migration):
     dependencies = [
         ('options', '0001_initial'),
@@ -213,7 +213,7 @@ class Migration(migrations.Migration):
 -- Version 1.1.0 (2026-01-15)
 --   - Added market_cap column to stocks table
 --   - Added index on market_cap
---   - Migration: app_django/apps/options/migrations/0002_add_market_cap.py
+--   - Migration: app_admin/apps/options/migrations/0002_add_market_cap.py
 ```
 
 ## Best Practices
@@ -241,7 +241,7 @@ class Stock(models.Model):
 Always review Django migrations before applying:
 
 ```bash
-cd app_django
+cd app_admin
 python manage.py makemigrations
 # Review the generated migration file
 python manage.py migrate
@@ -261,7 +261,7 @@ Before applying to production:
 
 ```bash
 # Test on development database
-cd app_django
+cd app_admin
 python manage.py migrate
 
 # Verify all three are in sync
@@ -287,7 +287,7 @@ CREATE INDEX idx_stocks_symbol ON stocks(symbol);  -- Fails if exists
 
 1. **Add Django model** (SINGLE SOURCE OF TRUTH):
 ```python
-# app_django/apps/options/models.py (or appropriate app)
+# app_admin/apps/options/models.py (or appropriate app)
 class NewTable(models.Model):
     name = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -298,7 +298,7 @@ class NewTable(models.Model):
 
 2. **Generate Django migrations:**
 ```bash
-cd app_django
+cd app_admin
 python manage.py makemigrations
 python manage.py migrate
 ```
@@ -332,7 +332,7 @@ CREATE TABLE IF NOT EXISTS new_table (
 
 1. **Update Django model** (SINGLE SOURCE OF TRUTH):
 ```python
-# app_django/apps/options/models.py
+# app_admin/apps/options/models.py
 class Stock(models.Model):
     # ... existing fields ...
     new_column = models.CharField(max_length=50, null=True, blank=True)
@@ -340,7 +340,7 @@ class Stock(models.Model):
 
 2. **Generate Django migrations:**
 ```bash
-cd app_django
+cd app_admin
 python manage.py makemigrations
 python manage.py migrate
 ```
@@ -367,7 +367,7 @@ ALTER TABLE stocks ADD COLUMN IF NOT EXISTS new_column VARCHAR(50);
 
 1. **Update Django model** (SINGLE SOURCE OF TRUTH):
 ```python
-# app_django/apps/options/models.py
+# app_admin/apps/options/models.py
 class Stock(models.Model):
     # ... existing fields ...
     
@@ -380,7 +380,7 @@ class Stock(models.Model):
 
 2. **Generate Django migrations:**
 ```bash
-cd app_django
+cd app_admin
 python manage.py makemigrations
 python manage.py migrate
 ```
@@ -457,7 +457,7 @@ If Django migrations conflict:
 
 1. **Resolve conflicts in Django migrations:**
    ```bash
-   cd app_django
+   cd app_admin
    python manage.py makemigrations --merge
    ```
 
@@ -476,7 +476,7 @@ If Django migrations conflict:
 ## Summary
 
 **Remember:**
-- ⭐ `app_django/apps/*/models.py` (Django Models) is the **SINGLE SOURCE OF TRUTH**
+- ⭐ `app_admin/apps/*/models.py` (Django Models) is the **SINGLE SOURCE OF TRUTH**
 - Always update Django models first
 - Generate Django migrations
 - Then update SQLAlchemy models to match Django models

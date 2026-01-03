@@ -2,7 +2,7 @@
 
 This document provides a human-readable view of the complete database schema.
 
-> **Note:** This is an auto-generated file. The source of truth is Django models (`app_django/apps/*/models.py`).
+> **Note:** This is an auto-generated file. The source of truth is Django models (`app_admin/apps/*/models.py`).
 > 
 > For the raw SQL schema files, see the app-specific schema files in `scripts/database/`.
 
@@ -24,7 +24,7 @@ Click on the links above to view detailed schema documentation for each Django a
 
 ## Related Files
 
-- **Django Models**: `app_django/apps/*/models.py` (Single Source of Truth)
+- **Django Models**: `app_admin/apps/*/models.py` (Single Source of Truth)
 - **SQLAlchemy Models**: `src/database/models.py`
 - **App-Specific SQL Schema Files** (in `scripts/database/`):
   - `schema_options.sql` - Options app tables

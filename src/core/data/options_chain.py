@@ -10,7 +10,7 @@ from ib_insync import Option as IBOption, Ticker
 
 from ..connector.ib import get_connector
 from .exchange import get_exchange_manager
-from app_fastapi.database.schemas import OptionContract, OptionType, OptionsChain
+from app_api.database.schemas import OptionContract, OptionType, OptionsChain
 from ...config import config
 
 logger = logging.getLogger(__name__)

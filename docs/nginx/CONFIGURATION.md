@@ -46,7 +46,7 @@ server {
 
 ### Main Application (`bifrost.conf`)
 
-Serves frontend and proxies to backends:
+Serves portal UI and proxies to backends:
 
 ```nginx
 upstream fastapi_backend {
@@ -61,9 +61,9 @@ server {
     listen 80;
     server_name bifrost.local;
     
-    # Frontend static files
+    # Portal UI static files
     location / {
-        root /opt/bifrost-frontend/build;
+        root /opt/bifrost-portal-ui/build;
         try_files $uri $uri/ /index.html;
     }
     

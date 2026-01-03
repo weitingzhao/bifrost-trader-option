@@ -9,9 +9,9 @@ from src.core.connector.ib import get_connector
 from src.core.data.options_chain import get_fetcher
 from src.core.data.exchange import get_exchange_manager
 from src.config import config
-from app_fastapi.database.connection import get_AsyncSessionLocal
-from app_fastapi.database.repositories import OptionRepository, CollectionJobRepository
-from app_fastapi.database.schemas import OptionsChain
+from app_api.database.connection import get_AsyncSessionLocal
+from app_api.database.repositories import OptionRepository, CollectionJobRepository
+from app_api.database.schemas import OptionsChain
 
 logger = logging.getLogger(__name__)
 

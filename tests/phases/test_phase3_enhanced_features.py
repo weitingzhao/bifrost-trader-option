@@ -22,7 +22,7 @@ class TestPlotlyCharts:
     
     def test_analytics_pages_exist(self):
         """Verify analytics pages exist."""
-        pages_dir = project_root / 'app_streamlit' / 'analytics' / 'pages'
+        pages_dir = project_root / 'app_monitor' / 'analytics' / 'pages'
         required_pages = [
             'strategy_performance.py',
             'option_chain_viewer.py',
@@ -39,13 +39,13 @@ class TestHistoricalDataAPI:
     
     def test_history_routes_exist(self):
         """Verify history routes module exists."""
-        from app_fastapi.api.routes import history
+        from app_api.api.routes import history
         assert history is not None
         assert hasattr(history, 'router')
     
     def test_history_endpoints_registered(self):
         """Verify history endpoints are registered."""
-        from app_fastapi.api.main import app
+        from app_api.api.main import app
         routes = [r.path for r in app.routes if hasattr(r, 'path')]
         
         history_routes = [r for r in routes if 'history' in r]
@@ -57,12 +57,12 @@ class TestStreamlitAnalytics:
     
     def test_analytics_app_exists(self):
         """Verify analytics app exists."""
-        analytics_app = project_root / 'app_streamlit' / 'analytics' / 'app.py'
+        analytics_app = project_root / 'app_monitor' / 'analytics' / 'app.py'
         assert analytics_app.exists(), "Analytics app.py not found"
     
     def test_all_pages_exist(self):
         """Verify all analytics pages exist."""
-        pages_dir = project_root / 'app_streamlit' / 'analytics' / 'pages'
+        pages_dir = project_root / 'app_monitor' / 'analytics' / 'pages'
         required_pages = [
             'strategy_performance.py',
             'option_chain_viewer.py',
@@ -95,13 +95,13 @@ class TestVectorBTIntegration:
     
     def test_backtesting_routes_exist(self):
         """Verify backtesting routes exist."""
-        from app_fastapi.api.routes import backtesting
+        from app_api.api.routes import backtesting
         assert backtesting is not None
         assert hasattr(backtesting, 'router')
     
     def test_backtesting_endpoints_registered(self):
         """Verify backtesting endpoints are registered."""
-        from app_fastapi.api.main import app
+        from app_api.api.main import app
         routes = [r.path for r in app.routes if hasattr(r, 'path')]
         
         backtesting_routes = [r for r in routes if 'backtesting' in r]
@@ -139,12 +139,12 @@ class TestOptionChainVisualization:
     
     def test_option_chain_viewer_exists(self):
         """Verify option chain viewer page exists."""
-        viewer_page = project_root / 'app_streamlit' / 'analytics' / 'pages' / 'option_chain_viewer.py'
+        viewer_page = project_root / 'app_monitor' / 'analytics' / 'pages' / 'option_chain_viewer.py'
         assert viewer_page.exists(), "Option chain viewer page not found"
     
     def test_viewer_has_visualization_code(self):
         """Verify viewer has visualization code."""
-        viewer_page = project_root / 'app_streamlit' / 'analytics' / 'pages' / 'option_chain_viewer.py'
+        viewer_page = project_root / 'app_monitor' / 'analytics' / 'pages' / 'option_chain_viewer.py'
         
         with open(viewer_page, 'r') as f:
             content = f.read().lower()

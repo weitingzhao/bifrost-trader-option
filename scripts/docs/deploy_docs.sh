@@ -13,7 +13,7 @@ WEB_SERVER_USER="vision"
 DOCS_DEPLOY_PATH="/var/www/docs"
 
 # Get site directory from mkdocs.yml or use default
-SITE_DIR="app_mkdocs"
+SITE_DIR="statics_mkdoc"
 if [ -f "$PROJECT_ROOT/mkdocs.yml" ]; then
     # Try to extract site_dir from mkdocs.yml
     EXTRACTED_DIR=$(grep -E "^site_dir:" "$PROJECT_ROOT/mkdocs.yml" | sed 's/site_dir:[[:space:]]*//' | tr -d '"' | tr -d "'" || echo "")
@@ -95,7 +95,7 @@ ssh -t "$WEB_SERVER_USER@$WEB_SERVER" "SUDO_PASS='$SUDO_PASSWORD' bash -c '
     echo \"✅ Directory ready: $DOCS_DEPLOY_PATH\"
 '" || {
     echo "⚠️  Warning: Could not create directory"
-    echo "   Run ./scripts/nginx/setup_app_mkdocs.sh first to setup directory"
+    echo "   Run ./scripts/nginx/setup_app_doc.sh first to setup directory"
     exit 1
 }
 

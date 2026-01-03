@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from typing import List, Optional
 import math
 
-from app_fastapi.database.schemas import (
+from app_api.database.schemas import (
     StrategyResult, ProfitPoint, BreakevenPoint, StrategyGreeks,
     StrategyType
 )

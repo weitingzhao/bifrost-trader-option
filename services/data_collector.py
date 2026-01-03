@@ -7,8 +7,8 @@ from datetime import datetime
 
 from src.core.connector.ib import get_connector
 from src.core.data.options_chain import get_fetcher
-from app_fastapi.database.connection import get_db, get_AsyncSessionLocal as get_session_factory
-from app_fastapi.database.models import OptionSnapshot, Stock
+from app_api.database.connection import get_db, get_AsyncSessionLocal as get_session_factory
+from app_api.database.models import OptionSnapshot, Stock
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 

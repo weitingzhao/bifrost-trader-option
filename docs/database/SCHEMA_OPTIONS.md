@@ -2,7 +2,7 @@
 
 Stock symbols, option snapshots, and option contracts
 
-> **Note:** This is an auto-generated file. The source of truth is Django models (`app_django/apps/*/models.py`).
+> **Note:** This is an auto-generated file. The source of truth is Django models (`app_admin/apps/*/models.py`).
 > 
 > For the raw SQL schema files, see the app-specific schema files in `scripts/database/`.
 
@@ -112,7 +112,7 @@ Stock symbols, option snapshots, and option contracts
 
 ## Related Files
 
-- **Django Models**: `app_django/apps/options/models.py` (Single Source of Truth)
+- **Django Models**: `app_admin/apps/options/models.py` (Single Source of Truth)
 - **SQLAlchemy Models**: `src/database/models.py`
 - **SQL Schema File**: `scripts/database/schema_options.sql`
 
