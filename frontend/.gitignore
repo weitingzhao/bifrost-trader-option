@@ -1,13 +1,10 @@
-# Node modules
+# Node modules (should not be tracked - install via npm install)
 node_modules/
+**/node_modules/
 
-# Compiled assets
-public/assets/
-
-# Environment files
+# Environment files (may contain secrets)
 config.env
 config.env.backup
-*.env
 *.env.local
 
 # Logs
@@ -28,18 +25,6 @@ Thumbs.db
 dist/
 build/
 
-# Starterkit source code (purchased commercial software - exclude from git)
-# Only track custom files like api.js, README.md, .gitkeep
-views/
-src/
-routes/
-models/
-controller/
-utils/
-i18n/
-app.js
-package.json
-package-lock.json
-package-libs-config.json
-webpack.config.js
-public/
+# Compiled assets (can be regenerated)
+public/assets/
+

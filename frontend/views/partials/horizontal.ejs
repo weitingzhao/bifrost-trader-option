@@ -1,0 +1,732 @@
+<header id="page-topbar">
+    <div class="navbar-header">
+        <div class="d-flex">
+            <!-- LOGO -->
+            <div class="navbar-brand-box">
+                <a href="index" class="logo logo-dark">
+                    <span class="logo-sm">
+                        <img src="/assets/images/logo.svg" alt="" height="22">
+                    </span>
+                    <span class="logo-lg">
+                        <img src="/assets/images/logo-dark.png" alt="" height="17">
+                    </span>
+                </a>
+
+                <a href="index" class="logo logo-light">
+                    <span class="logo-sm">
+                        <img src="/assets/images/logo-light.svg" alt="" height="22">
+                    </span>
+                    <span class="logo-lg">
+                        <img src="/assets/images/logo-light.png" alt="" height="19">
+                    </span>
+                </a>
+            </div>
+
+            <button type="button" class="btn btn-sm px-3 font-size-16 d-lg-none header-item waves-effect waves-light"
+                data-bs-toggle="collapse" data-bs-target="#topnav-menu-content">
+                <i class="fa fa-fw fa-bars"></i>
+            </button>
+
+            <!-- App Search-->
+            <form class="app-search d-none d-lg-block">
+                <div class="position-relative">
+                    <input type="text" class="form-control" placeholder="Search...">
+                    <span class="bx bx-search-alt"></span>
+                </div>
+            </form>
+
+            <div class="dropdown dropdown-mega d-none d-lg-block ms-2">
+                <button type="button" class="btn header-item waves-effect" data-bs-toggle="dropdown"
+                    aria-haspopup="false" aria-expanded="false">
+                    <span key="t-megamenu">
+                        <%=translation.t_megamenu %>
+                    </span>
+                    <i class="mdi mdi-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu dropdown-megamenu">
+                    <div class="row">
+                        <div class="col-sm-8">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h5 class="font-size-14" key="t-ui-components">
+                                        <%=translation.t_ui_components %>
+                                    </h5>
+                                    <ul class="list-unstyled megamenu-list">
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-lightbox">
+                                                <%=translation.t_lightbox%>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-range-slider">
+                                                <%=translation.t_range_slider %>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-sweet-alert">
+                                                <%=translation.t_sweet_alert %>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-rating">
+                                                <%=translation.t_rating %>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-forms">
+                                                <%=translation.t_forms %>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-tables">
+                                                <%=translation.t_tables %>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-charts">
+                                                <%=translation.t_charts %>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <h5 class="font-size-14" key="t-applications">
+                                        <%=translation.t_applications%>
+                                    </h5>
+                                    <ul class="list-unstyled megamenu-list">
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-ecommerce">
+                                                <%=translation.t_ecommerce %>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-calendar">
+                                                <%=translation.t_calendar%>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-email">
+                                                <%=translation.t_email %>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-projects">
+                                                <%=translation.t_projects%>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-tasks">
+                                                <%=translation.t_tasks%>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-contacts">
+                                                <%=translation.t_contacts %>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <h5 class="font-size-14" key="t-extra-pages">
+                                        <%=translation.t_extra_pages %>
+                                    </h5>
+                                    <ul class="list-unstyled megamenu-list">
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-light-sidebar">
+                                                <%=translation.t_light_sidebar%>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-compact-sidebar">
+                                                <%=translation.t_compact_sidebar%>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-horizontal">
+                                                <%=translation.t_horizontal %>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-maintenance">
+                                                <%=translation.t_maintenance %>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-coming-soon">
+                                                <%=translation.t_coming_soon %>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-timeline">
+                                                <%=translation.t_timeline%>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-faqs">
+                                                <%=translation.t_faqs%>
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <h5 class="font-size-14" key="t-ui-components">
+                                        <%=translation.t_ui_components %>
+                                    </h5>
+                                    <ul class="list-unstyled megamenu-list">
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-lightbox">
+                                                <%=translation.t_lightbox %>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-range-slider">
+                                                <%=translation.t_range_slider %>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-sweet-alert">
+                                                <%=translation.t_sweet_alert%>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-rating">
+                                                <%=translation.t_rating %>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-forms">
+                                                <%=translation.t_forms %>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-tables">
+                                                <%=translation.t_tables %>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" key="t-charts">
+                                                <%=translation.t_charts%>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="col-sm-5">
+                                    <div>
+                                        <img src="/assets/images/megamenu-img.png" alt=""
+                                            class="img-fluid mx-auto d-block">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex">
+
+            <div class="dropdown d-inline-block d-lg-none ms-2">
+                <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-search-dropdown"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="mdi mdi-magnify"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                    aria-labelledby="page-header-search-dropdown">
+
+                    <form class="p-3">
+                        <div class="form-group m-0">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search ..."
+                                    aria-label="Search input">
+
+                                <button class="btn btn-primary" type="submit"><i class="mdi mdi-magnify"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="dropdown d-inline-block">
+                <button type="button" class="btn header-item waves-effect" data-bs-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <% if(lang=="en" ) { %>
+                        <img src="/assets/images/flags/us.jpg" alt="Header Language" class="me-1" height="20">
+                        <!-- <span class="align-middle">English</span> -->
+                        <% } else if(lang=="gr" ) { %>
+                            <img src="/assets/images/flags/germany.jpg" alt="Header Language" class="me-1" height="20">
+                            <!-- <span class="align-middle">German</span> -->
+                            <% } else if(lang=="it" ) { %>
+                                <img src="/assets/images/flags/italy.jpg" alt="Header Language" class="me-1"
+                                    height="20">
+                                <!-- <span class="align-middle">Italian</span> -->
+                                <% } else if(lang=="ru" ) { %>
+                                    <img src="/assets/images/flags/russia.jpg" alt="Header Language" class="me-1"
+                                        height="20">
+                                    <!-- <span class="align-middle">Russian</span> -->
+                                    <% } else if(lang=="sp" ) { %>
+                                        <img src="/assets/images/flags/spain.jpg" alt="Header Language" class="me-1"
+                                            height="20">
+                                        <!-- <span class="align-middle">Spanish</span> -->
+                                        <% } else { %>
+                                            <img src="/assets/images/flags/us.jpg" alt="Header Language" class="me-1"
+                                                height="20">
+                                            <!-- <span class="align-middle">English</span> -->
+                                            <% } %>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+
+                    <!-- item-->
+                    <a href="?clang=en" class="dropdown-item notify-item language" data-lang="en">
+                        <img src="/assets/images/flags/us.jpg" alt="user-image" class="me-1" height="12"> <span
+                            class="align-middle">English</span>
+                    </a>
+                    <!-- item-->
+                    <a href="?clang=sp" class="dropdown-item notify-item language" data-lang="sp">
+                        <img src="/assets/images/flags/spain.jpg" alt="user-image" class="me-1" height="12"> <span
+                            class="align-middle">Spanish</span>
+                    </a>
+
+                    <!-- item-->
+                    <a href="?clang=gr" class="dropdown-item notify-item language" data-lang="gr">
+                        <img src="/assets/images/flags/germany.jpg" alt="user-image" class="me-1" height="12"> <span
+                            class="align-middle">German</span>
+                    </a>
+
+                    <!-- item-->
+                    <a href="?clang=it" class="dropdown-item notify-item language" data-lang="it">
+                        <img src="/assets/images/flags/italy.jpg" alt="user-image" class="me-1" height="12"> <span
+                            class="align-middle">Italian</span>
+                    </a>
+
+                    <!-- item-->
+                    <a href="?clang=ru" class="dropdown-item notify-item language" data-lang="ru">
+                        <img src="/assets/images/flags/russia.jpg" alt="user-image" class="me-1" height="12"> <span
+                            class="align-middle">Russian</span>
+                    </a>
+                </div>
+            </div>
+            <div class="dropdown d-none d-lg-inline-block ms-1">
+                <button type="button" class="btn header-item noti-icon waves-effect" data-bs-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <i class="bx bx-customize"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+                    <div class="px-lg-2">
+                        <div class="row g-0">
+                            <div class="col">
+                                <a class="dropdown-icon-item" href="#">
+                                    <img src="/assets/images/brands/github.png" alt="Github">
+                                    <span>GitHub</span>
+                                </a>
+                            </div>
+                            <div class="col">
+                                <a class="dropdown-icon-item" href="#">
+                                    <img src="/assets/images/brands/bitbucket.png" alt="bitbucket">
+                                    <span>Bitbucket</span>
+                                </a>
+                            </div>
+                            <div class="col">
+                                <a class="dropdown-icon-item" href="#">
+                                    <img src="/assets/images/brands/dribbble.png" alt="dribbble">
+                                    <span>Dribbble</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="row no-gutters">
+                            <div class="col">
+                                <a class="dropdown-icon-item" href="#">
+                                    <img src="/assets/images/brands/dropbox.png" alt="dropbox">
+                                    <span>Dropbox</span>
+                                </a>
+                            </div>
+                            <div class="col">
+                                <a class="dropdown-icon-item" href="#">
+                                    <img src="/assets/images/brands/mail_chimp.png" alt="mail_chimp">
+                                    <span>Mail Chimp</span>
+                                </a>
+                            </div>
+                            <div class="col">
+                                <a class="dropdown-icon-item" href="#">
+                                    <img src="/assets/images/brands/slack.png" alt="slack">
+                                    <span>Slack</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dropdown d-none d-lg-inline-block ms-1">
+                <button type="button" class="btn header-item noti-icon waves-effect" data-bs-toggle="fullscreen">
+                    <i class="bx bx-fullscreen"></i>
+                </button>
+            </div>
+
+            <div class="dropdown d-inline-block">
+                <button type="button" class="btn header-item noti-icon waves-effect"
+                    id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    <i class="bx bx-bell bx-tada"></i>
+                    <span class="badge bg-danger rounded-pill">3</span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                    aria-labelledby="page-header-notifications-dropdown">
+                    <div class="p-3">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h6 class="m-0" key="t-notifications">
+                                    <%=translation.t_notifications %>
+                                </h6>
+                            </div>
+                            <div class="col-auto">
+                                <a href="#!" class="small" key="t-view-all">
+                                    <%=translation.t_view_all %>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-simplebar style="max-height: 230px;">
+                        <a href="javascript: void(0);" class="text-reset notification-item">
+                            <div class="d-flex">
+                                <div class="avatar-xs me-3">
+                                    <span class="avatar-title bg-primary rounded-circle font-size-16">
+                                        <i class="bx bx-cart"></i>
+                                    </span>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1" key="t-your-order">
+                                        <%=translation.t_your_order%>
+                                    </h6>
+                                    <div class="font-size-12 text-muted">
+                                        <p class="mb-1" key="t-grammer">
+                                            <%=translation.t_grammer %>
+                                        </p>
+                                        <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span key="t-min-ago">
+                                                <%=translation.t_min_ago %>
+                                            </span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="javascript: void(0);" class="text-reset notification-item">
+                            <div class="d-flex">
+                                <img src="/assets/images/users/avatar-3.jpg" class="me-3 rounded-circle avatar-xs"
+                                    alt="user-pic">
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">James Lemire</h6>
+                                    <div class="font-size-12 text-muted">
+                                        <p class="mb-1" key="t-simplified">
+                                            <%=translation.t_simplified %>
+                                        </p>
+                                        <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span key="t-hours-ago">
+                                                <%=translation.t_hours_ago%>
+                                            </span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="javascript: void(0);" class="text-reset notification-item">
+                            <div class="d-flex">
+                                <div class="avatar-xs me-3">
+                                    <span class="avatar-title bg-success rounded-circle font-size-16">
+                                        <i class="bx bx-badge-check"></i>
+                                    </span>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1" key="t-shipped">
+                                        <%=translation.t_shipped %>
+                                    </h6>
+                                    <div class="font-size-12 text-muted">
+                                        <p class="mb-1" key="t-grammer">
+                                            <%=translation.t_grammer %>
+                                        </p>
+                                        <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span key="t-min-ago">
+                                                <%=translation.t_min_ago %>
+                                            </span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+
+                        <a href="javascript: void(0);" class="text-reset notification-item">
+                            <div class="d-flex">
+                                <img src="/assets/images/users/avatar-4.jpg" class="me-3 rounded-circle avatar-xs"
+                                    alt="user-pic">
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">Salena Layfield</h6>
+                                    <div class="font-size-12 text-muted">
+                                        <p class="mb-1" key="t-occidental">
+                                            <%=translation.t_occidental %>
+                                        </p>
+                                        <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span key="t-hours-ago">
+                                                <%=translation.t_hours_ago %>
+                                            </span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="p-2 border-top d-grid">
+                        <a class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
+                            <i class="mdi mdi-arrow-right-circle me-1"></i> <span key="t-view-more">
+                                <%=translation.t_view_more %>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dropdown d-inline-block">
+                <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img class="rounded-circle header-profile-user" src="/assets/images/users/avatar-1.jpg"
+                        alt="Header Avatar">
+                    <span class="d-none d-xl-inline-block ms-1" key="t-henry">
+                        <%=translation.t_henry %>
+                    </span>
+                    <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end">
+                    <!-- item-->
+                    <a class="dropdown-item" href="#"><i class="bx bx-user font-size-16 align-middle me-1"></i> <span
+                            key="t-profile">
+                            <%=translation.t_profile %>
+                        </span></a>
+                    <a class="dropdown-item" href="#"><i class="bx bx-wallet font-size-16 align-middle me-1"></i> <span
+                            key="t-my-wallet">
+                            <%=translation.t_my_wallet %>
+                        </span></a>
+                    <a class="dropdown-item d-block" href="#"><span class="badge bg-success float-end">11</span><i
+                            class="bx bx-wrench font-size-16 align-middle me-1"></i> <span key="t-settings">
+                            <%=translation.t_settings %>
+                        </span></a>
+                    <a class="dropdown-item" href="#"><i class="bx bx-lock-open font-size-16 align-middle me-1"></i>
+                        <span key="t-lock-screen">
+                            <%=translation.t_lock_screen %>
+                        </span></a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-danger" href="/logout"><i
+                            class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> <span
+                            key="t-logout">
+                            <%=translation.t_logout %>
+                        </span></a>
+                </div>
+            </div>
+
+            <div class="dropdown d-inline-block">
+                <button type="button" class="btn header-item noti-icon right-bar-toggle waves-effect">
+                    <i class="bx bx-cog bx-spin"></i>
+                </button>
+            </div>
+
+        </div>
+    </div>
+</header>
+
+<div class="topnav">
+    <div class="container-fluid">
+        <nav class="navbar navbar-light navbar-expand-lg topnav-menu">
+
+            <div class="collapse navbar-collapse" id="topnav-menu-content">
+                <ul class="navbar-nav">
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-dashboard" role="button">
+                            <i class="bx bx-home-circle me-2"></i><span key="t-dashboards">
+                                <%=translation.t_starter_page%>
+                            </span>
+                            <div class="arrow-down"></div>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="topnav-dashboard">
+
+                            <a href="/index" class="dropdown-item" key="t-default">
+                                <%=translation.t_starter_page%>
+                            </a>
+                        </div>
+                    </li>
+
+             
+
+
+                   
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-more" role="button">
+                            <i class="bx bx-file me-2"></i><span key="t-extra-pages">
+                                <%=translation.t_extra_pages %>
+                            </span>
+                            <div class="arrow-down"></div>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="topnav-more">
+                            
+                            <div class="dropdown">
+                                <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-auth"
+                                    role="button">
+                                    <span key="t-authentication">
+                                        <%=translation.t_authentication %>
+                                    </span>
+                                    <div class="arrow-down"></div>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="topnav-auth">
+                                    <a href="auth-login" class="dropdown-item" key="t-login">
+                                        <%=translation.t_login %>
+                                    </a>
+                                    <a href="auth-login-2" class="dropdown-item" key="t-login-2">
+                                        <%=translation.t_login_2 %>
+                                    </a>
+                                    <a href="auth-register" class="dropdown-item" key="t-register">
+                                        <%=translation.t_register%>
+                                    </a>
+                                    <a href="auth-register-2" class="dropdown-item" key="t-register-2">
+                                        <%=translation.t_register_2 %>
+                                    </a>
+                                    <a href="auth-recoverpw" class="dropdown-item" key="t-recover-password">
+                                        <%=translation.t_recover_password %>
+                                    </a>
+                                    <a href="auth-recoverpw-2" class="dropdown-item" key="t-recover-password-2">
+                                        <%=translation.t_recover_password_2 %>
+                                    </a>
+                                    <a href="auth-lock-screen" class="dropdown-item" key="t-lock-screen">
+                                        <%=translation.t_lock_screen%>
+                                    </a>
+                                    <a href="auth-lock-screen-2" class="dropdown-item" key="t-lock-screen-2">
+                                        <%=translation.t_lock_screen_2 %>
+                                    </a>
+                                    <a href="auth-confirm-mail" class="dropdown-item" key="t-confirm-mail">
+                                        <%=translation.t_confirm_mail%>
+                                    </a>
+                                    <a href="auth-confirm-mail-2" class="dropdown-item" key="t-confirm-mail-2">
+                                        <%=translation.t_confirm_mail_2 %>
+                                    </a>
+                                    <a href="auth-email-verification" class="dropdown-item" key="t-email-verification">
+                                        <%=translation.t_email_verification%>
+                                    </a>
+                                    <a href="auth-email-verification-2" class="dropdown-item"
+                                        key="t-email-verification-2">
+                                        <%=translation.t_email_verification_2%>
+                                    </a>
+                                    <a href="auth-two-step-verification" class="dropdown-item"
+                                        key="t-two-step-verification">
+                                        <%=translation.t_step_verification%>
+                                    </a>
+                                    <a href="auth-two-step-verification-2" class="dropdown-item"
+                                        key="t-two-step-verification-2">
+                                        <%=translation.t_step_verification_2 %>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="dropdown">
+                                <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-utility"
+                                    role="button">
+                                    <span key="t-utility">
+                                        <%=translation.t_utility%>
+                                    </span>
+                                    <div class="arrow-down"></div>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="topnav-utility">
+                                   
+                                    <a href="/pages-maintenance" class="dropdown-item" key="t-maintenance">
+                                        <%=translation.t_maintenance %>
+                                    </a>
+                                    <a href="/pages-comingsoon" class="dropdown-item" key="t-coming-soon">
+                                        <%=translation.t_coming_soon %>
+                                    </a>
+                                    <a href="/pages-404" class="dropdown-item" key="t-error-404">
+                                        <%=translation.t_error_404 %>
+                                    </a>
+                                    <a href="/pages-500" class="dropdown-item" key="t-error-500">
+                                        <%=translation.t_error_500 %>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-layout" role="button">
+                            <i class="bx bx-layout me-2"></i><span key="t-layouts">
+                                <%=translation.t_layouts%>
+                            </span>
+                            <div class="arrow-down"></div>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="topnav-layout">
+                            <div class="dropdown">
+                                <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-layout-verti"
+                                    role="button">
+                                    <span key="t-vertical">
+                                        <%=translation.t_vertical %>
+                                    </span>
+                                    <div class="arrow-down"></div>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="topnav-layout-verti">
+                                    <a href="/layouts-light-sidebar" class="dropdown-item" key="t-light-sidebar">
+                                        <%=translation.t_light_sidebar %>
+                                    </a>
+                                    <a href="/layouts-compact-sidebar" class="dropdown-item" key="t-compact-sidebar">
+                                        <%=translation.t_compact_sidebar %>
+                                    </a>
+                                    <a href="/layouts-icon-sidebar" class="dropdown-item" key="t-icon-sidebar">
+                                        <%=translation.t_icon_sidebar %>
+                                    </a>
+                                    <a href="/layouts-boxed" class="dropdown-item" key="t-boxed-width">
+                                        <%=translation.t_boxed_width %>
+                                    </a>
+                                    <a href="/layouts-preloader" class="dropdown-item" key="t-preloader">
+                                        <%=translation.t_preloader %>
+                                    </a>
+                                    <a href="/layouts-colored-sidebar" class="dropdown-item" key="t-colored-sidebar">
+                                        <%=translation.t_colored_sidebar %>
+                                    </a>
+                                    <a href="/layouts-scrollable" class="dropdown-item" key="t-scrollable">
+                                        <%=translation.t_scrollable %>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="dropdown">
+                                <a class="dropdown-item dropdown-toggle arrow-none" href="#" id="topnav-layout-hori"
+                                    role="button">
+                                    <span key="t-horizontal">
+                                        <%=translation.t_horizontal %>
+                                    </span>
+                                    <div class="arrow-down"></div>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="topnav-layout-hori">
+                                    <a href="/layouts-horizontal" class="dropdown-item" key="t-horizontal">
+                                        <%=translation.t_horizontal %>
+                                    </a>
+                                    <a href="/layouts-hori-topbar-light" class="dropdown-item" key="t-topbar-light">
+                                        <%=translation.t_topbar_light %>
+                                    </a>
+                                    <a href="/layouts-hori-boxed-width" class="dropdown-item" key="t-boxed-width">
+                                        <%=translation.t_boxed_width %>
+                                    </a>
+                                    <a href="/layouts-hori-preloader" class="dropdown-item" key="t-preloader">
+                                        <%=translation.t_preloader %>
+                                    </a>
+                                    <a href="/layouts-hori-colored-header" class="dropdown-item" key="t-colored-topbar">
+                                        <%=translation.t_colored_topbar %>
+                                    </a>
+                                    <a href="/layouts-hori-scrollable" class="dropdown-item" key="t-scrollable">
+                                        <%=translation.t_scrollable %>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>

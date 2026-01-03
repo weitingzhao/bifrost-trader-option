@@ -1,0 +1,38 @@
+<%- include ('../partials/main') %>
+
+
+    <head>
+
+        <%- HeaderCss %>
+            <%- include ('../partials/head-css.ejs') %>
+
+    </head>
+
+
+    <body data-sidebar="dark" data-keep-enlarged="true" class="vertical-collpsed" data-layout-size="boxed">
+        <div id="layout-wrapper">
+            <%- include ('../partials/menu') %>
+
+                <div class="main-content overflow-hidden">
+                    <div class="page-content">
+                        <div class="container-fluid">
+                            <%- body%>
+                        </div>
+                        <!-- container-fluid -->
+                    </div>
+                    <!-- End Page-content -->
+                    <%- include ('../partials/footer') %>
+                </div>
+                <!-- end main content-->
+        </div>
+        <%- include ('../partials/right-sidebar') %>
+
+            <!-- END layout-wrapper -->
+            <%- include ('../partials/vendor-scripts') %>
+                <%- FooterJs %>
+
+                    <!-- App js -->
+                    <script src="/assets/js/app.js"></script>
+    </body>
+
+    </html>

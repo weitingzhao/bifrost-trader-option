@@ -1,0 +1,52 @@
+<%- include ('../partials/main') %>
+
+
+    <head>
+
+        <%- HeaderCss %>
+            <%- include ('../partials/head-css.ejs') %>
+
+    </head>
+
+
+    <body data-topbar="dark" data-layout="horizontal">
+
+        <!-- Loader -->
+        <div id="preloader">
+            <div id="status">
+                <div class="spinner-chase">
+                    <div class="chase-dot"></div>
+                    <div class="chase-dot"></div>
+                    <div class="chase-dot"></div>
+                    <div class="chase-dot"></div>
+                    <div class="chase-dot"></div>
+                    <div class="chase-dot"></div>
+                </div>
+            </div>
+        </div>
+        <div id="layout-wrapper">
+            <%- include ('../partials/horizontal') %>
+
+                <div class="main-content overflow-hidden">
+                    <div class="page-content">
+                        <div class="container-fluid">
+                            <%- body%>
+                        </div>
+                        <!-- container-fluid -->
+                    </div>
+                    <!-- End Page-content -->
+                    <%- include ('../partials/footer') %>
+                </div>
+                <!-- end main content-->
+        </div>
+        <%- include ('../partials/right-sidebar') %>
+
+            <!-- END layout-wrapper -->
+            <%- include ('../partials/vendor-scripts') %>
+                <%- FooterJs %>
+
+                    <!-- App js -->
+                    <script src="/assets/js/app.js"></script>
+    </body>
+
+    </html>

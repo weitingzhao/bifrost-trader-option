@@ -1,0 +1,16 @@
+<%- include ('../partials/main') %>
+
+    <head>
+        <%- HeaderCss %>
+            <%- include ('../partials/head-css.ejs') %>
+    </head>
+
+    <body>
+        <%- body%>
+            <%- include ('../partials/vendor-scripts') %>
+                <%- FooterJs %>
+                    <!-- App js -->
+                    <script src="/assets/js/app.js"></script>
+    </body>
+
+    </html>
