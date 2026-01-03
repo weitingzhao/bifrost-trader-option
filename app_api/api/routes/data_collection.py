@@ -14,15 +14,8 @@ from app_api.api.schemas.data_collection import (
     BatchCollectionRequest,
     BatchCollectionResponse
 )
-# Import directly to avoid services/__init__.py celery dependency
-import importlib.util
-import os
-_project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
-_services_path = os.path.join(_project_root, 'services/ib_data_collector.py')
-_spec = importlib.util.spec_from_file_location('ib_data_collector', _services_path)
-_ib_data_collector = importlib.util.module_from_spec(_spec)
-_spec.loader.exec_module(_ib_data_collector)
-get_collector = _ib_data_collector.get_collector
+# Import directly to avoid app_api.services.__init__.py celery dependency
+from app_api.services.ib_data_collector import get_collector
 
 logger = logging.getLogger(__name__)
 router = APIRouter()

@@ -33,7 +33,7 @@ echo "📖 Building documentation site..."
 mkdocs build
 
 # Get site directory from mkdocs.yml or use default
-SITE_DIR="statics_mkdoc"
+SITE_DIR="gen_mkdoc"
 if [ -f "mkdocs.yml" ]; then
     # Try to extract site_dir from mkdocs.yml
     EXTRACTED_DIR=$(grep -E "^site_dir:" mkdocs.yml | sed 's/site_dir:[[:space:]]*//' | tr -d '"' | tr -d "'" || echo "")

@@ -254,21 +254,22 @@ print('✓ Django models exist')
 ```bash
 # Test 1: Verify Celery configuration
 python3 -c "
-from services.celery_app import celery_app
+from app_api.services.celery_app import celery_app
 assert celery_app is not None
 print('✓ Celery app configured')
 "
 
 # Test 2: Verify Celery tasks exist
 python3 -c "
-from services.tasks import collect_option_chain_data
+from app_api.services.tasks import collect_option_chain_task
 assert callable(collect_option_chain_data)
 print('✓ Celery tasks exist')
 "
 
 # Test 3: Verify scheduler exists
 python3 -c "
-from services.scheduler import scheduler
+from app_api.services.scheduler import get_scheduler
+scheduler = get_scheduler()
 assert scheduler is not None
 print('✓ Scheduler configured')
 "
@@ -384,14 +385,14 @@ EOF
 ```bash
 # Test 1: Verify data collector exists
 python3 -c "
-from services.data_collector import collect_option_chain
+from app_api.services.data_collector import collect_option_chain_async
 assert callable(collect_option_chain)
 print('✓ Data collector function exists')
 "
 
 # Test 2: Verify Celery task
 python3 -c "
-from services.tasks import collect_option_chain_data
+from app_api.services.tasks import collect_option_chain_task
 assert hasattr(collect_option_chain_data, 'delay')
 print('✓ Celery task configured')
 "
@@ -416,14 +417,15 @@ print('✓ Celery task configured')
 ```bash
 # Test 1: Verify scheduler configuration
 python3 -c "
-from services.scheduler import scheduler
+from app_api.services.scheduler import get_scheduler
+scheduler = get_scheduler()
 assert scheduler is not None
 print('✓ Scheduler exists')
 "
 
 # Test 2: Check for scheduled jobs
 python3 << 'EOF'
-from services.scheduler import scheduler
+from app_api.services.scheduler import get_scheduler
 jobs = scheduler.get_jobs()
 if jobs:
     print(f"✓ {len(jobs)} scheduled job(s) found")

@@ -47,7 +47,7 @@ ENV/
 logs/
 
 # MkDocs
-statics_mkdoc/
+gen_mkdoc/
 .mkdocs_cache/
 
 # OS

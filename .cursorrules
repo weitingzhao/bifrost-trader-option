@@ -61,18 +61,20 @@ Bifrost is a professional options trading strategy analyzer system that integrat
   - `data_collection/`: Data collection management commands
 - Django manages database migrations (source of truth)
 - SQLAlchemy models must mirror Django models
-- **CAN IMPORT from**: `src/core/`, `src/analyzer/`, `src/strategies/`, `src/utils/`, `src/backtesting/`, `services/`
+- **CAN IMPORT from**: `src/core/`, `src/analyzer/`, `src/strategies/`, `src/utils/`, `src/backtesting/`, `app_api/services/`
 - **CANNOT IMPORT from**: `app_api/database/` (use Django ORM instead), `app_api/api/` (FastAPI only)
 
-### Background Services (services/)
-- **services/**: Background services (CAN BE SHARED by FastAPI, Django, Streamlit/monitoring)
+### Background Services (app_api/services/)
+- **app_api/services/**: Background services (FastAPI-specific, but can be used by Django and Streamlit/monitoring)
   - `data_collector.py`: Periodic option chain collection (Celery)
   - `ib_data_collector.py`: Comprehensive IB data collection service
   - `history_service.py`: Historical data management
   - `tasks.py`: Celery task definitions
   - `scheduler.py`: Task scheduling
+  - `celery_app.py`: Celery application configuration
 - Services can use shared business logic from `src/core/`, `src/analyzer/`, etc.
-- Services typically use SQLAlchemy for database operations (FastAPI-style)
+- Services use SQLAlchemy for database operations (FastAPI-style via `app_api/database/`)
+- **Note**: Services are FastAPI-specific but can be imported by Django for management commands
 
 ### Portal UI (app_portal/)
 - **app_portal/**: Vue.js 3 portal UI application
@@ -122,7 +124,7 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 - `src/strategies/` - Can be shared (strategy implementations)
 - `src/utils/` - Can be shared (utilities, logger)
 - `src/backtesting/` - Can be shared (backtesting engines)
-- `services/` - Can be shared (background services)
+- `app_api/services/` - FastAPI background services (can be imported by Django)
 
 **Shared Utilities:**
 - `src/utils/` - Shared utility functions and constants

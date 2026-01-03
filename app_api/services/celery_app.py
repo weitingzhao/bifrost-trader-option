@@ -10,7 +10,7 @@ celery_app = Celery(
     'bifrost_trader',
     broker=os.getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0'),
     backend=os.getenv('CELERY_RESULT_BACKEND', 'redis://localhost:6379/0'),
-    include=['services.tasks']
+    include=['app_api.services.tasks']
 )
 
 # Celery configuration
@@ -28,5 +28,5 @@ celery_app.conf.update(
 )
 
 # Auto-discover tasks
-celery_app.autodiscover_tasks(['services'])
+celery_app.autodiscover_tasks(['app_api.services'])
 

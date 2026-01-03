@@ -4,7 +4,7 @@ from apscheduler.triggers.cron import CronTrigger
 import logging
 from typing import List, Optional
 
-from services.tasks import periodic_option_collection_task
+from app_api.services.tasks import periodic_option_collection_task
 
 logger = logging.getLogger(__name__)
 

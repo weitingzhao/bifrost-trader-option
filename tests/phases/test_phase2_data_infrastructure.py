@@ -81,7 +81,7 @@ class TestDataCollector:
     def test_data_collector_exists(self):
         """Verify data collector function exists."""
         try:
-            from services.data_collector import collect_option_chain
+            from app_api.services.data_collector import collect_option_chain_async
             assert callable(collect_option_chain)
         except ImportError:
             pytest.skip("Celery not installed (expected in some environments)")
@@ -89,7 +89,7 @@ class TestDataCollector:
     def test_celery_task_configured(self):
         """Verify Celery task is configured."""
         try:
-            from services.tasks import collect_option_chain_data
+            from app_api.services.tasks import collect_option_chain_task
             # Check if it's a Celery task (has delay method)
             assert hasattr(collect_option_chain_data, 'delay') or hasattr(collect_option_chain_data, 'apply_async')
         except ImportError:
@@ -102,7 +102,8 @@ class TestScheduledCollection:
     def test_scheduler_exists(self):
         """Verify scheduler exists."""
         try:
-            from services.scheduler import scheduler
+            from app_api.services.scheduler import get_scheduler
+            scheduler = get_scheduler()
             assert scheduler is not None
         except ImportError:
             pytest.skip("Celery/APScheduler not installed (expected in some environments)")
@@ -110,7 +111,8 @@ class TestScheduledCollection:
     def test_scheduler_can_add_jobs(self):
         """Verify scheduler can add jobs."""
         try:
-            from services.scheduler import scheduler
+            from app_api.services.scheduler import get_scheduler
+            scheduler = get_scheduler()
             # Scheduler should have add_job method
             assert hasattr(scheduler, 'add_job') or hasattr(scheduler, 'add_jobstore')
         except ImportError:

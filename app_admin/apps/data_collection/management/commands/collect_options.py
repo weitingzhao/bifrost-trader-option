@@ -4,8 +4,8 @@ import asyncio
 from django.core.management.base import BaseCommand
 from apps.data_collection.models import CollectionJob
 from django.utils import timezone
-from services.tasks import collect_option_chain_task
-from services.ib_data_collector import get_collector
+from app_api.services.tasks import collect_option_chain_task
+from app_api.services.ib_data_collector import get_collector
 
 
 class Command(BaseCommand):

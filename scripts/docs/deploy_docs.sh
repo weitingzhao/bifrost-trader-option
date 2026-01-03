@@ -13,7 +13,7 @@ WEB_SERVER_USER="vision"
 DOCS_DEPLOY_PATH="/var/www/docs"
 
 # Get site directory from mkdocs.yml or use default
-SITE_DIR="statics_mkdoc"
+SITE_DIR="gen_mkdoc"
 if [ -f "$PROJECT_ROOT/mkdocs.yml" ]; then
     # Try to extract site_dir from mkdocs.yml
     EXTRACTED_DIR=$(grep -E "^site_dir:" "$PROJECT_ROOT/mkdocs.yml" | sed 's/site_dir:[[:space:]]*//' | tr -d '"' | tr -d "'" || echo "")
