@@ -36,6 +36,7 @@ Stock symbols, option snapshots, and option contracts
 | `theta` | `DOUBLE PRECISION` | - | Option Greek / Volatility |
 | `vega` | `DOUBLE PRECISION` | - | Option Greek / Volatility |
 | `contract_id` | `INTEGER` | UNIQUE | Foreign key reference |
+| `exchange` | `VARCHAR(20)` | - | - |
 | `timestamp` | `TIMESTAMP WITH` | NOT NULL | Timestamp |
 | `created_at` | `TIMESTAMP WITH` | HAS DEFAULT | Timestamp |
 
@@ -50,6 +51,7 @@ Stock symbols, option snapshots, and option contracts
 - `timestamp`
 - `expiration`
 - `strike`
+- `exchange`
 
 ---
 
@@ -66,6 +68,7 @@ Stock symbols, option snapshots, and option contracts
 | `symbol` | `VARCHAR(10)` | NOT NULL | Text field |
 | `underlying_price` | `DOUBLE PRECISION` | NOT NULL | Price/numeric value |
 | `timestamp` | `TIMESTAMP WITH` | NOT NULL | Timestamp |
+| `exchange` | `VARCHAR(20)` | - | - |
 | `contracts_data` | `JSONB` | - | JSON data |
 | `expiration_dates` | `JSONB` | - | JSON data |
 | `strike_range` | `JSONB` | - | JSON data |
@@ -80,6 +83,7 @@ Stock symbols, option snapshots, and option contracts
 - `stock_id`
 - `symbol`
 - `timestamp`
+- `exchange`
 
 ---
 

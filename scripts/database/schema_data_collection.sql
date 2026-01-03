@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS collection_jobs (
     id SERIAL PRIMARY KEY,
     job_type VARCHAR(50) NOT NULL,
     symbol VARCHAR(10),
+    exchange VARCHAR(20),
     status VARCHAR(20) NOT NULL,
     started_at TIMESTAMP WITH TIME ZONE,
     completed_at TIMESTAMP WITH TIME ZONE,
@@ -34,6 +35,7 @@ CREATE TABLE IF NOT EXISTS collection_jobs (
 CREATE INDEX IF NOT EXISTS idx_collection_jobs_status ON collection_jobs(status);
 CREATE INDEX IF NOT EXISTS idx_collection_jobs_job_type ON collection_jobs(job_type);
 CREATE INDEX IF NOT EXISTS idx_collection_jobs_symbol ON collection_jobs(symbol);
+CREATE INDEX IF NOT EXISTS idx_collection_jobs_exchange ON collection_jobs(exchange);
 CREATE INDEX IF NOT EXISTS idx_collection_jobs_created_at ON collection_jobs(created_at);
 
 -- Composite index for common queries (job_type, status, created_at)

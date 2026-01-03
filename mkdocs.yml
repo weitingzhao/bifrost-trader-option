@@ -73,10 +73,12 @@ nav:
       - nginx/CONFIGURATION.md
 
   - Testing:
+      - testing/README.md
       - testing/TEST_STRATEGY.md
       - testing/TEST_DATABASE_COVERAGE.md
       - testing/TEST_AND_SCHEMA_SUMMARY.md
-      - testing/README.md
+      - testing/CONNECTOR_TESTS.md
+      - testing/IB_SETUP.md
 
   - Setup & Installation:
       - setup/NEXT_STEPS.md

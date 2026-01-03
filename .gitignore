@@ -64,3 +64,8 @@ htmlcov/
 
 # IB Gateway
 *.ibgateway
+
+# Themes (purchased commercial packages - exclude from git)
+themes/
+!themes/README.md
+!themes/.gitkeep

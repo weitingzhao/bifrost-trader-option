@@ -39,13 +39,13 @@ class TestHistoricalDataAPI:
     
     def test_history_routes_exist(self):
         """Verify history routes module exists."""
-        from src.api.routes import history
+        from app_fastapi.api.routes import history
         assert history is not None
         assert hasattr(history, 'router')
     
     def test_history_endpoints_registered(self):
         """Verify history endpoints are registered."""
-        from src.api.main import app
+        from app_fastapi.api.main import app
         routes = [r.path for r in app.routes if hasattr(r, 'path')]
         
         history_routes = [r for r in routes if 'history' in r]
@@ -95,13 +95,13 @@ class TestVectorBTIntegration:
     
     def test_backtesting_routes_exist(self):
         """Verify backtesting routes exist."""
-        from src.api.routes import backtesting
+        from app_fastapi.api.routes import backtesting
         assert backtesting is not None
         assert hasattr(backtesting, 'router')
     
     def test_backtesting_endpoints_registered(self):
         """Verify backtesting endpoints are registered."""
-        from src.api.main import app
+        from app_fastapi.api.main import app
         routes = [r.path for r in app.routes if hasattr(r, 'path')]
         
         backtesting_routes = [r for r in routes if 'backtesting' in r]

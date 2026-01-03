@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS option_snapshots (
     symbol VARCHAR(10) NOT NULL,
     underlying_price DOUBLE PRECISION NOT NULL,
     timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
+    exchange VARCHAR(20),
     contracts_data JSONB,
     expiration_dates JSONB,
     strike_range JSONB,
@@ -56,6 +57,7 @@ CREATE TABLE IF NOT EXISTS option_snapshots (
 CREATE INDEX IF NOT EXISTS idx_option_snapshots_stock_id ON option_snapshots(stock_id);
 CREATE INDEX IF NOT EXISTS idx_option_snapshots_symbol ON option_snapshots(symbol);
 CREATE INDEX IF NOT EXISTS idx_option_snapshots_timestamp ON option_snapshots(timestamp);
+CREATE INDEX IF NOT EXISTS idx_option_snapshots_exchange ON option_snapshots(exchange);
 
 -- Composite index for common queries (symbol + timestamp)
 CREATE INDEX IF NOT EXISTS idx_option_snapshots_symbol_timestamp 
@@ -88,6 +90,7 @@ CREATE TABLE IF NOT EXISTS option_contracts (
     theta DOUBLE PRECISION,
     vega DOUBLE PRECISION,
     contract_id INTEGER UNIQUE,
+    exchange VARCHAR(20),
     timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -98,6 +101,7 @@ CREATE INDEX IF NOT EXISTS idx_option_contracts_symbol ON option_contracts(symbo
 CREATE INDEX IF NOT EXISTS idx_option_contracts_timestamp ON option_contracts(timestamp);
 CREATE INDEX IF NOT EXISTS idx_option_contracts_expiration ON option_contracts(expiration);
 CREATE INDEX IF NOT EXISTS idx_option_contracts_strike ON option_contracts(strike);
+CREATE INDEX IF NOT EXISTS idx_option_contracts_exchange ON option_contracts(exchange);
 
 -- Composite index for common queries (symbol, expiration, strike)
 CREATE INDEX IF NOT EXISTS idx_option_contracts_symbol_expiration_strike 

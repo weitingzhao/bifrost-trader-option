@@ -4,7 +4,7 @@ import logging
 from typing import List, Optional
 from datetime import datetime
 
-from ..database.schemas import (
+from app_fastapi.database.schemas import (
     OptionsChain,
     StrategyResult,
     StrategyType,
@@ -14,7 +14,7 @@ from ..database.schemas import (
     OptionType,
 )
 from ..strategies import CoveredCall, IronCondor
-from ..core.ib_connector import get_connector
+from ..core.connector.ib import get_connector
 
 logger = logging.getLogger(__name__)
 

@@ -11,11 +11,11 @@ from datetime import datetime
 from typing import Dict, Any
 import argparse
 
-# Add src to path
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+# Add project root to path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from fastapi import FastAPI
-from src.main import app
+from app_fastapi.api.main import app
 
 
 def export_openapi_schema(output_path: str = "api_schemas"):

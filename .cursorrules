@@ -15,68 +15,127 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 - **Backend API**: FastAPI (Port 8000) - High-performance trading API, real-time data, async operations
 - **Admin/Management**: Django (Port 8001) - Admin interface, data management, migrations
 - **Shared Database**: PostgreSQL + TimescaleDB (both frameworks access same database)
-- **Frontend**: React/Vue (Web-Server) - Production trading interface
+- **Frontend**: Vue.js 3 + Skote Theme Reference (Web-Server) - Production trading interface
 - **Monitoring**: Streamlit (Dev PC) - System monitoring and analytics dashboards
 - **Data Management**: Django Admin (APP-SERVER) - CRUD operations
 
 ### Multi-Machine Deployment
 - **Dev PC (10.0.0.90)**: Development, SSH management, Streamlit monitoring
 - **APP-SERVER (10.0.0.80)**: FastAPI, Django, PostgreSQL, IB Gateway
-- **Web-Server (10.0.0.75)**: Nginx, React/Vue frontend
+- **Web-Server (10.0.0.75)**: Nginx, Vue.js frontend
 - **RTX4090-Server (10.0.0.60)**: ML/AI services with GPU
 
 ## Project Structure Rules
 
-### FastAPI Code Organization (src/)
-- **src/api/**: FastAPI application, routes, middleware
-  - Use `src/api/routes/` for route handlers (one file per domain)
-  - Use `src/api/middleware/` for custom middleware
-  - Main app in `src/api/main.py`
-- **src/core/**: Core business logic (config, IB connector, options chain, cache)
-- **src/analyzer/**: Analysis engines (analyzer, filter, risk calculator)
-- **src/database/**: Database layer
+### FastAPI Code Organization (app_fastapi/)
+- **app_fastapi/api/**: FastAPI application, routes, middleware (FastAPI only)
+  - Use `app_fastapi/api/routes/` for route handlers (one file per domain)
+  - Use `app_fastapi/api/middleware/` for custom middleware
+  - Main app in `app_fastapi/api/main.py`
+- **app_fastapi/database/**: Database layer (FastAPI only - SQLAlchemy ORM)
   - `schemas.py`: Pydantic models (API request/response)
   - `models.py`: SQLAlchemy ORM models (mirror Django models)
   - `connection.py`: Database connection configuration
-  - `repositories/`: Data access layer
-- **src/strategies/**: Strategy implementations (base_strategy, covered_call, iron_condor)
-- **src/utils/**: Utility functions (logger, validators)
+  - `repositories/`: Data access layer (SQLAlchemy)
+
+### Shared Business Logic (src/)
+- **src/core/**: Core business logic (CAN BE SHARED with Django and Streamlit)
+  - IB connector (`src/core/connector/ib.py`)
+  - Options chain fetcher (`src/core/data/options_chain.py`)
+  - Exchange manager (`src/core/data/exchange.py`)
+  - Config (`src/config.py`)
+- **src/analyzer/**: Analysis engines (CAN BE SHARED)
+  - Analyzer, filter, risk calculator
+- **src/strategies/**: Strategy implementations (CAN BE SHARED)
+  - base_strategy, covered_call, iron_condor
+- **src/utils/**: Utility functions (CAN BE SHARED)
+  - logger, validators, database_constants
+- **src/backtesting/**: Backtesting engines (CAN BE SHARED)
+  - backtester, vectorbt_engine
 
 ### Django Code Organization (app_django/)
 - **app_django/django_config/**: Django project settings
 - **app_django/apps/**: Django apps
-  - `options/`: Options data models & admin
-  - `strategies/`: Strategy history models & admin
+  - `options/`: Options data models & admin (Django ORM only)
+  - `strategies/`: Strategy history models & admin (Django ORM only)
   - `data_collection/`: Data collection management commands
 - Django manages database migrations (source of truth)
 - SQLAlchemy models must mirror Django models
-
-### Shared Code (shared/)
-- **shared/database/**: Shared database utilities and constants
-- **shared/schemas/**: Shared data structures between FastAPI and Django
+- **CAN IMPORT from**: `src/core/`, `src/analyzer/`, `src/strategies/`, `src/utils/`, `src/backtesting/`, `services/`
+- **CANNOT IMPORT from**: `app_fastapi/database/` (use Django ORM instead), `app_fastapi/api/` (FastAPI only)
 
 ### Background Services (services/)
-- **services/data_collector.py**: Periodic option chain collection (Celery)
-- **services/history_service.py**: Historical data management
+- **services/**: Background services (CAN BE SHARED by FastAPI, Django, Streamlit)
+  - `data_collector.py`: Periodic option chain collection (Celery)
+  - `ib_data_collector.py`: Comprehensive IB data collection service
+  - `history_service.py`: Historical data management
+  - `tasks.py`: Celery task definitions
+  - `scheduler.py`: Task scheduling
+- Services can use shared business logic from `src/core/`, `src/analyzer/`, etc.
+- Services typically use SQLAlchemy for database operations (FastAPI-style)
+
+### Frontend (frontend/)
+- **frontend/**: Vue.js 3 frontend application
+  - Uses Skote Nodejs v4.2.0 theme as **design reference only**
+  - Theme located in `themes/skote_nodejs_v4.2.0/` (excluded from git)
+  - Build custom Vue.js components following Skote's design patterns
+  - Convert EJS patterns to Vue.js patterns
+  - Reference SCSS styling from theme
+
+### Theme Reference (themes/)
+- **themes/skote_nodejs_v4.2.0/**: Purchased Skote theme (EXCLUDED from git)
+  - **Type**: Node.js/Express.js backend template with EJS views
+  - **Purpose**: Design reference template for building Vue.js frontend
+  - **Usage**: Reference only - convert EJS patterns to Vue.js
+  - **Launch**: Use `./themes/launch_skote.sh admin` to view theme in browser
+  - **Important**: This is NOT a Vue.js template - use as design reference only
 
 ## Import Conventions
 
-### FastAPI Code (src/)
-- Use **relative imports** within the package:
-  - Same level: `from .module import something`
-  - Parent level: `from ..module import something`
-  - Two levels up: `from ...module import something`
-- Example: `from ..core.config import config`
-- Example: `from ...database.schemas import OptionsChain`
+### FastAPI Code (app_fastapi/)
+- Use **absolute imports** for shared code:
+  - `from src.core.config import config`
+  - `from src.analyzer.analyzer import get_analyzer`
+  - `from app_fastapi.database.schemas import OptionsChain`
+- Use **relative imports** within app_fastapi:
+  - `from .routes import health`
+  - `from ..database.connection import get_db`
 
 ### Django Code (app_django/)
 - Use Django's standard import patterns
 - Import Django models: `from apps.options.models import OptionSnapshot`
 
 ### Cross-Framework Imports
-- FastAPI and Django should NOT import from each other
-- Use `shared/` directory for common code
-- Both access same database via their respective ORMs
+
+**Database ORM Layer (SEPARATE):**
+- `app_fastapi/database/` - FastAPI only (SQLAlchemy ORM)
+- `app_django/apps/*/models.py` - Django only (Django ORM)
+- **DO NOT** mix database ORM code between frameworks
+
+**Shared Business Logic (CAN BE SHARED):**
+- `src/core/` - Can be imported by FastAPI, Django, and Streamlit
+  - IB connector (`src/core/connector/ib.py`)
+  - Options chain fetcher (`src/core/data/options_chain.py`)
+  - Exchange manager (`src/core/data/exchange.py`)
+  - Config (`src/config.py`)
+- `src/analyzer/` - Can be shared (analysis engines)
+- `src/strategies/` - Can be shared (strategy implementations)
+- `src/utils/` - Can be shared (utilities, logger)
+- `src/backtesting/` - Can be shared (backtesting engines)
+- `services/` - Can be shared (background services)
+
+**Shared Utilities:**
+- `src/utils/` - Shared utility functions and constants
+  - `database_constants.py` - Database table names and constants (shared between FastAPI and Django)
+  - `logger.py` - Logging utilities
+  - `validators.py` - Validation utilities
+  - `pricing.py` - Pricing utilities
+
+**Summary:**
+- ✅ Database ORM: Keep separate (SQLAlchemy vs Django ORM)
+- ✅ Business logic: Can be shared (IB connector, analyzers, strategies)
+- ✅ Services: Can be shared (background tasks)
+- ✅ Both frameworks access same database via their respective ORMs
 
 ## Code Style & Standards
 
@@ -100,6 +159,14 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 - Use Django admin for data management interfaces
 - Use management commands for background tasks
 
+### Frontend (Vue.js) Best Practices
+- Reference Skote theme in `themes/skote_nodejs_v4.2.0/` for design patterns
+- Convert EJS templates to Vue.js components
+- Follow Skote's SCSS styling patterns
+- Build custom trading components in `frontend/src/components/trading/`
+- Use Vue 3 Composition API
+- Integrate with FastAPI backend via API client
+
 ## Database Rules
 
 ### Schema Management - CRITICAL WORKFLOW
@@ -113,11 +180,11 @@ Bifrost is a professional options trading strategy analyzer system that integrat
    ↓
 2. Generate Django migrations (python manage.py makemigrations)
    ↓
-3. Update SQLAlchemy models (src/database/models.py) to match Django models
+3. Update SQLAlchemy models (app_fastapi/database/models.py) to match Django models
    ↓
-4. Update scripts/database/schema.sql to match Django models
+4. Update scripts/database/schema_*.sql to match Django models
    ↓
-5. Run verify_schema.py to verify all three are in sync
+5. Run refresh_schema.py to verify all are in sync
 ```
 
 **When making ANY database schema change:**
@@ -137,22 +204,22 @@ Bifrost is a professional options trading strategy analyzer system that integrat
    - Review generated migrations to ensure they match your intended changes
    - Migrations track all schema changes automatically
 
-3. **Update SQLAlchemy models** in `src/database/models.py` to match Django models exactly
+3. **Update SQLAlchemy models** in `app_fastapi/database/models.py` to match Django models exactly
    - Must mirror Django models field-by-field
    - Match field types, constraints, and indexes
    - Keep `__tablename__` matching Django's `db_table`
    - Update docstrings to reference Django model
 
-4. **Update schema.sql** in `scripts/database/schema.sql` to match Django models
+4. **Update schema.sql** in `scripts/database/schema_*.sql` to match Django models
    - Use `IF NOT EXISTS` / `IF EXISTS` for idempotent operations
    - Document changes in version tracking section (optional, for reference)
    - Include comments for new tables/columns
 
 5. **Verify synchronization:**
    ```bash
-   ./scripts/database/verify_schema.py
+   ./scripts/database/refresh_schema.sh
    ```
-   - Compares Django models, SQLAlchemy models, and schema.sql
+   - Compares Django models, SQLAlchemy models, and schema files
    - All three should match
    - If discrepancies found, fix starting from Django models (source of truth)
 
@@ -161,7 +228,7 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 - ✅ **ALWAYS** generate and review Django migrations
 - ✅ **ALWAYS** update SQLAlchemy models to match Django models
 - ✅ **ALWAYS** update schema.sql to match Django models
-- ✅ **ALWAYS** run verify_schema.py to verify all three are in sync
+- ✅ **ALWAYS** run refresh_schema.sh to verify all three are in sync
 - ❌ **NEVER** modify SQLAlchemy models or schema.sql without updating Django models first
 - ❌ **NEVER** skip the verification step
 
@@ -188,8 +255,8 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 - Use async/await for all IB operations
 
 ### Code Location
-- IB connector: `src/core/ib_connector.py`
-- Options chain fetcher: `src/core/options_chain.py`
+- IB connector: `src/core/connector/ib.py`
+- Options chain fetcher: `src/core/data/options_chain.py`
 - Use caching to reduce IB API calls
 
 ## File Naming Conventions
@@ -272,7 +339,7 @@ Bifrost is a professional options trading strategy analyzer system that integrat
 
 ### General Changes
 1. **Follow the project structure** - Don't create files in wrong locations
-2. **Update imports** - Use relative imports within packages
+2. **Update imports** - Use absolute imports for shared code, relative within packages
 3. **Maintain separation** - FastAPI and Django should not import from each other
 4. **Update tests** - Add tests for new functionality
 5. **Update documentation** - Update relevant docs when adding features
@@ -297,33 +364,40 @@ Bifrost is a professional options trading strategy analyzer system that integrat
    - Review generated migrations
    - Migrations track all schema changes
 
-3. **Update SQLAlchemy models** (`src/database/models.py`)
+3. **Update SQLAlchemy models** (`app_fastapi/database/models.py`)
    - Mirror Django models exactly
    - Match field types, constraints, indexes
    - Keep `__tablename__` matching Django's `db_table`
 
-4. **Update schema.sql** (`scripts/database/schema.sql`)
+4. **Update schema.sql** (`scripts/database/schema_*.sql`)
    - Match Django models
    - Use idempotent SQL (`IF NOT EXISTS`, `IF EXISTS`)
    - Document changes in version tracking section (optional)
 
 5. **Verify synchronization**
    ```bash
-   ./scripts/database/verify_schema.py
+   ./scripts/database/refresh_schema.sh
    ```
-   - Compares Django models, SQLAlchemy models, and schema.sql
+   - Compares Django models, SQLAlchemy models, and schema files
    - All three should match
    - Fix any discrepancies starting from Django models
 
 **See `docs/database/database.md` for detailed examples and best practices.**
+
+### Frontend Development
+1. **Reference Skote Theme**: Study `themes/skote_nodejs_v4.2.0/Admin/views/` for design patterns
+2. **Convert EJS to Vue.js**: Transform EJS templates to Vue.js components
+3. **Reference SCSS**: Study `themes/skote_nodejs_v4.2.0/Admin/src/assets/scss/` for styling
+4. **Build Custom Components**: Create trading-specific components in `frontend/src/components/trading/`
+5. **Launch Theme**: Use `./themes/launch_skote.sh admin` to view theme in browser for reference
 
 ## Common Patterns
 
 ### FastAPI Route Pattern
 ```python
 from fastapi import APIRouter
-from ...database.schemas import ResponseModel
-from ...core.something import get_something
+from app_fastapi.database.schemas import ResponseModel
+from src.core.something import get_something
 
 router = APIRouter()
 
@@ -336,7 +410,7 @@ async def endpoint():
 ### Database Access Pattern
 ```python
 # FastAPI (SQLAlchemy)
-from ...database.connection import AsyncSessionLocal
+from app_fastapi.database.connection import AsyncSessionLocal
 async with AsyncSessionLocal() as session:
     # Query database
     pass
@@ -348,21 +422,43 @@ OptionSnapshot.objects.filter(...)
 
 ### IB Connection Pattern
 ```python
-from ...core.ib_connector import get_connector
+from src.core.connector.ib import get_connector
 connector = await get_connector()
 # Use connector
+```
+
+### Frontend Component Pattern (Vue.js)
+```vue
+<template>
+  <!-- Reference Skote EJS templates for HTML structure -->
+  <div class="card">
+    <!-- Custom trading component -->
+  </div>
+</template>
+
+<script setup>
+// Reference Skote JS patterns, adapt for Vue.js
+import { useOptionsStore } from '@/store/options'
+</script>
+
+<style scoped lang="scss">
+// Reference Skote SCSS for styling
+@import '@/styles/variables'; // Skote-inspired variables
+</style>
 ```
 
 ## Prohibited Practices
 
 - ❌ Don't mix FastAPI and Django imports
 - ❌ Don't create circular dependencies
-- ❌ Don't use absolute imports starting with `src.` (use relative)
+- ❌ Don't use relative imports for shared code (use absolute)
 - ❌ Don't modify database schema without following the canonical schema workflow
 - ❌ Don't modify Django or SQLAlchemy models without updating schema.sql first
 - ❌ Don't commit secrets or credentials
 - ❌ Don't create files outside the defined structure
 - ❌ Don't bypass the ORM for database access (use repositories)
+- ❌ Don't copy theme files directly - use as reference only
+- ❌ Don't commit theme source code to git
 
 ## Project Goals
 
@@ -381,12 +477,46 @@ connector = await get_connector()
 3. **Co-located Services**: API, DB, and IB Gateway on APP-SERVER for low latency
 4. **Separation of Concerns**: Clear boundaries between components
 5. **Async-First**: Use async/await for all I/O operations in FastAPI
+6. **Theme Reference**: Use Skote theme as design template, not source code
+
+## Theme Reference Guidelines
+
+### Using Skote Theme as Template
+
+**Location**: `themes/skote_nodejs_v4.2.0/` (excluded from git)
+
+**Important Notes**:
+- ⚠️ This is a **Node.js/Express.js template** (EJS views), NOT Vue.js
+- ✅ Use as **design reference only** - convert EJS patterns to Vue.js
+- ✅ Reference SCSS styling from `Admin/src/assets/scss/`
+- ✅ Study layout structure from `Admin/views/layouts/` and `Admin/views/partials/`
+- ✅ Launch theme to view in browser: `./themes/launch_skote.sh admin`
+
+**Conversion Approach**:
+1. Study EJS templates in `Admin/views/`
+2. Convert EJS patterns to Vue.js components
+3. Reference SCSS for styling
+4. Build custom trading components in `frontend/`
+5. Integrate with FastAPI backend
+
+**Example Conversion**:
+- EJS: `<%- include('partials/sidebar') %>` → Vue: `<Sidebar />`
+- EJS: `<div class="card">` → Vue: Same HTML structure, Vue.js logic
+- SCSS: Reference color variables, spacing, typography
+
+**When Building Frontend**:
+- Always reference `themes/skote_nodejs_v4.2.0/` for design patterns
+- Convert EJS to Vue.js, don't copy directly
+- Follow Skote's design system and styling
+- Build custom components for trading functionality
 
 ## When in Doubt
 
 - Refer to `docs/PROJECT_PLAN.md` for architecture decisions
 - Follow existing code patterns in the codebase
-- Use relative imports within packages
+- Use absolute imports for shared code
 - Keep FastAPI and Django code separate
 - Test imports and functionality after changes
-
+- Reference Skote theme for frontend design patterns
+- See `themes/THEME_STRUCTURE.md` for theme analysis
+- See `frontend/THEME_INTEGRATION.md` for integration guide

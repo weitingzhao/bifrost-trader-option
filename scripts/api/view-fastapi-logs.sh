@@ -12,7 +12,7 @@ echo ""
 
 # Check if FastAPI is running
 echo "Checking FastAPI status..."
-PID=$(ssh "$SERVER" "ps aux | grep 'src.main' | grep -v grep | awk '{print \$2}'" | head -1)
+PID=$(ssh "$SERVER" "ps aux | grep 'app_fastapi.api.main' | grep -v grep | awk '{print \$2}'" | head -1)
 
 if [ -z "$PID" ]; then
     echo "⚠️  FastAPI is not running"

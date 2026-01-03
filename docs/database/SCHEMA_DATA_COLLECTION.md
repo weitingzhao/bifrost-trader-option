@@ -21,6 +21,7 @@ Collection job tracking
 | `id` | `SERIAL` | PRIMARY KEY | Primary key |
 | `job_type` | `VARCHAR(50)` | NOT NULL | Categorical value |
 | `symbol` | `VARCHAR(10)` | - | Text field |
+| `exchange` | `VARCHAR(20)` | - | - |
 | `status` | `VARCHAR(20)` | NOT NULL | Categorical value |
 | `started_at` | `TIMESTAMP WITH` | - | Timestamp |
 | `completed_at` | `TIMESTAMP WITH` | - | Timestamp |
@@ -33,6 +34,7 @@ Collection job tracking
 - `status`
 - `job_type`
 - `symbol`
+- `exchange`
 - `created_at`
 
 ---

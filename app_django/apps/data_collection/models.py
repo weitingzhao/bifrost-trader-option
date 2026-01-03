@@ -14,6 +14,8 @@ class CollectionJob(models.Model):
     
     job_type = models.CharField(max_length=50, db_index=True)  # 'option_chain', 'market_data', etc.
     symbol = models.CharField(max_length=10, null=True, blank=True, db_index=True)
+    exchange = models.CharField(max_length=20, null=True, blank=True, db_index=True, 
+                                help_text="Exchange used for data collection (NYSE, NASDAQ, OPRA, etc.)")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     
     started_at = models.DateTimeField(null=True, blank=True)

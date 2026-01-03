@@ -62,7 +62,7 @@ fi
 # Check project files
 echo ""
 echo "6. Project Files:"
-if ssh "$SERVER" "cd ~/bifrost-trader && test -f src/main.py && echo 'exists'" >/dev/null 2>&1; then
+if ssh "$SERVER" "cd ~/bifrost-trader && test -f app_fastapi/api/main.py && echo 'exists'" >/dev/null 2>&1; then
     echo "   ✓ Code is deployed"
     FILE_COUNT=$(ssh "$SERVER" "cd ~/bifrost-trader && find src -name '*.py' | wc -l")
     echo "   ✓ Python files: $FILE_COUNT"

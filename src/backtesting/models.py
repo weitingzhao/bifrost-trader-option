@@ -3,7 +3,7 @@ from typing import List, Optional, Dict, Any
 from datetime import datetime
 import pandas as pd
 
-from ..database.schemas import StrategyType
+from app_fastapi.database.schemas import StrategyType
 
 
 class BacktestResult:

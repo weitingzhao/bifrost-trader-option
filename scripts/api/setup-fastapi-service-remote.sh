@@ -21,7 +21,7 @@ Group=vision
 WorkingDirectory=/home/vision/bifrost-trader
 Environment="PATH=/home/vision/bifrost-trader/venv/bin:/usr/local/bin:/usr/bin:/bin"
 Environment="PYTHONUNBUFFERED=1"
-ExecStart=/home/vision/bifrost-trader/venv/bin/python -m src.main
+ExecStart=/home/vision/bifrost-trader/venv/bin/uvicorn app_fastapi.api.main:app --host 0.0.0.0 --port 8000
 Restart=always
 RestartSec=10
 StandardOutput=journal

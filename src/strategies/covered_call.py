@@ -2,7 +2,7 @@
 from typing import Optional, List
 
 from .base_strategy import BaseStrategy
-from ..database.schemas import (
+from app_fastapi.database.schemas import (
     CoveredCallParams, BreakevenPoint, StrategyGreeks,
     StrategyType, OptionContract, OptionType
 )

@@ -2,7 +2,7 @@
 import logging
 from typing import List, Optional, Callable
 
-from ..database.schemas import StrategyResult, FilterCriteria, StrategyRanking, StrategyType
+from app_fastapi.database.schemas import StrategyResult, FilterCriteria, StrategyRanking, StrategyType
 
 logger = logging.getLogger(__name__)
 

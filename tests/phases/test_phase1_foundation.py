@@ -14,13 +14,13 @@ class TestFastAPIStructure:
     
     def test_fastapi_app_imports(self):
         """Verify FastAPI app can be imported."""
-        from src.api.main import app
+        from app_fastapi.api.main import app
         assert app is not None
         assert app.title == "Bifrost Options Trading Strategy Analyzer"
     
     def test_all_routes_registered(self):
         """Verify all expected routes are registered."""
-        from src.api.main import app
+        from app_fastapi.api.main import app
         routes = [r.path for r in app.routes if hasattr(r, 'path')]
         
         expected_routes = [
@@ -37,7 +37,7 @@ class TestFastAPIStructure:
     
     def test_health_endpoint_exists(self):
         """Verify health endpoint is accessible."""
-        from src.api.routes.health import router
+        from app_fastapi.api.routes.health import router
         routes = [r.path for r in router.routes if hasattr(r, 'path')]
         assert '/api/health' in routes
 
@@ -47,12 +47,12 @@ class TestIBConnector:
     
     def test_ib_connector_module_exists(self):
         """Verify IB connector module exists."""
-        from src.core import ib_connector
-        assert ib_connector is not None
+        from src.core.connector import ib
+        assert ib is not None
     
     def test_connection_manager_exists(self):
         """Verify connection manager class exists."""
-        from src.core.ib_connector import IBConnector
+        from src.core.connector.ib import IBConnector
         assert IBConnector is not None
         assert hasattr(IBConnector, 'connect')
         assert hasattr(IBConnector, 'disconnect')
@@ -83,8 +83,8 @@ class TestProjectStructure:
     def test_required_directories_exist(self):
         """Verify all required directories exist."""
         required_dirs = [
-            'src/api',
-            'src/api/routes',
+            'app_fastapi/api',
+            'app_fastapi/api/routes',
             'src/core',
             'src/analyzer',
             'src/database',
@@ -101,8 +101,8 @@ class TestProjectStructure:
     def test_key_files_exist(self):
         """Verify key files are in correct locations."""
         key_files = [
-            'src/api/main.py',
-            'src/core/ib_connector.py',
+            'app_fastapi/api/main.py',
+            'src/core/connector/ib.py',
             'src/core/options_chain.py',
             'src/analyzer/analyzer.py',
             'src/database/connection.py',
